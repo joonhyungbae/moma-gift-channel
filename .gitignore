@@ -1,0 +1,36 @@
+# OS
+.DS_Store
+
+# Archives
+code_zip/
+*.zip
+archive/
+
+# Nested repo (the LaTeX paper has its own git repo; never absorb it here)
+moma_paper/
+
+# Editor / agent config
+.claude/
+.cursor/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Output (generated)
+output/
+
+# Scratch / working notes and personal files (kept locally, never published)
+CODEX_*.md
+MOMA_RESEARCH_TOPICS.md
+CV in Korean*.md
+
+# Large unused raw backup (the pipeline reads data/Artworks_full.csv)
+data/Artworks_original.csv
+
+# Large derived analysis table (regenerate: python code/01_data_preprocessing.py)
+data/processed_moma_data.csv
