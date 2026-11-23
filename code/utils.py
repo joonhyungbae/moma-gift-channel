@@ -58,32 +58,27 @@ def reclassify_unknown_other_enhanced(creditline):
 
 
 def gender_grouped(gender):
-    """Map Gender to Female / Male / Other/Unknown. data: '(male)', '(female)' 등 괄호 형식 지원."""
-    if pd.isna(gender):
-        return "Other/Unknown"
-    g = str(gender).strip()
-    if g.startswith("(") and g.endswith(")"):
-        g = g[1:-1]
-    g = g.lower()
-    if "female" in g:
-        return "Female"
-    if "male" in g:
-        return "Male"
-    return "Other/Unknown"
+    """Record-level gender: Female / Male / Mixed / Other/Unknown.
+
+    Delegates to coding.gender_record. A record whose constituents include both
+    women and men is 'Mixed' and is left out of binary female shares (the
+    submitted version coded such records Female through substring matching).
+    """
+    from coding import gender_record
+    return gender_record(gender)
 
 
 def geographic_origin(nationality):
-    """Western vs Non-Western from Nationality. data: '(American)', '(French)' 등 괄호 형식 지원."""
-    if pd.isna(nationality) or str(nationality).strip() in ("", "()", "nan"):
-        return np.nan
-    s = str(nationality).strip()
-    if s.startswith("(") and s.endswith(")"):
-        s = s[1:-1]
-    nat = s.lower()
-    for kw in WESTERN_KEYWORDS:
-        if kw in nat:
-            return "Western"
-    return "Non-Western"
+    """Record-level origin: Western / Non-Western, NaN when uncoded or mixed.
+
+    Delegates to coding.origin_record (explicit nationality -> region lookup).
+    Records with unknown nationality are NaN; records whose constituents span
+    Western and non-Western nationalities are NaN here and 'Mixed' in the
+    GeoDetail column.
+    """
+    from coding import origin_record
+    value = origin_record(nationality)
+    return np.nan if value == "Mixed" else value
 
 
 # Paper robustness (iv): 3 categories Western / Non-Western excl. East Asia / East Asia
@@ -210,40 +205,18 @@ def extract_named_funds(creditline):
 
 
 def extract_donor_from_gift(creditline):
-    """Extract donor name from Gift CreditLine (e.g. 'Gift of [Donor]').
+    """First-named donor of a gift / bequest credit line, or NaN.
 
-    Returns NaN for credit lines that name a role rather than an individual
-    (e.g., 'Gift of the architect', 'Gift of the designer'). Such strings
-    aggregate many distinct people under one label and would inflate donor-
-    concentration metrics if treated as a single donor.
+    Delegates to coding.parse_credit_line: name suffixes after a comma are kept
+    ('Kleiner, Bell & Co.', 'Edgar Kaufmann, Jr.'), dedication and exchange
+    clauses are removed, and role labels ('the architect') return NaN.
     """
-    if pd.isna(creditline):
-        return np.nan
+    from coding import parse_credit_line
     try:
         from config import GENERIC_DONOR_ROLE_TERMS
     except ImportError:
-        GENERIC_DONOR_ROLE_TERMS = {
-            "architect", "architects", "designer", "designers", "manufacturer",
-            "manufacturers", "artist", "artists", "photographer", "photographers",
-            "publisher", "publishers", "estate", "family", "foundation",
-            "company", "firm", "studio", "office", "above", "donor", "donors",
-            "anonymous donor", "anonymous", "various donors",
-        }
-    cl = str(creditline).strip()
-    cl_lower = cl.lower()
-    for phrase in ("gift of the ", "bequest of the ", "gift of ", "bequest of "):
-        idx = cl_lower.find(phrase)
-        if idx >= 0:
-            rest = cl[idx + len(phrase):].strip()
-            for sep in (",", "\n"):
-                if sep in rest:
-                    rest = rest.split(sep)[0].strip()
-            if not rest:
-                return np.nan
-            if rest.strip().lower() in GENERIC_DONOR_ROLE_TERMS:
-                return np.nan
-            return rest
-    return np.nan
+        GENERIC_DONOR_ROLE_TERMS = set()
+    return parse_credit_line(creditline, GENERIC_DONOR_ROLE_TERMS)["donor"]
 
 
 def shannon_entropy(proportions):

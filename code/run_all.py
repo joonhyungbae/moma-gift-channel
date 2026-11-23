@@ -4,7 +4,7 @@ Run the full donor-biographies analysis pipeline for the paper
 MoMA's gift channel, 1929-2024" (Museum Management and Curatorship).
 
 Usage:
-    cd /home/jhbae/moma && python code/run_all.py
+    cd <repository root> && python code/run_all.py
 
 Inputs (in data/):
     Artworks_full.csv            raw MoMA collection export (step 01 input)
@@ -34,6 +34,14 @@ STEPS = [
     ("37_donor_tate_crossmuseum", 300),             # Tate cross-museum recurrence
     ("39_phase_l_tate_channel_filter", 300),        # channel-filtered Tate selection -> tate_*_v2.csv
     ("38_phase_j_verifications", 300),     # -> output/symmetric_boundary_check.tex, arithmetic checks
+    # Revision analyses (R1). All read the corrected coding in coding.py.
+    ("50_rev_levels_baselines", 900),      # records / artists / first-entry artists, matched baselines, cluster bootstrap
+    ("51_rev_coding_audits", 600),         # gender and region coding audits, Rockefeller disaggregation, selection audit
+    ("52_rev_typology", 600),              # fixed-threshold signatures, threshold sensitivity, cluster structure
+    ("53_rev_tate_patterns", 600),         # pattern recurrence at the Tate
+    ("55_rev_artist_concentration", 900),  # artist-level concentration, first-source attribution, Rothschild bound
+    ("54_rev_gender_validation", 900),     # MoMA gender field vs Wikidata; reads data/wikidata_gender_cache.csv, queries only uncached items
+    ("56_rev_paper_assets", 600),          # rev_numbers.tex, main and supplement tables, Figures 1-2; copies them to moma_paper/output/
 ]
 
 
@@ -53,9 +61,9 @@ def run_step(script_name, timeout):
 def main():
     for script_name, timeout in STEPS:
         run_step(script_name, timeout)
-    print("\nDone. Results are in output/. The paper's \\input tables and figures")
-    print("(table_donor_exploratory_top20.tex, symmetric_boundary_check.tex, fig_*) are")
-    print("copied into moma_paper/output/ for the LaTeX build.")
+    print("\nDone. Results are in output/. Step 56 writes the paper's number macros, tables and")
+    print("figures (rev_numbers.tex, rev_tab_*.tex, rev_supp_*.tex, fig_*) and copies them to")
+    print("moma_paper/output/ when that directory exists.")
 
 
 if __name__ == "__main__":

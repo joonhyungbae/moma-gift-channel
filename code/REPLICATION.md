@@ -13,7 +13,7 @@ pip install -r code/requirements.txt
 ## Run the pipeline
 
 ```bash
-cd /home/jhbae/moma
+cd <repository root>
 python code/run_all.py
 ```
 
@@ -39,32 +39,32 @@ slightly different totals.
 
 Run order is encoded in `run_all.py`. Each script writes to `output/`.
 
+Coding rules live in one module, `coding.py`: positional parsing of the
+constituent, gender and nationality lists; record-level and artist-level gender
+coding; the nationality-to-region lookup with the baseline and alternative
+Western / non-Western rules; and the credit-line parser (first-named donor,
+suffix retention, dedication and exchange clauses, co-donor / fund-led /
+by-exchange flags). The supplement's Sections S1-S3 describe the same rules.
+
 | Script | Produces | Paper element |
 | --- | --- | --- |
-| `01_data_preprocessing.py` | `data/processed_moma_data.csv` | sample construction (§3.1) |
-| `32_donor_exploratory_profile.py` | `table_donor_exploratory_top20.tex` | Table 1 |
-| `34_donor_biographies.py` | `donor_biography_profile.csv`, `cumulative_*.csv`, top-artist CSVs | §4 biographies, Table 2 |
-| `35_donor_cross_comparison.py` | `donor_dept_footprint.csv`, `donor_demographic_gap.csv`, `six_donor_joint_counterfactual.csv` | §5 cross-donor, joint counterfactual |
-| `36_donor_figures.py` | `fig_donor_*.{eps,pdf}`, `fig_six_donor_jointcf.{eps,pdf}` | Figures 1-5 |
-| `41_strong_accept_analyses.py` | `fig_volume_vs_gap.{eps,pdf}`, `population_decorrelation.csv`, `catalogue_oos_*.csv` | §5.1 population decorrelation, Figure 6, §5.2 OOS validation |
-| `40_concentration_canonical_recompute.py` | `concentration_canonical_recompute.csv` | §3.1 donor concentration |
-| `33/37/39_*` (Tate) | `tate_*_v2.csv` | §5.3 Tate cross-museum check |
-| `38_phase_j_verifications.py` | `symmetric_boundary_check.tex`, arithmetic checks | Table (symmetric boundary check), §5.3 |
+| `01_data_preprocessing.py` | `data/processed_moma_data.csv` | sample construction (Section 3.1) |
+| `50_rev_levels_baselines.py` | `rev_units.csv`, `rev_six_cases.csv`, `rev_museum.csv`, `rev_joint_counterfactual.csv`, `rev_volume_gap_association.csv`, `rev_suberas.csv` | three levels of count, gap / contribution / matched gap, cluster resampling (Sections 3.3, 4, 5.1; Table 1) |
+| `51_rev_coding_audits.py` | `rev_gender_*.csv`, `rev_region_*.csv`, `rev_rockefeller*.csv`, `rev_selection_audit.csv` | gender and origin coding (Section 3.2), regional rules, Rockefeller disaggregation, case selection (Section 3.4) |
+| `52_rev_typology.py` | `rev_typology_*.csv` | six gift patterns, threshold sensitivity, cluster structure (Section 5.3; Table 2) |
+| `53_rev_tate_patterns.py` | `rev_tate_units.csv`, `rev_tate_vs_moma_patterns.csv` | Tate comparison (Section 5.4; Table 3) |
+| `54_rev_gender_validation.py` | `rev_gender_validation*.csv` | Wikidata check of the gender field (Section 3.2). Reads `data/wikidata_gender_cache.csv`; pass `--offline` to forbid network access |
+| `55_rev_artist_concentration.py` | `rev_artist_*.csv`, `rev_rothschild_origin_bound.csv`, `rev_new_artists_by_decade.csv` | records versus artists, concentration, Rothschild bound (Section 5.2) |
+| `56_rev_paper_assets.py` | `rev_numbers.tex`, `rev_tab_*.tex`, `rev_supp_*.tex`, `fig_volume_vs_gap.*`, `fig_record_vs_artist.*` | every number, table and figure in the article and supplement |
+| `32`-`41` (earlier scripts) | donor profiles, named-donor Tate check | named-donor recurrence sentence in Section 5.4; otherwise superseded by 50-56 |
 
-Shared helpers: `config.py` (paths, baselines), `donor_bio_utils.py`,
+Shared helpers: `config.py`, `coding.py`, `rev_utils.py`, `donor_bio_utils.py`,
 `experiment_utils.py`, `tate_utils.py`, `utils.py`.
 
-## Known limitation
-
-`table_russian_soviet_sensitivity.tex` (the Russian/Soviet recoding sensitivity
-table in the paper) is assembled by hand from the per-donor non-Western shares
-under the baseline and alternative codings; there is no single script that emits
-that `.tex` file. The underlying shares it tabulates are reproducible from the
-biography and counterfactual outputs above (the 17-nationality coding rule is
-documented in the paper's supplementary parser specification).
+Every data-derived number in the article is a LaTeX macro defined in
+`rev_numbers.tex`, so the text cannot drift from the pipeline.
 
 ## LaTeX build
 
-The paper source is a separate repository (`moma_paper/`). The figures and
-`\input` tables produced here are copied into `moma_paper/output/` for the
-LaTeX build; see that repository's `Makefile`.
+The paper source is a separate repository (`moma_paper/`). Step 56 copies the number macros, tables and figures into `moma_paper/output/`
+for the LaTeX build; see that repository's `Makefile`.

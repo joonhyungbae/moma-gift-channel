@@ -85,9 +85,14 @@ def main():
 
     # GeographicOrigin from Nationality
     if "Nationality" in df.columns:
-        df["GeographicOrigin"] = df["Nationality"].apply(geographic_origin)
+        from coding import origin_record, region_record
+        df["GeoDetail"] = df["Nationality"].apply(origin_record)
+        df["GeographicOrigin"] = df["GeoDetail"].where(df["GeoDetail"] != "Mixed")
+        df["Region"] = df["Nationality"].apply(region_record)
     else:
+        df["GeoDetail"] = np.nan
         df["GeographicOrigin"] = np.nan
+        df["Region"] = np.nan
 
     # Artist birth year and age at acquisition
     if "BeginDate" in df.columns:

@@ -18,6 +18,7 @@ from config import GENERIC_DONOR_ROLE_TERMS, MAIN_DEPARTMENTS, PROJECT_ROOT, get
 from experiment_utils import safe_pct
 from tate_utils import categorize_tate_acquisition, extract_tate_donor_from_creditline
 from utils import extract_birth_year, extract_donor_from_gift
+from coding import donor_key, parse_credit_line
 
 
 GIFT_TYPES = {"Gift", "Artist Gift", "Bequest", "Partial Gift/Purchase"}
@@ -139,6 +140,21 @@ def canonicalize_donors(series):
             mapping[name] = base
         else:
             mapping[name] = name
+    # Merge punctuation / case / 'and'-'&' variants of the same string and show
+    # the most frequent spelling.
+    mapped = names.map(mapping)
+    keys = mapped.map(donor_key)
+    display = mapped.groupby(keys).agg(lambda x: x.value_counts().index[0])
+    mapping = {name: display[donor_key(target)] for name, target in mapping.items()}
+    # A trailing parenthetical qualifier ('Judith Rothschild Foundation (Boris
+    # Kerdimun Archive)', '... (Donation of X)', '... (in perpetuity)') names a
+    # part of a donor's gift, not a different donor. Merge it into the base name
+    # when the base name also occurs as a donor.
+    targets = set(mapping.values())
+    for name, target in list(mapping.items()):
+        m = re.match(r"^(.*?\S)\s*\(", str(target))
+        if m and m.group(1) in targets:
+            mapping[name] = m.group(1)
     return series.apply(compact_space).map(mapping)
 
 
@@ -232,6 +248,10 @@ def load_moma_donor_gifts():
         "Classification",
         "Medium",
         "ObjectID",
+        "Nationality",
+        "Gender",
+        "GeoDetail",
+        "Region",
     ]
     usecols = [c for c in wanted if c in available]
     chunks = []
@@ -264,7 +284,10 @@ def load_moma_donor_gifts():
     df["Donor"] = canonicalize_donors(df["DonorRaw"])
     df = df[df["Donor"].notna()].copy()
     df["YearAcquired"] = df["YearAcquired"].astype(int)
-    return df
+    flags = df["CreditLine"].apply(lambda cl: parse_credit_line(cl, GENERIC_DONOR_ROLE_TERMS))
+    for flag in ("co_donor", "fund_led", "by_exchange"):
+        df[flag] = flags.map(lambda d: d[flag]).astype(bool)
+    return df.reset_index(drop=True)
 
 
 def is_rockefeller_donor(name):
@@ -279,6 +302,7 @@ def is_rockefeller_donor(name):
         "nelson a. rockefeller",
         "nelson rockefeller",
         "mrs. john d. rockefeller",
+        "mr. john d. rockefeller",
         "mr. and mrs. john d. rockefeller",
         "john d. rockefeller",
         "john d. rockefeller iii",
@@ -294,7 +318,7 @@ def case_for_donor(name):
     if pd.isna(name):
         return np.nan
     text = str(name).strip()
-    if text == "Kleiner":
+    if text == "Kleiner" or text.startswith("Kleiner, Bell") or text.startswith("Kleiner Bell"):
         return "Kleiner"
     if is_rockefeller_donor(text):
         return "Rockefeller lineage"

@@ -13,8 +13,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import MAIN_DEPARTMENTS, get_output_path
 from donor_bio_utils import (
-    BASELINE_FEMALE,
-    BASELINE_NONWEST,
     CASE_ORDER,
     assign_case,
     counterfactual_stats,
@@ -54,7 +52,9 @@ def write_dept_footprint(case_df):
     return out
 
 
-def write_demographic_gap(profile):
+def write_demographic_gap(profile, base_df):
+    base = demographic_stats(base_df)
+    BASELINE_FEMALE, BASELINE_NONWEST = base["pct_female"], base["pct_nonwest"]
     rows = []
     for _, row in profile.iterrows():
         rows.append(
@@ -151,7 +151,7 @@ def main():
 
     overlay = write_overlay(case_df)
     footprint = write_dept_footprint(case_df)
-    gap = write_demographic_gap(profile)
+    gap = write_demographic_gap(profile, base_df)
     overlap = write_pairwise_overlap(case_df)
     joint = write_joint_counterfactual(base_df)
     coverage = coverage_stats(profile, case_df, base_df)

@@ -858,6 +858,11 @@ def write_outputs_and_print_summary(
 def main() -> None:
     ensure_output_dir()
     df = load_canonical_moma_donors()
+    # Baselines are computed from the loaded sample, not hard-coded.
+    global BASELINE_FEMALE, BASELINE_NONWEST
+    f_n, f_valid = gender_counts(df)
+    nw_n, nw_valid = nonwest_counts(df)
+    BASELINE_FEMALE, BASELINE_NONWEST = safe_pct(f_n, f_valid), safe_pct(nw_n, nw_valid)
     donors, alt_baseline = build_donor_population(df)
 
     decorrelation = run_decorrelation(donors)
