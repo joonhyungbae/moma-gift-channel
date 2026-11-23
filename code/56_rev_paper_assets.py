@@ -387,7 +387,7 @@ def main():
     put("TypOthers", fint(typsum["non-anchor units"]))
     put("TypClean", fint(typsum["non-anchor clean"])); put("TypAmbig", fint(typsum["non-anchor ambiguous"]))
     put("TypNone", fint(typsum["non-anchor unclassified"]))
-    for key, ty in (("Vol", "Volume contributor"), ("Found", "Founding lineage"), ("Single", "Single-artist patron"),
+    for key, ty in (("Vol", "Volume contributor"), ("Found", "Founding lineage"), ("Single", "Single-artist block"),
                     ("Anon", "Anonymous-archive donor"), ("Inst", "Institutional mass-gift"),
                     ("Cross", "Cross-departmental diversifying donor")):
         put("Typ" + key, fint(typsum[f"type count (non-anchor, any match): {ty}"]))
@@ -436,7 +436,7 @@ def main():
     for p, lab in (("M", "MoMA"), ("T", "Tate")):
         r = tate_rules.loc[lab]
         put(p + "RulesUnits", fint(r["units"])); put(p + "RulesOne", fint(r["one pattern"])); put(p + "RulesNone", fint(r["none"]))
-        put(p + "RulesSingle", fint(r["Single-artist patron"])); put(p + "RulesVol", fint(r["Volume contributor"]))
+        put(p + "RulesSingle", fint(r["Single-artist block"])); put(p + "RulesVol", fint(r["Volume contributor"]))
         put(p + "RulesInst", fint(r["Institutional mass-gift"])); put(p + "RulesFound", fint(r["Founding lineage"]))
         put(p + "RulesCross", fint(r["Cross-departmental diversifying donor"])); put(p + "RulesAnon", fint(r["Anonymous-archive donor"]))
     put("ShearConNWEE", fsigned(pd.read_csv(out("rev_region_scheme_top_contributors.csv")).query(
@@ -458,6 +458,8 @@ def main():
     s_all, s_wo = record_shares(dp), record_shares(dp[dp["Unit"] != "Jean Pigozzi"])
     put("DPNineteenN", fint(s_all["n"])); put("DPNineteenNW", fdec(s_all["pct_nw"]))
     put("DPNineteenNWwoP", fdec(s_wo["pct_nw"])); put("DPNineteenPShare", fdec(pct((dp["Unit"] == "Jean Pigozzi").sum(), len(dp))))
+    put("JFirstNewNW", fint(first.loc["Judith Rothschild Foundation", "new_nw"]))
+    put("JFirstNewF", fint(first.loc["Judith Rothschild Foundation", "new_f"]))
     put("SmallArtShare", fdec(classes.loc["1-9 records", "pct_new_artists"], 0))
     put("TenArtShare", fdec(classes.loc["ten largest units", "pct_new_artists"]))
     put("BigArtShare", fdec(classes.loc["100+ records", "pct_new_artists"], 0))
@@ -486,29 +488,30 @@ def main():
             if dim == "nw":
                 row.append(csigned(schemes.loc["Eastern Europe and former USSR as Western", f"{u} | contribution_pp"]))
             rows.append(" & ".join(row) + r" \\")
-        tot = ["All donor-identified gifts"]
+        tot = ["All gifts"]
         if dim == "f":
             tot += [fint(n), fint(museum["n_artists"]), ""]
         tot += [cell(museum[f"pct_{dim}"]), cell(museum[f"art_pct_{dim}"]), "", "", ""] + ([""] if dim == "nw" else [])
         rows += [r"\midrule", " & ".join(tot) + r" \\"]
         return "\n".join(rows)
-    head5 = r"\% of records & \% of artists & Matched gap & Contrib.\ (rec.) & Contrib.\ (art.)"
+    head5 = r"\% rec. & \% art. & Matched gap & Contrib.\ rec. & Contrib.\ art."
     with open(out("rev_tab_cases.tex"), "w", encoding="utf-8") as f:
         f.write("\\begin{table}[ht]\n\\centering\n"
                 "\\tbl{The six cases counted as records, as distinct artists, and as artists first entering the collection.}\n"
-                "{\\footnotesize\\setlength{\\tabcolsep}{3.2pt}\\begin{tabular}{@{}lrrrrrrrr@{}}\n\\toprule\n"
+                "{\\begin{minipage}{\\textwidth}\\centering\n"
+                "{\\footnotesize\\setlength{\\tabcolsep}{2.5pt}\\begin{tabular}{@{}lrrrrrrrr@{}}\n\\toprule\n"
                 "\\multicolumn{9}{@{}l}{\\emph{(a) Counts and female share}} \\\\\n"
                 "Donor & Records & Artists & First entry & " + head5 + " \\\\\n\\midrule\n" + case_rows("f") + "\n\\bottomrule\n"
                 "\\end{tabular}}\n\n\\vspace{6pt}\n"
                 "{\\footnotesize\\setlength{\\tabcolsep}{3.2pt}\\begin{tabular}{@{}lrrrrrr@{}}\n\\toprule\n"
                 "\\multicolumn{7}{@{}l}{\\emph{(b) Non-Western share}} \\\\\n"
-                "Donor & " + head5 + " & Contrib.\\ (rec.), alt.$^{b}$ \\\\\n\\midrule\n" + case_rows("nw") + "\n\\bottomrule\n\\end{tabular}}\n"
+                "Donor & " + head5 + " & Alt.\\ rule$^{b}$ \\\\\n\\midrule\n" + case_rows("nw") + "\n\\bottomrule\n\\end{tabular}}\n\\end{minipage}}\n"
                 "\\begin{tabnote}`First entry' counts artists whose earliest MoMA accession in any channel is a gift from the donor. "
-                "Shares are of coded records and of coded artists. "
+                "Shares (\\%) are of coded records and of coded artists. "
                 "`Matched gap' is the record share minus the share of other donors' gifts in the same departments and decades. "
-                "`Contrib.' is the museum-wide share minus the share without the donor's gifts, counted as records (rec.) and as artists (art.). Gaps and contributions are in percentage points. "
+                "`Contrib.' is the museum-wide share minus the share without the donor's gifts. `rec.' counts records and `art.' artists. Gaps and contributions are in percentage points. "
                 "$^{a}$Fewer than half of the donor's records carry the code. "
-                "$^{b}$Contribution to the non-Western share of records when Eastern Europe and the former USSR count as Western.\\end{tabnote}\n"
+                "$^{b}$Contribution to the non-Western share of records when Eastern Europe and the former USSR count as Western (percentage points).\\end{tabnote}\n"
                 "\\label{tab:cases}\n\\end{table}\n")
 
     # Table: MoMA and Tate patterns.
@@ -531,7 +534,7 @@ def main():
         trow(r"Volume and absolute non-Western gap, Spearman $\rho$", "vol_gap_rho_nw", signed=True),
     ]
     for lab, key in (("Units matching exactly one pattern rule of Table~\\ref{tab:donor_type_taxonomy}", "one pattern"),
-                     ("Units matching the single-artist rule", "Single-artist patron"),
+                     ("Units matching the single-artist rule", "Single-artist block"),
                      ("Units matching no pattern rule", "none")):
         trows.append([lab, fint(tate_rules.loc["MoMA", key]), fint(tate_rules.loc["Tate", key])])
     write_table("rev_tab_tate.tex", "Gift patterns at MoMA and at the Tate, computed with comparable definitions.",

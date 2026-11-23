@@ -41,11 +41,11 @@ DEFAULT = {
 
 ANCHOR_TYPE = {
     "Kleiner, Bell & Co.": "Volume contributor", "Rockefeller lineage": "Founding lineage",
-    "Jean Pigozzi": "Single-artist patron", "Peter J. Cohen": "Anonymous-archive donor",
+    "Jean Pigozzi": "Single-artist block", "Peter J. Cohen": "Anonymous-archive donor",
     "Judith Rothschild Foundation": "Institutional mass-gift", "Agnes Gund": "Cross-departmental diversifying donor",
 }
 
-TYPES = ["Volume contributor", "Founding lineage", "Single-artist patron", "Anonymous-archive donor",
+TYPES = ["Volume contributor", "Founding lineage", "Single-artist block", "Anonymous-archive donor",
          "Institutional mass-gift", "Cross-departmental diversifying donor"]
 
 
@@ -55,7 +55,8 @@ def apply_rules(r, t):
     if (r["n"] >= t["min_volume"] and r["top_dept_share"] >= t["dept_single"] and r["top_artist_share"] < t["max_top_artist"]
             and ph_share < t["placeholder"]
             and (pd.isna(r["gap_f"]) or r["gap_f"] <= t["near_gap"])
-            and (pd.isna(r["gap_nw"]) or r["gap_nw"] <= t["near_gap"])):
+            and (pd.isna(r["gap_nw"]) or r["gap_nw"] <= t["near_gap"])
+            and r["peak_year_share"] <= t["peak_year"]):
         m.append(TYPES[0])
     if r["era_years"] >= t["era_years"] and r["gap_f"] < 0 and r["gap_nw"] < 0:
         m.append(TYPES[1])
