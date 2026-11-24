@@ -459,6 +459,17 @@ def main():
     s_all, s_wo = record_shares(dp), record_shares(dp[dp["Unit"] != "Jean Pigozzi"])
     put("DPNineteenN", fint(s_all["n"])); put("DPNineteenNW", fdec(s_all["pct_nw"]))
     put("DPNineteenNWwoP", fdec(s_wo["pct_nw"])); put("DPNineteenPShare", fdec(pct((dp["Unit"] == "Jean Pigozzi").sum(), len(dp))))
+    nsum = pd.read_csv(out("rev_size_null_summary.csv")).set_index(["museum", "dimension"])
+    nun = pd.read_csv(out("rev_size_null_units.csv"))
+    put("NullUnits", fint(nsum.loc[("MoMA", "is_F"), "units"]))
+    put("NullExceedF", fint(nsum.loc[("MoMA", "is_F"), "exceed_p95"])); put("NullExceedNW", fint(nsum.loc[("MoMA", "is_NW"), "exceed_p95"]))
+    put("NullMedF", fdec(nsum.loc[("MoMA", "is_F"), "median_ratio"], 1)); put("NullMedNW", fdec(nsum.loc[("MoMA", "is_NW"), "median_ratio"], 1))
+    put("TNullUnits", fint(nsum.loc[("Tate", "is_F"), "units"]))
+    put("TNullExceedF", fint(nsum.loc[("Tate", "is_F"), "exceed_p95"])); put("TNullExceedNW", fint(nsum.loc[("Tate", "is_NW"), "exceed_p95"]))
+    ex = nun[(nun["museum"] == "MoMA") & nun["exceeds"]].copy()
+    sign = [units.loc[r.unit, "gap_f" if r.dimension == "is_F" else "gap_nw"] for r in ex.itertuples()]
+    put("NullExceedDown", fint(sum(v < 0 for v in sign)))
+    put("NullDraws", "1{,}000")
     put("SixConNWOne", fdec(schemes.loc["Baseline", "six_contribution_pp"], 1))
     put("SchEESixOne", fdec(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"], 1))
     put("NIndig", fint(regrec.loc["All donor-identified gifts", "Indigenous peoples of North America and Australia"]))
@@ -529,7 +540,7 @@ def main():
                 "\\begin{tabnote}`First entry' counts artists whose earliest MoMA accession in any channel is a gift from the donor. "
                 "Shares (\\%) are of coded records and of coded artists. "
                 "`Matched gap' is the record share minus the share of other donors' gifts in the same departments and decades. "
-                "`Contrib.' is the museum-wide share minus the share without the donor's gifts. `rec.' counts records and `art.' artists. Gaps and contributions are in percentage points. "
+                "`Contrib.' is the gift-channel share minus the share without the donor's gifts. `rec.' counts records and `art.' artists. Gaps and contributions are in percentage points. "
                 "$^{a}$Fewer than half of the donor's records carry the code. "
                 "$^{b}$Contribution to the non-Western share of records when Eastern Europe and the former USSR count as Western (percentage points).\\end{tabnote}\n"
                 "\\label{tab:cases}\n\\end{table}\n")
@@ -628,9 +639,9 @@ def main():
                 "Non-Western shares and contributions under the baseline rule and five alternative regional rules.",
                 ["Rule", "Museum", "Six jointly"] + [p + r" \%" for p, _ in CASES] + [p + " con." for p, _ in CASES], rows,
                 r"p{0.3\textwidth}" + "r" * 14, "tab:s_schemes", resize=True,
-                note="`Museum' is the museum-wide non-Western share of records (\\%). `Six jointly' is the contribution of the six cases together (percentage points). "
+                note="`Museum' is the gift-channel non-Western share of records (\\%). `Six jointly' is the contribution of the six cases together (percentage points). "
                      "K Kleiner, Bell \\& Co., R Rockefeller lineage, P Pigozzi, C Cohen, J Judith Rothschild Foundation, G Gund. "
-                     "`\\%' is the donor's non-Western share and `con.' the donor's contribution to the museum-wide share.")
+                     "`\\%' is the donor's non-Western share and `con.' the donor's contribution to the gift-channel share.")
 
     # S: six cases, dependence among records.
     rows = []
@@ -664,7 +675,7 @@ def main():
     write_table("rev_supp_rockefeller.tex", "The Rockefeller family-line aggregate taken apart.",
                 ["Part", "Records", "Artists", "Years", r"\% female", r"\% non-W.", "Contrib. F", "Contrib. NW"], rows,
                 "lrrlrrrr", "tab:s_rockefeller",
-                note="Contributions are to the museum-wide record shares (percentage points).")
+                note="Contributions are to the gift-channel record shares (percentage points).")
     rows = [[tex_escape(u), fint(r["n"]), f"{int(r['start'])}--{int(r['end'])}"] for u, r in rock_strings.sort_values("n", ascending=False).iterrows()]
     write_table("rev_supp_rockefeller_strings.tex", "Credit-line donor strings aggregated as the Rockefeller lineage.",
                 ["Donor string", "Records", "Years"], rows, r"p{0.6\textwidth}rl", "tab:s_rockefeller_strings")
@@ -683,7 +694,7 @@ def main():
         for r in rows:
             f.write(" & ".join(r) + r" \\" + "\n")
         f.write("\\hline\n\\end{longtable}}\n")
-    thr_label = {"min_volume": "Minimum records, volume rule", "dept_single": "Top-department share, single-department rules (\\%)", "near_gap": "Allowed excess over museum-wide share (points)",
+    thr_label = {"min_volume": "Minimum records, volume rule", "dept_single": "Top-department share, single-department rules (\\%)", "near_gap": "Allowed excess over gift-channel share (points)",
                  "era_years": "Active era, founding lineage (years)", "top_artist": "Top-artist share, single-artist rule (\\%)",
                  "placeholder": "Unidentified-maker share, anonymous archive (\\%)", "peak_year": "Peak-year share, institutional mass-gift (\\%)",
                  "dept_spread": "Top-department share, cross-departmental rule (\\%)", "artist_gap": "Artist-level gap, cross-departmental rule (points)",
@@ -736,6 +747,21 @@ def main():
                 ["Decade", "New artists", "Female", r"\%", "Units supplying", "Non-Western", r"\%", "Units supplying"], rows,
                 "lrrrrrrr", "tab:s_decades")
 
+    # S: size-matched null, units that exceed it.
+    ex_all = nun[nun["exceeds"]].sort_values(["museum", "dimension", "records"], ascending=[True, True, False])
+    rows = [[r.museum, "Female" if r.dimension == "is_F" else "Non-Western", tex_escape(r.unit), fint(r.records), fint(r.coded),
+             fdec(r.obs_gap), fdec(r.null_p95), fdec(r.ratio)] for r in ex_all.itertuples()]
+    rows.append(r"\midrule")
+    for (m_, d_), r in nsum.iterrows():
+        rows.append([m_, "Female" if d_ == "is_F" else "Non-Western", f"All units ({fint(r['units'])})", "", "",
+                     f"{fint(r['exceed_p95'])} exceed", "", f"median {fdec(r['median_ratio'])}"])
+    write_table("rev_supp_size_null.tex",
+                "Donor units whose gap from the gift-channel baseline exceeds the 95th percentile of random gifts of the same size.",
+                ["Museum", "Share", "Donor unit", "Records", "Coded", "Gap (pp)", "Random 95th pct.", "Ratio"], rows,
+                r"llp{0.34\textwidth}rrrrr", "tab:s_size_null", resize=True,
+                note="Random gifts are drawn from the museum's gift channel artist cluster by artist cluster until they reach the donor's number of coded records (1{,}000 draws). "
+                     "`Ratio' is the observed absolute gap divided by the mean absolute gap of the random gifts. Units with at least 100 records and 30 coded records.")
+
     # S: associations, selection audit, Tate units.
     rows = [[tex_escape(m), fint(r["n_units"]), csigned(r["spearman_rho"]), fdec(r["perm_p"], 3)] for m, r in assoc.iterrows()]
     write_table("rev_supp_association.tex", "Association between a donor unit's record count and its gap or contribution (units with 100 or more records).",
@@ -760,8 +786,8 @@ def main():
     labels = {"Kleiner, Bell & Co.": "Kleiner, Bell", "Rockefeller lineage": "Rockefeller", "Jean Pigozzi": "Pigozzi",
               "Peter J. Cohen": "Cohen", "Judith Rothschild Foundation": "Rothschild Fdn.", "Agnes Gund": "Gund",
               "Jack Shear": "Shear", "Patricia Phelps de Cisneros": "Cisneros", "Helen Kornblum": "Kornblum"}
-    for ax, (num, den, base, ylab) in zip(axes, (("is_F", "g_valid", museum["pct_f"], "Female share minus museum-wide share (pp)"),
-                                                 ("is_NW", "o_valid", museum["pct_nw"], "Non-Western share minus museum-wide share (pp)"))):
+    for ax, (num, den, base, ylab) in zip(axes, (("is_F", "g_valid", museum["pct_f"], "Female share minus gift-channel share (pp)"),
+                                                 ("is_NW", "o_valid", museum["pct_nw"], "Non-Western share minus gift-channel share (pp)"))):
         d = agg[agg[den] >= 30].copy()
         d["gap"] = 100 * d[num] / d[den] - base
         small, large = d[d["n"] < 100], d[d["n"] >= 100]

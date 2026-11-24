@@ -41,6 +41,7 @@ STEPS = [
     ("53_rev_tate_patterns", 600),         # pattern recurrence at the Tate
     ("55_rev_artist_concentration", 900),  # artist-level concentration, first-source attribution, Rothschild bound
     ("54_rev_gender_validation", 900),     # MoMA gender field vs Wikidata; reads data/wikidata_gender_cache.csv, queries only uncached items
+    ("57_rev_size_null", 900),             # size-matched random-gift null for donor gaps, MoMA and Tate
     ("56_rev_paper_assets", 600),          # rev_numbers.tex, main and supplement tables, Figures 1-2; copies them to moma_paper/output/
 ]
 
