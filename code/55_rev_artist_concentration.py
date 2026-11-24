@@ -157,7 +157,9 @@ def main():
                       "sole_source_without_nationality": int((unc & only).sum()),
                       "contribution_coded_only_pp": pct(NW.sum(), OV.sum()) - pct((NW & keep).sum(), (OV & keep).sum()),
                       "museum_share_if_non_western": pct(nw_all, ov_all), "share_without_units": pct(nw_wo, ov_wo),
-                      "contribution_if_non_western_pp": pct(nw_all, ov_all) - pct(nw_wo, ov_wo)})
+                      "contribution_if_non_western_pp": pct(nw_all, ov_all) - pct(nw_wo, ov_wo),
+                      "contribution_if_western_pp": pct(NW.sum(), OV.sum() + unc.sum())
+                      - pct((NW & keep).sum(), (OV & keep).sum() + (unc & keep).sum())})
     bound = pd.DataFrame(brows)
     bound.to_csv(out("rev_rothschild_origin_bound.csv"), index=False)
 

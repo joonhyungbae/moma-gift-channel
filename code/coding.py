@@ -116,13 +116,18 @@ REGIONS = [
     "South and Southeast Asia",
     "Middle East and North Africa",
     "Sub-Saharan Africa",
+    "Indigenous peoples of North America and Australia",
 ]
 
 _REGION_MEMBERS = {
     "North America": [
-        "American", "Canadian", "Native American", "Canadian Inuit",
-        "Member of Wood Mountain Lakota First Nations", "Oneida",
-        "Spirit Lake Dakota/Cheyenne River Lakota",
+        "American", "Canadian",
+    ],
+    # Nationality terms that name an Indigenous nation are kept apart from the
+    # settler states; under the baseline rule they are non-Western.
+    "Indigenous peoples of North America and Australia": [
+        "Native American", "Canadian Inuit", "Member of Wood Mountain Lakota First Nations", "Oneida",
+        "Spirit Lake Dakota/Cheyenne River Lakota", "Anmatyerr [Australian]",
     ],
     "Western Europe": [
         "German", "British", "French", "Italian", "Swiss", "Dutch", "Austrian",
@@ -131,7 +136,7 @@ _REGION_MEMBERS = {
         "Welsh", "English", "Catalan", "Cypriot",
     ],
     "Australia and New Zealand": [
-        "Australian", "New Zealander", "Anmatyerr [Australian]",
+        "Australian", "New Zealander",
     ],
     "Eastern Europe and former USSR": [
         "Russian", "Polish", "Czech", "Hungarian", "Croatian", "Romanian",
@@ -309,6 +314,7 @@ TRAILING_CLAUSE_RE = re.compile(
     r"|,?\s+on the occasion\b"
     r"|,?\s*\(?through\b"
     r"|\s+and\s+(?:of\b|acquired\b|gift\b)"
+    r"|,?\s+and\s+the\s+Committee\s+on\b"
     r"|\.\s+Conservation\b"
     r"|\s+\(both\b"
     r"|;"

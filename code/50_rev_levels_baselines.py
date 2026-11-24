@@ -102,7 +102,7 @@ def unit_measures(sub, cons_sub, gifts_rest, museum, first, cons_all_gift_counts
     row["gap_f_matched"] = row["pct_f"] - exp["exp_f"]
     row["gap_nw_matched"] = row["pct_nw"] - exp["exp_nw"]
     # Dependence among records.
-    row.update(drop_top_cluster(sub))
+    row.update(drop_top_cluster(sub, frozenset(cons_sub.loc[cons_sub["placeholder"], "cid"])))
     if with_boot:
         row.update(cluster_bootstrap(sub))
     return row

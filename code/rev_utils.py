@@ -11,6 +11,7 @@ Units of analysis
 """
 
 import os
+import re
 import sys
 
 import numpy as np
@@ -143,11 +144,17 @@ def cluster_bootstrap(df, n_boot=N_BOOT, seed=RNG_SEED):
     return {"n_clusters": k, "f_lo": q(pf)[0], "f_hi": q(pf)[1], "nw_lo": q(pn)[0], "nw_hi": q(pn)[1]}
 
 
-def drop_top_cluster(df):
-    """Record shares after removing the donor's single largest artist cluster."""
+def drop_top_cluster(df, placeholder_ids=frozenset()):
+    """Record shares after removing the donor's largest identified artist cluster.
+
+    Clusters made up only of placeholder constituents (unidentified makers,
+    group labels) carry no codes and are skipped."""
     if df.empty:
         return {}
     top = df["Cluster"].value_counts()
+    ident = [c for c in top.index
+             if not set(re.findall(r"\d+", str(c))) <= set(placeholder_ids) or not re.findall(r"\d+", str(c))]
+    top = top.loc[ident] if ident else top
     rest = df[df["Cluster"] != top.index[0]]
     s = record_shares(rest)
     return {"top_cluster_n": int(top.iloc[0]), "top_cluster_share": pct(top.iloc[0], len(df)),
