@@ -551,6 +551,8 @@ def main():
     put("NStern", fint(stern)); put("NAnon", fint(anon))
     name_first = ~gifts["CreditLine"].fillna("").map(lambda c: bool(GIFT_PHRASE_RE.search(c)))
     put("NNameFirst", fint(name_first.sum()))
+    put("NOtherParserGain", fint(n - int(name_first.sum()) - 49740))  # 49,740 is the submitted sample size
+    assert n - int(name_first.sum()) - 49740 > 0
     put("SixConNWOne", fdec(schemes.loc["Baseline", "six_contribution_pp"], 1))
     put("SchEESixOne", fdec(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"], 1))
     put("NIndig", fint(regrec.loc["All donor-identified gifts", "Indigenous peoples of North America and Australia"]))
@@ -721,7 +723,7 @@ def main():
                 "Non-Western shares and contributions under the baseline rule and five alternative regional rules.",
                 ["Rule", "Gift channel", "Six jointly"] + [p + r" \%" for p, _ in CASES] + [p + " con." for p, _ in CASES], rows,
                 r"p{0.3\textwidth}" + "r" * 14, "tab:s_schemes", resize=True,
-                note="`Museum' is the gift-channel non-Western share of records (\\%). `Six jointly' is the contribution of the six cases together (percentage points). "
+                note="`Gift channel' is the gift-channel non-Western share of records (\\%). `Six jointly' is the contribution of the six cases together (percentage points). "
                      "K Kleiner, Bell \\& Co., R Rockefeller lineage, P Pigozzi, C Cohen, J Judith Rothschild Foundation, G Gund. "
                      "`\\%' is the donor's non-Western share and `con.' the donor's contribution to the gift-channel share.")
 
@@ -739,7 +741,8 @@ def main():
                  r"\% non-W.", "Interval", "Without largest", "Expected F", "Expected NW"], rows, "lrrrrrrrrrr", "tab:s_dependence",
                 resize=True,
                 note="Intervals are 2.5th and 97.5th percentiles over 5{,}000 resamples of the donor's artist clusters. "
-                     "`Expected' is the share of other donors' gifts in the same departments and decades.")
+                     "`Expected' is the share of other donors' gifts in the same departments and decades. `Largest' is the share of the largest artist cluster among the donor's records, "
+                     "which is smaller than the top artist's share in Table~\\ref{tab:s_typology} when the artist also appears on jointly credited records.")
 
     # S: sub-eras.
     rows = [[CASE_TEX[r["case"]], f"{int(r['start'])}--{int(r['end'])}" if r["start"] != r["end"] else str(int(r["start"])),
@@ -849,7 +852,7 @@ def main():
     with open(out("rev_supp_size_null.tex"), "w", encoding="utf-8") as f:
         f.write("{\\footnotesize\\setlength{\\tabcolsep}{4pt}\n\\begin{longtable}{@{}p{0.34\\textwidth}rrrrrl@{}}\n"
                 "\\caption{Donor units whose record share departs from random gifts of the same structure, at a false discovery rate of 5\\% under both versions of the comparison. "
-                "`Clusters' are the unit's artist clusters. `Matched' and `Pooled' are the mean share (\\%) of the random gifts when records are drawn from the same department and decade "
+                "`Clusters' are the unit's artist clusters among the records coded for the share. `Matched' and `Pooled' are the mean share (\\%) of the random gifts when records are drawn from the same department and decade "
                 "or from the whole channel.}\\label{tab:s_size_null}\\\\\n\\hline\n"
                 "Donor unit & Records & Clusters & Observed (\\%) & Matched & Pooled & Direction \\\\\n\\hline\n\\endfirsthead\n\\hline\n"
                 "Donor unit & Records & Clusters & Observed (\\%) & Matched & Pooled & Direction \\\\\n\\hline\n\\endhead\n")
