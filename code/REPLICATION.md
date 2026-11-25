@@ -42,21 +42,23 @@ Run order is encoded in `run_all.py`. Each script writes to `output/`.
 Coding rules live in one module, `coding.py`: positional parsing of the
 constituent, gender and nationality lists; record-level and artist-level gender
 coding; the nationality-to-region lookup with the baseline and alternative
-Western / non-Western rules; and the credit-line parser (first-named donor,
+Western / non-Western rules; and the credit-line parser (first-named donor
+after `Gift of` / `Bequest of`, the name-first forms `X Gift` / `X Bequest`,
 suffix retention, dedication and exchange clauses, co-donor / fund-led /
 by-exchange flags). The supplement's Sections S1-S3 describe the same rules.
 
 | Script | Produces | Paper element |
 | --- | --- | --- |
 | `01_data_preprocessing.py` | `data/processed_moma_data.csv` | sample construction (Section 3.1) |
-| `50_rev_levels_baselines.py` | `rev_units.csv`, `rev_six_cases.csv`, `rev_museum.csv`, `rev_joint_counterfactual.csv`, `rev_volume_gap_association.csv`, `rev_suberas.csv` | three levels of count, gap / contribution / matched gap, cluster resampling (Sections 3.3, 4, 5.1; Table 1) |
+| `50_rev_levels_baselines.py` | `rev_units.csv`, `rev_six_cases.csv`, `rev_museum.csv`, `rev_joint_counterfactual.csv`, `rev_volume_gap_association.csv`, `rev_suberas.csv` | records and artists, gap / contribution / matched gap, cluster resampling (Sections 3.3, 4, 5.1; Table 1) |
 | `51_rev_coding_audits.py` | `rev_gender_*.csv`, `rev_region_*.csv`, `rev_rockefeller*.csv`, `rev_selection_audit.csv` | gender and origin coding (Section 3.2), regional rules, Rockefeller disaggregation, case selection (Section 3.4) |
 | `52_rev_typology.py` | `rev_typology_*.csv` | six gift patterns, threshold sensitivity, cluster structure (Section 5.3; Table 2) |
 | `53_rev_tate_patterns.py` | `rev_tate_units.csv`, `rev_tate_vs_moma_patterns.csv` | Tate comparison (Section 5.4; Table 3) |
 | `54_rev_gender_validation.py` | `rev_gender_validation*.csv` | Wikidata check of the gender field (Section 3.2). Reads `data/wikidata_gender_cache.csv`; pass `--offline` to forbid network access |
-| `55_rev_artist_concentration.py` | `rev_artist_*.csv`, `rev_rothschild_origin_bound.csv`, `rev_new_artists_by_decade.csv` | records versus artists, concentration, Rothschild bound (Section 5.2) |
+| `55_rev_artist_concentration.py` | `rev_artist_*.csv`, `rev_first_entry_overview.csv`, `rev_ten_largest_decade_matched.csv`, `rev_rothschild_origin_bound.csv`, `rev_new_artists_by_decade.csv` | records versus artists, artists new to the collection by first accession in any channel, concentration, Rothschild bound (Section 5.2) |
+| `57_rev_size_null.py` | `rev_null_units.csv`, `rev_null_summary.csv` | comparison of each large donor with random gifts of the same structure, matched and pooled, two-sided, false discovery rate 5% (Sections 3.3, 5.1, 5.4) |
 | `56_rev_paper_assets.py` | `rev_numbers.tex`, `rev_tab_*.tex`, `rev_supp_*.tex`, `fig_volume_vs_gap.*`, `fig_record_vs_artist.*` | every number, table and figure in the article and supplement |
-| `32`-`41` (earlier scripts) | donor profiles, named-donor Tate check | named-donor recurrence sentence in Section 5.4; otherwise superseded by 50-56 |
+| `32`-`41` (earlier scripts) | donor profiles, named-donor Tate check | named-donor recurrence sentence in Section 5.4; otherwise superseded by 50-57 |
 
 Shared helpers: `config.py`, `coding.py`, `rev_utils.py`, `donor_bio_utils.py`,
 `experiment_utils.py`, `tate_utils.py`, `utils.py`.

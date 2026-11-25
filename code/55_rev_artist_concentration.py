@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
-from rev_utils import RNG_SEED, artist_names, constituents, load_gifts, out, pct
+from rev_utils import RNG_SEED, artist_names, constituents, load_collection, load_gifts, out, pct
 
 N_SHUFFLE_ARTISTS = 2000
 N_SHUFFLE_RECORDS = 500
@@ -51,8 +51,22 @@ def main():
     cons["year"] = g["YearAcquired"].reindex(cons["rec"]).to_numpy()
     sizes = g["Unit"].value_counts()
 
-    # 1. First-source attribution.
-    fs = cons.sort_values(["year", "rec"]).drop_duplicates("cid").set_index("cid")
+    # 1. First-entry attribution. An artist is credited to a donor unit when the
+    # artist's earliest accession in the five departments, in any acquisition
+    # channel, is a donor-identified gift from that unit. Artists who first
+    # entered by purchase, fund, or an unattributed gift are credited to no unit.
+    names = artist_names()
+    collection = load_collection()
+    ccons = constituents(collection, names)
+    ccons = ccons[~ccons["placeholder"]].copy()
+    ccons["date"] = collection["DateAcquired"].reindex(ccons["rec"]).to_numpy()
+    ccons["oid"] = collection["ObjectID"].reindex(ccons["rec"]).to_numpy()
+    ccons["year"] = collection["YearAcquired"].reindex(ccons["rec"]).to_numpy()
+    first_any = ccons.sort_values(["date", "oid"]).drop_duplicates("cid").set_index("cid")
+    unit_by_oid = g.drop_duplicates("ObjectID").set_index("ObjectID")["Unit"]
+    first_any["unit"] = first_any["oid"].map(unit_by_oid)
+    n_all_artists = len(first_any)
+    fs = first_any[first_any["unit"].notna()].copy()
     fs["F"] = fs["gender"] == "F"
     fs["GV"] = fs["gender"].isin(["F", "M"])
     fs["NW"] = fs["origin"] == "Non-Western"
@@ -61,6 +75,8 @@ def main():
                                       new_nw=("NW", "sum"), new_ov=("OV", "sum"))
     per_unit["n_records"] = sizes.reindex(per_unit.index)
     per_unit.sort_values("new_artists", ascending=False).to_csv(out("rev_artist_first_source.csv"))
+    pd.DataFrame([{"artists_in_collection": n_all_artists, "first_entry_by_identified_gift": len(fs),
+                   "pct": pct(len(fs), n_all_artists)}]).to_csv(out("rev_first_entry_overview.csv"), index=False)
 
     # 2. Concentration against a label-shuffle reference.
     rows = []
@@ -165,6 +181,18 @@ def main():
 
     # 6. New artists by decade and the breadth of their sources.
     fs["decade"] = (fs["year"] // 10) * 10
+    # Decade-matched expectation for the ten largest units: what share of their
+    # first-entry artists would be women / non-Western at each decade's rate
+    # among other units' first-entry artists.
+    top10 = set(sizes.head(10).index)
+    mine, rest = fs[fs["unit"].isin(top10)], fs[~fs["unit"].isin(top10)]
+    exp = {}
+    for key, flag, valid in (("f", "F", "GV"), ("nw", "NW", "OV")):
+        rate = rest[rest[valid]].groupby("decade")[flag].mean()
+        m = mine[mine[valid]]
+        exp[key] = {"observed": int(m[flag].sum()), "coded": int(len(m)),
+                    "expected": float(m["decade"].map(rate).fillna(rest.loc[rest[valid], flag].mean()).sum())}
+    pd.DataFrame(exp).T.to_csv(out("rev_ten_largest_decade_matched.csv"))
     drows = []
     for dec, s in fs.groupby("decade"):
         tf, tn = s.loc[s["F"], "unit"].value_counts(), s.loc[s["NW"], "unit"].value_counts()

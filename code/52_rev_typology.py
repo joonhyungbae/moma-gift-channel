@@ -41,11 +41,11 @@ DEFAULT = {
 
 ANCHOR_TYPE = {
     "Kleiner, Bell & Co.": "Volume contributor", "Rockefeller lineage": "Founding lineage",
-    "Jean Pigozzi": "Single-artist block", "Peter J. Cohen": "Anonymous-archive donor",
+    "Jean Pigozzi": "Single-artist gift", "Peter J. Cohen": "Anonymous-archive donor",
     "Judith Rothschild Foundation": "Institutional mass-gift", "Agnes Gund": "Cross-departmental diversifying donor",
 }
 
-TYPES = ["Volume contributor", "Founding lineage", "Single-artist block", "Anonymous-archive donor",
+TYPES = ["Volume contributor", "Founding lineage", "Single-artist gift", "Anonymous-archive donor",
          "Institutional mass-gift", "Cross-departmental diversifying donor"]
 
 

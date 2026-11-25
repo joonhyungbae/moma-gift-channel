@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from coding import REGIONS
+from coding import GIFT_PHRASE_RE, REGIONS
 from config import MAIN_DEPARTMENTS, PROJECT_ROOT, get_processed_path
 from rev_utils import artist_names, constituents, load_gifts, out, pct, record_shares
 
@@ -388,7 +388,7 @@ def main():
     put("TypOthers", fint(typsum["non-anchor units"]))
     put("TypClean", fint(typsum["non-anchor clean"])); put("TypAmbig", fint(typsum["non-anchor ambiguous"]))
     put("TypNone", fint(typsum["non-anchor unclassified"]))
-    for key, ty in (("Vol", "Volume contributor"), ("Found", "Founding lineage"), ("Single", "Single-artist block"),
+    for key, ty in (("Vol", "Volume contributor"), ("Found", "Founding lineage"), ("Single", "Single-artist gift"),
                     ("Anon", "Anonymous-archive donor"), ("Inst", "Institutional mass-gift"),
                     ("Cross", "Cross-departmental diversifying donor")):
         put("Typ" + key, fint(typsum[f"type count (non-anchor, any match): {ty}"]))
@@ -437,7 +437,7 @@ def main():
     for p, lab in (("M", "MoMA"), ("T", "Tate")):
         r = tate_rules.loc[lab]
         put(p + "RulesUnits", fint(r["units"])); put(p + "RulesOne", fint(r["one pattern"])); put(p + "RulesNone", fint(r["none"]))
-        put(p + "RulesSingle", fint(r["Single-artist block"])); put(p + "RulesVol", fint(r["Volume contributor"]))
+        put(p + "RulesSingle", fint(r["Single-artist gift"])); put(p + "RulesVol", fint(r["Volume contributor"]))
         put(p + "RulesInst", fint(r["Institutional mass-gift"])); put(p + "RulesFound", fint(r["Founding lineage"]))
         put(p + "RulesCross", fint(r["Cross-departmental diversifying donor"])); put(p + "RulesAnon", fint(r["Anonymous-archive donor"]))
     put("ShearConNWEE", fsigned(pd.read_csv(out("rev_region_scheme_top_contributors.csv")).query(
@@ -459,17 +459,93 @@ def main():
     s_all, s_wo = record_shares(dp), record_shares(dp[dp["Unit"] != "Jean Pigozzi"])
     put("DPNineteenN", fint(s_all["n"])); put("DPNineteenNW", fdec(s_all["pct_nw"]))
     put("DPNineteenNWwoP", fdec(s_wo["pct_nw"])); put("DPNineteenPShare", fdec(pct((dp["Unit"] == "Jean Pigozzi").sum(), len(dp))))
-    nsum = pd.read_csv(out("rev_size_null_summary.csv")).set_index(["museum", "dimension"])
-    nun = pd.read_csv(out("rev_size_null_units.csv"))
-    put("NullUnits", fint(nsum.loc[("MoMA", "is_F"), "units"]))
-    put("NullExceedF", fint(nsum.loc[("MoMA", "is_F"), "exceed_p95"])); put("NullExceedNW", fint(nsum.loc[("MoMA", "is_NW"), "exceed_p95"]))
-    put("NullMedF", fdec(nsum.loc[("MoMA", "is_F"), "median_ratio"], 1)); put("NullMedNW", fdec(nsum.loc[("MoMA", "is_NW"), "median_ratio"], 1))
-    put("TNullUnits", fint(nsum.loc[("Tate", "is_F"), "units"]))
-    put("TNullExceedF", fint(nsum.loc[("Tate", "is_F"), "exceed_p95"])); put("TNullExceedNW", fint(nsum.loc[("Tate", "is_NW"), "exceed_p95"]))
-    ex = nun[(nun["museum"] == "MoMA") & nun["exceeds"]].copy()
-    sign = [units.loc[r.unit, "gap_f" if r.dimension == "is_F" else "gap_nw"] for r in ex.itertuples()]
-    put("NullExceedDown", fint(sum(v < 0 for v in sign)))
-    put("NullDraws", "1{,}000")
+    # ---- random-gift null (script 57). Headline counts: significant at FDR 5% under both versions.
+    nun = pd.read_csv(out("rev_null_units.csv"))
+    nun["both"] = nun["matched_sig"] & nun["pooled_sig"]
+    def null_counts(museum, share):
+        t_ = nun[(nun["museum"] == museum) & (nun["share"] == share)]
+        b_ = t_[t_["both"]]
+        return len(t_), int((b_["matched_dir"] == "up").sum()), int((b_["matched_dir"] == "down").sum()), b_
+    nu_, f_up, f_dn, f_b = null_counts("MoMA", "female")
+    _, nw_up, nw_dn, nw_b = null_counts("MoMA", "non-Western")
+    _, alt_up, alt_dn, alt_b = null_counts("MoMA", "non-Western (Eastern Europe as Western)")
+    tn_, tf_up, tf_dn, _ = null_counts("Tate", "female")
+    _, tnw_up, tnw_dn, _ = null_counts("Tate", "non-Western")
+    put("NullUnits", fint(nu_)); put("NullDraws", "10{,}000")
+    put("NullFUp", fint(f_up)); put("NullFDown", fint(f_dn)); put("NullNWUp", fint(nw_up)); put("NullNWDown", fint(nw_dn))
+    put("NullAltUp", fint(alt_up)); put("NullAltDown", fint(alt_dn))
+    put("TNullUnits", fint(tn_)); put("TNullFUp", fint(tf_up)); put("TNullFDown", fint(tf_dn))
+    put("TNullNWUp", fint(tnw_up)); put("TNullNWDown", fint(tnw_dn))
+    def nrow(unit, share):
+        return nun[(nun["museum"] == "MoMA") & (nun["share"] == share) & (nun["unit"] == unit)].iloc[0]
+    for p_, u_ in CASES:
+        for key, share in (("F", "female"), ("NW", "non-Western")):
+            r_ = nrow(u_, share)
+            put(p_ + "NullExp" + key, fdec(r_["matched_expected"])); put(p_ + "NullClusters" + key, fint(r_["clusters"]))
+    # Statements made in the text about named units, checked here.
+    def is_sig(unit, share, direction):
+        r_ = nrow(unit, share)
+        return bool(r_["both"]) and r_["matched_dir"] == direction
+    assert is_sig("Kleiner, Bell & Co.", "non-Western", "down") and is_sig("Rockefeller lineage", "non-Western", "down")
+    assert is_sig("Jean Pigozzi", "non-Western", "up") and is_sig("Judith Rothschild Foundation", "non-Western", "up")
+    assert is_sig("Judith Rothschild Foundation", "non-Western (Eastern Europe as Western)", "down")
+    assert is_sig("Patricia Phelps de Cisneros", "non-Western", "up") and is_sig("Nihon Keizai Shimbun", "non-Western", "up")
+    assert is_sig("Helen Kornblum", "female", "up") and is_sig("Sarah-Ann and Werner H. Kramarsky", "female", "up")
+    for u_ in ("Kleiner, Bell & Co.", "Rockefeller lineage", "Jean Pigozzi", "Peter J. Cohen", "Judith Rothschild Foundation"):
+        assert not nrow(u_, "female")["both"], f"{u_} female share is beyond chance; revise the text"
+    assert not nrow("Peter J. Cohen", "non-Western")["both"] and not nrow("Agnes Gund", "non-Western")["both"]
+    g_f = nrow("Agnes Gund", "female")
+    assert g_f["pooled_sig"] and not g_f["matched_sig"], "text says Gund is beyond chance against the channel only"
+    put("GNullExpPooledF", fdec(g_f["pooled_expected"]))
+    cdc = "Judith Rothschild Foundation Contemporary Drawings Collection"
+    assert is_sig(cdc, "non-Western", "down")
+    # ---- first-entry attribution (script 55)
+    ten = pd.read_csv(out("rev_ten_largest_decade_matched.csv"), index_col=0)
+    put("TenFArtObs", fint(ten.loc["f", "observed"])); put("TenFArtExp", fint(ten.loc["f", "expected"]))
+    put("TenNWArtObs", fint(ten.loc["nw", "observed"])); put("TenNWArtExp", fint(ten.loc["nw", "expected"]))
+    fe = pd.read_csv(out("rev_first_entry_overview.csv")).iloc[0]
+    put("NArtCollection", fint(fe["artists_in_collection"])); put("NFirstEntryGift", fint(fe["first_entry_by_identified_gift"]))
+    put("PctFirstEntryGift", fdec(fe["pct"], 0))
+    dd = decades.set_index("decade")
+    put("DecFStart", fdec(dd.loc[1930, "pct_f"], 0)); put("DecFEnd", fdec(dd.loc[2020, "pct_f"], 0))
+    put("DecFMid", fdec(dd.loc[1990, "pct_f"], 0))
+    put("DecUnitsFStart", fint(dd.loc[1930, "units_with_new_f"])); put("DecUnitsFTens", fint(dd.loc[2010, "units_with_new_f"]))
+    # ---- related units
+    for p_, u_ in (("CDC", cdc), ("Silv", "Gilbert and Lila Silverman Fluxus Collection")):
+        r_ = units.loc[u_]
+        put(p_ + "N", fint(r_["n"])); put(p_ + "NArt", fint(r_["n_artists"])); put(p_ + "Year", str(int(r_["peak_year"])))
+        put(p_ + "PctF", fdec(r_["pct_f"])); put(p_ + "PctNW", fdec(r_["pct_nw"]))
+        put(p_ + "ConF", fsigned(r_["contrib_f"])); put(p_ + "ConNW", fsigned(r_["contrib_nw"]))
+        put(p_ + "NewF", fint(first.loc[u_, "new_f"])); put(p_ + "NewArt", fint(first.loc[u_, "new_artists"]))
+    both_j = gifts[gifts["Unit"].isin([cdc, "Judith Rothschild Foundation"])]
+    bj = record_shares(both_j)
+    put("JBothN", fint(bj["n"])); put("JBothPctNW", fdec(bj["pct_nw"])); put("JBothPctF", fdec(bj["pct_f"]))
+    assert sizes.index[0] == "Gilbert and Lila Silverman Fluxus Collection" and sizes.index[1] == "Kleiner, Bell & Co."
+    multi = [u_ for u_ in sizes.index[:5] if units.loc[u_, "peak_year_share"] <= 90]
+    assert multi[0] == "Kleiner, Bell & Co.", "text calls Kleiner, Bell the largest unit given over several years"
+    assert set(nw_b[nw_b["matched_dir"] == "up"]["unit"]) == {
+        "Jean Dubuffet", "Jean Pigozzi", "Judith Rothschild Foundation", "MSGSSS", "Nihon Keizai Shimbun",
+        "Patricia Phelps de Cisneros"}, "text lists the units above chance on the non-Western share"
+    assert set(f_b[f_b["matched_dir"] == "up"]["unit"]) == {"Helen Kornblum", "Sarah-Ann and Werner H. Kramarsky"}
+    assert first["new_f"].idxmax() == cdc, "text names the Contemporary Drawings Collection as the leading source of new women"
+    assert set(first.sort_values("new_nw", ascending=False).head(3).index) == {
+        "Nihon Keizai Shimbun", "Patricia Phelps de Cisneros", "Judith Rothschild Foundation"}
+    assert first["new_artists"].idxmax() == "Judith Rothschild Foundation"
+    down_order = units["contrib_nw"].sort_values().head(4).index.tolist()
+    assert down_order == ["Jack Shear", cdc, "Kleiner, Bell & Co.", "Rockefeller lineage"], down_order
+    up_order = units["contrib_nw"].sort_values(ascending=False).head(3).index.tolist()
+    assert up_order == ["Judith Rothschild Foundation", "Jean Pigozzi", "Patricia Phelps de Cisneros"], up_order
+    others = [schemes.loc[k, "six_contribution_pp"] for k in ("Latin America and Caribbean as Western", "Japan as Western",
+                                                              "Israel and Turkey as Western")]
+    put("SchOtherMin", fdec(min(others), 2)); put("SchOtherMax", fdec(max(others), 2))
+    put("SampleSharePct", fdec(pct(n, len(main_all)), 0))
+    vol_others = typ[(~typ["is_case"]) & typ["types"].fillna("").str.contains("Volume contributor")].index.tolist()
+    assert set(vol_others) == {"Lawrence Benenson", "Curt Valentin"}, vol_others
+    stern = main_all["CreditLine"].fillna("").str.fullmatch(r"The Louis E\. Stern Collection").sum()
+    anon = main_all["CreditLine"].fillna("").str.fullmatch(r"(?i)anonymous gift|given anonymously").sum()
+    put("NStern", fint(stern)); put("NAnon", fint(anon))
+    name_first = ~gifts["CreditLine"].fillna("").map(lambda c: bool(GIFT_PHRASE_RE.search(c)))
+    put("NNameFirst", fint(name_first.sum()))
     put("SixConNWOne", fdec(schemes.loc["Baseline", "six_contribution_pp"], 1))
     put("SchEESixOne", fdec(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"], 1))
     put("NIndig", fint(regrec.loc["All donor-identified gifts", "Indigenous peoples of North America and Australia"]))
@@ -479,21 +555,26 @@ def main():
     put("TenArtShare", fdec(classes.loc["ten largest units", "pct_new_artists"]))
     put("BigArtShare", fdec(classes.loc["100+ records", "pct_new_artists"], 0))
 
-    # The case-selection rule stated in Section 3.4, applied to the selection audit.
-    chosen = {}
-    def top_of(axis):
-        return sel[sel["axis"].str.startswith(axis)].sort_values("rank")
-    chosen["volume"] = top_of("Volume (records)")["unit"].iloc[0]
-    chosen["era"] = top_of("Longevity (active era, years; family line")["unit"].iloc[0]
-    chosen["spread"] = top_of("Departmental spread")["unit"].iloc[0]
-    for key, axis in (("institutional", "Institutional donor"), ("nonwest", "Non-Western share, records"),
-                      ("female", "Female share, records")):
-        cand = top_of(axis)
-        cand = cand[~cand["unit"].isin(chosen.values())]
-        chosen[key] = cand.sort_values("n", ascending=False)["unit"].iloc[0]
-    expected = {"volume": "Kleiner, Bell & Co.", "era": "Rockefeller lineage", "spread": "Agnes Gund",
-                "institutional": "Judith Rothschild Foundation", "nonwest": "Jean Pigozzi", "female": "Peter J. Cohen"}
-    assert chosen == expected, f"selection rule does not reproduce the cases: {chosen}"
+    # Where each (purposively chosen) case stands on its axis among units with 100+ records.
+    from coding import INSTITUTIONAL_DONOR_RE
+    pop = units[units["n"] >= 100]
+    def rank_of(series, unit, ascending=False):
+        r_ = series.dropna().rank(ascending=ascending, method="min")
+        return int(r_[unit])
+    def ordinal(k):
+        return ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth"][k - 1]
+    inst = pop[[bool(INSTITUTIONAL_DONOR_RE.search(u_)) for u_ in pop.index]]
+    put("KRankVolume", ordinal(rank_of(pop["n"], "Kleiner, Bell & Co.")))
+    put("RRankEra", ordinal(rank_of(pop["era_years"], "Rockefeller lineage")))
+    put("PRankNW", ordinal(rank_of(pop["pct_nw"].where(pop["o_valid"] >= 30), "Jean Pigozzi")))
+    put("CRankF", ordinal(rank_of(pop["pct_f"].where(pop["g_valid"] >= 30), "Peter J. Cohen")))
+    put("JRankInstPeak", ordinal(rank_of(inst["peak_year_share"], "Judith Rothschild Foundation")))
+    put("JRankInstSize", ordinal(rank_of(inst.loc[inst["peak_year_share"] > 90, "n"], "Judith Rothschild Foundation")))
+    put("GRankSpread", ordinal(rank_of(pop["top_dept_share"], "Agnes Gund", ascending=True)))
+    assert rank_of(pop["era_years"], "Rockefeller lineage") == 1
+    big_inst = inst.loc[inst["peak_year_share"] > 90, "n"].sort_values(ascending=False)
+    assert big_inst.index[:2].tolist() == [cdc, "Judith Rothschild Foundation"], big_inst.head(3)
+    assert rank_of(pop["top_dept_share"], "Agnes Gund", ascending=True) == 2, "text says one other large donor matches Gund's spread"
 
     # ---------------------------------------------------------------- write macros
     with open(out("rev_numbers.tex"), "w", encoding="utf-8") as f:
@@ -568,8 +649,8 @@ def main():
     trows.append(r"\multicolumn{3}{l}{\emph{Pattern rules of Table~\ref{tab:donor_type_taxonomy}, units with 100 or more records other than the six anchors}} \\")
     trows.append(["Units", fint(typsum["non-anchor units"]), fint(tate_rules.loc["Tate", "units"])])
     trows.append(["Matching exactly one pattern", fint(typsum["non-anchor clean"]), fint(tate_rules.loc["Tate", "one pattern"])])
-    trows.append(["Matching the single-artist rule", fint(typsum["type count (non-anchor, any match): Single-artist block"]),
-                  fint(tate_rules.loc["Tate", "Single-artist block"])])
+    trows.append(["Matching the single-artist rule", fint(typsum["type count (non-anchor, any match): Single-artist gift"]),
+                  fint(tate_rules.loc["Tate", "Single-artist gift"])])
     trows.append(["Matching no pattern", fint(typsum["non-anchor unclassified"]), fint(tate_rules.loc["Tate", "none"])])
     write_table("rev_tab_tate.tex", "Gift patterns at MoMA and at the Tate, computed with comparable definitions.",
                 ["", "MoMA", "Tate"], trows, "lrr", "tab:tate",
@@ -687,8 +768,10 @@ def main():
                      fdec(r["peak_year_share"], 0), fdec(r["top_dept_share"], 0), fdec(r["top_artist_share"], 0),
                      tex_escape(r["types"]) if isinstance(r["types"], str) and r["types"] else "(none)"])
     with open(out("rev_supp_typology.tex"), "w", encoding="utf-8") as f:
-        f.write("{\\footnotesize\\setlength{\\tabcolsep}{3pt}\n\\begin{longtable}{@{}p{0.31\\textwidth}rrrrrrp{0.25\\textwidth}@{}}\n"
+        f.write("{\\footnotesize\\setlength{\\tabcolsep}{3pt}\n\\begin{longtable}{@{}p{0.29\\textwidth}rrrrrrp{0.24\\textwidth}@{}}\n"
                 "\\caption{Pattern classification of all donor units with 100 or more records. $^{\\ast}$Anchor case.}\\label{tab:s_typology}\\\\\n\\hline\n"
+                "Donor unit & Rec. & Art. & Era & Peak yr & Top dept & Top artist & Pattern matched \\\\\n"
+                " & & & (yr) & (\\%) & (\\%) & (\\%) & \\\\\n\\hline\n\\endfirsthead\n\\hline\n"
                 "Donor unit & Rec. & Art. & Era & Peak yr & Top dept & Top artist & Pattern matched \\\\\n"
                 " & & & (yr) & (\\%) & (\\%) & (\\%) & \\\\\n\\hline\n\\endhead\n")
         for r in rows:
@@ -710,7 +793,8 @@ def main():
                 ["$k$", "$k$-means silhouette", "Ward silhouette", "Shuffled mean", "Shuffled 95th pct.", "Smallest cluster"], rows,
                 "rrrrrr", "tab:s_clustering",
                 note="Features are standardized log record count, active era, peak-year share, top-department share, top-artist share, "
-                     "share of unidentified-maker records, female share and non-Western share. The shuffled reference permutes each feature independently across donors (100 draws).")
+                     "share of unidentified-maker records, female share and non-Western share. The shuffled reference permutes each feature independently across donors (100 draws). "
+                     f"The adjusted Rand index between the six-cluster $k$-means solution and the pattern rules, over units matching exactly one pattern, is {clus['ari_rules_vs_k6_clean_units'].iloc[0]:.2f}.")
 
     # S: concentration and size classes.
     rows = []
@@ -722,7 +806,7 @@ def main():
     write_table("rev_supp_concentration.tex", "Concentration of female and non-Western records and artists across donor units.",
                 ["", "Count", "Units supplying any", "Units for half", "Label-shuffled", r"Ten leading sources (\%)", "Label-shuffled"],
                 rows, "lrrrrrr", "tab:s_concentration", resize=True,
-                note="Artists are credited to the donor unit of their first record in the gift channel. The shuffled reference permutes the label across artists "
+                note="Artists are those new to the collection, credited to the donor unit through which they first entered. The shuffled reference permutes the label across artists "
                      "(for records, across artist clusters) and reports the mean and the 2.5th and 97.5th percentiles. `Ten leading sources' are the ten units that supply the most, which differ from the ten largest units of Table~\\ref{tab:s_sizes}.")
     rows = []
     for c_, r in classes.iterrows():
@@ -730,40 +814,49 @@ def main():
             continue
         rows.append([c_.capitalize(), fint(r["units"]), fdec(r["pct_records"]), fdec(r["pct_f_records"]), fdec(r["pct_nw_records"]),
                      fdec(r["pct_new_artists"]), fdec(r["pct_new_f_artists"]), fdec(r["pct_new_nw_artists"])])
-    write_table("rev_supp_size_classes.tex", "What donor units of different sizes supply (percent of the gift-channel total).",
-                ["Units with", "Units", "Records", "Female rec.", "Non-W. rec.", "Artists", "Female artists", "Non-W. artists"],
+    write_table("rev_supp_size_classes.tex", "What donor units of different sizes supply, as percent of gift-channel records and of artists new to the collection through a named donor.",
+                ["Units with", "Units", "Records", "Female rec.", "Non-W. rec.", "New artists", "New female", "New non-W."],
                 rows, "lrrrrrrr", "tab:s_sizes")
     lead = first.sort_values("new_nw", ascending=False).head(8)
     rows = [[tex_escape(u), fint(r["n_records"]), fint(r["new_artists"]), fint(r["new_nw"])] for u, r in lead.iterrows()]
     lead = first.sort_values("new_f", ascending=False).head(8)
     rows2 = [[tex_escape(u), fint(r["n_records"]), fint(r["new_artists"]), fint(r["new_f"])] for u, r in lead.iterrows()]
-    write_table("rev_supp_first_source_nw.tex", "Donor units that are the first gift-channel source of the most non-Western artists.",
-                ["Donor unit", "Records", "Artists first sourced", "Non-Western"], rows, r"p{0.55\textwidth}rrr", "tab:s_first_nw")
-    write_table("rev_supp_first_source_f.tex", "Donor units that are the first gift-channel source of the most female artists.",
-                ["Donor unit", "Records", "Artists first sourced", "Female"], rows2, r"p{0.55\textwidth}rrr", "tab:s_first_f")
+    write_table("rev_supp_first_source_nw.tex", "Donor units through which the most non-Western artists first entered the collection.",
+                ["Donor unit", "Records", "New artists", "Non-Western"], rows, r"p{0.55\textwidth}rrr", "tab:s_first_nw")
+    write_table("rev_supp_first_source_f.tex", "Donor units through which the most female artists first entered the collection.",
+                ["Donor unit", "Records", "New artists", "Female"], rows2, r"p{0.55\textwidth}rrr", "tab:s_first_f")
     rows = [[str(int(r["decade"])) + "s", fint(r["new_artists"]), fint(r["new_f"]), cell(r["pct_f"]), fint(r["units_with_new_f"]),
              fint(r["new_nw"]), cell(r["pct_nw"]), fint(r["units_with_new_nw"])] for _, r in decades.iterrows() if r["decade"] >= 1930]
-    write_table("rev_supp_decades.tex", "Artists entering the gift channel for the first time, by decade.",
+    write_table("rev_supp_decades.tex", "Artists first entering the collection through a donor-identified gift, by decade.",
                 ["Decade", "New artists", "Female", r"\%", "Units supplying", "Non-Western", r"\%", "Units supplying"], rows,
                 "lrrrrrrr", "tab:s_decades")
 
-    # S: size-matched null, units that exceed it.
-    ex_all = nun[nun["exceeds"]].sort_values(["museum", "dimension", "records"], ascending=[True, True, False])
-    rows = [[r.museum, "Female" if r.dimension == "is_F" else "Non-Western", tex_escape(r.unit), fint(r.records), fint(r.coded),
-             fdec(r.obs_gap), fdec(r.null_p95), fdec(r.ratio)] for r in ex_all.itertuples()]
-    rows.append(r"\midrule")
-    for (m_, d_), r in nsum.iterrows():
-        rows.append([m_, "Female" if d_ == "is_F" else "Non-Western", f"All units ({fint(r['units'])})", "", "",
-                     f"{fint(r['exceed_p95'])} exceed", "", f"median {fdec(r['median_ratio'])}"])
-    write_table("rev_supp_size_null.tex",
-                "Donor units whose gap from the gift-channel baseline exceeds the 95th percentile of random gifts of the same size.",
-                ["Museum", "Share", "Donor unit", "Records", "Coded", "Gap (pp)", "Random 95th pct.", "Ratio"], rows,
-                r"llp{0.34\textwidth}rrrrr", "tab:s_size_null", resize=True,
-                note="Random gifts are drawn from the museum's gift channel artist cluster by artist cluster until they reach the donor's number of coded records (1{,}000 draws). "
-                     "`Ratio' is the observed absolute gap divided by the mean absolute gap of the random gifts. Units with at least 100 records and 30 coded records.")
+    # S: random-gift null, units beyond chance under both versions.
+    share_label = {"female": "female share", "non-Western": "non-Western share",
+                   "non-Western (Eastern Europe as Western)": "non-Western share, Eastern Europe as Western"}
+    rows = []
+    for (m_, sh_), t_ in nun.groupby(["museum", "share"], sort=False):
+        b_ = t_[t_["both"]].sort_values(["matched_dir", "records"], ascending=[False, False])
+        n_up, n_down = int((b_["matched_dir"] == "up").sum()), int((b_["matched_dir"] == "down").sum())
+        if rows:
+            rows.append(r"\hline")
+        rows.append(rf"\multicolumn{{7}}{{@{{}}l}}{{\emph{{{m_}, {share_label[sh_]} ({len(t_)} units tested, {n_up} above and {n_down} below)}}}} \\")
+        for r in b_.itertuples():
+            rows.append([tex_escape(r.unit), fint(r.records), fint(r.clusters), fdec(r.obs_share), fdec(r.matched_expected),
+                         fdec(r.pooled_expected), "above" if r.matched_dir == "up" else "below"])
+    with open(out("rev_supp_size_null.tex"), "w", encoding="utf-8") as f:
+        f.write("{\\footnotesize\\setlength{\\tabcolsep}{4pt}\n\\begin{longtable}{@{}p{0.34\\textwidth}rrrrrl@{}}\n"
+                "\\caption{Donor units whose record share departs from random gifts of the same structure, at a false discovery rate of 5\\% under both versions of the comparison. "
+                "`Clusters' are the unit's artist clusters. `Matched' and `Pooled' are the mean share (\\%) of the random gifts when artists are drawn from the same department and decade "
+                "or from the whole channel.}\\label{tab:s_size_null}\\\\\n\\hline\n"
+                "Donor unit & Records & Clusters & Observed (\\%) & Matched & Pooled & Direction \\\\\n\\hline\n\\endfirsthead\n\\hline\n"
+                "Donor unit & Records & Clusters & Observed (\\%) & Matched & Pooled & Direction \\\\\n\\hline\n\\endhead\n")
+        for r in rows:
+            f.write((r if isinstance(r, str) else " & ".join(r) + r" \\") + "\n")
+        f.write("\\hline\n\\end{longtable}}\n")
 
     # S: associations, selection audit, Tate units.
-    rows = [[tex_escape(m), fint(r["n_units"]), csigned(r["spearman_rho"]), fdec(r["perm_p"], 3)] for m, r in assoc.iterrows()]
+    rows = [[tex_escape(m), fint(r["n_units"]), csigned(r["spearman_rho"]), fdec(r["perm_p"], 3) if r["perm_p"] >= 0.001 else "$<$0.001"] for m, r in assoc.iterrows()]
     write_table("rev_supp_association.tex", "Association between a donor unit's record count and its gap or contribution (units with 100 or more records).",
                 ["Measure", "Units", r"Spearman $\rho$", "Permutation $p$"], rows, "lrrr", "tab:s_assoc")
     rows = [[tex_escape(r["axis"]) if r["rank"] == 1 else "", fint(r["rank"]), tex_escape(r["unit"]) + (r"$^{\ast}$" if r["is_case"] else ""),

@@ -321,6 +321,19 @@ TRAILING_CLAUSE_RE = re.compile(
     r").*$",
     re.IGNORECASE | re.DOTALL,
 )
+# Name-first credit lines: '<Name> Gift' or '<Name> Bequest' with nothing after
+# it but an exchange note. Lists of funds and donors (commas, semicolons) are
+# not matched.
+NAME_FIRST_RE = re.compile(
+    r"^(?:Acquired through the\s+)?(?:The\s+)?(?P<name>[^,;:]+?)\s+(?:Gift|Bequest)"
+    r"(?:\s*\((?:both\s+)?by exchange\)|,?\s+by exchange)?\.?$",
+    re.IGNORECASE,
+)
+NAME_FIRST_GENERIC = {"anonymous", "an anonymous", "partial", "promised", "fractional", "fractional and promised"}
+# Spelling variants of one named collection.
+DONOR_ALIASES = {
+    "Judith Rothschild Contemporary Drawings Collection": "Judith Rothschild Foundation Contemporary Drawings Collection",
+}
 BY_EXCHANGE_RE = re.compile(r"\bby exchange\b", re.IGNORECASE)
 
 # ", Jr." / ", Inc." style suffixes that belong to the name before the comma.
@@ -362,7 +375,16 @@ def parse_credit_line(creditline, generic_terms=()):
     cl = str(creditline).strip()
     m = GIFT_PHRASE_RE.search(cl)
     if not m:
-        return empty
+        # Second credit-line form: the donor's name comes first ('Curt Valentin
+        # Bequest', 'The Gilbert and Lila Silverman Fluxus Collection Gift',
+        # 'Acquired through the Lillie P. Bliss Bequest (by exchange)').
+        t = NAME_FIRST_RE.match(cl)
+        if not t:
+            return empty
+        donor = DONOR_ALIASES.get(t.group("name").strip(), t.group("name").strip())
+        if donor.lower() in generic_terms or donor.lower() in NAME_FIRST_GENERIC:
+            return empty
+        return {"donor": donor, "co_donor": False, "fund_led": False, "by_exchange": bool(BY_EXCHANGE_RE.search(cl))}
     prefix = cl[: m.start()]
     rest = cl[m.end():].split("\n")[0].strip()
     rest = re.sub(r"^the\s+", "", rest, flags=re.IGNORECASE)
