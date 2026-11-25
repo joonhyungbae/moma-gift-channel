@@ -308,7 +308,7 @@ GIFT_PHRASE_RE = re.compile(r"\b(?:gift|bequest)\s+of\s+", re.IGNORECASE)
 TRAILING_CLAUSE_RE = re.compile(
     r"(?:\s*\(by exchange\)"
     r"|,?\s+by exchange\b"
-    r"|,?\s+in\s+(?:loving\s+)?(?:honor|honour|memory|celebration|appreciation|recognition|tribute|gratitude)\b"
+    r"|,?\s+in\s+(?:loving\s+|fond\s+|grateful\s+)?(?:honor|honour|memory|celebration|appreciation|recognition|tribute|gratitude)\b"
     r"|,?\s+to honor\b"
     r"|,?\s+and\s+(?:partial\s+)?purchase\b"
     r"|,?\s+on the occasion\b"
@@ -325,7 +325,7 @@ TRAILING_CLAUSE_RE = re.compile(
 # it but an exchange note. Lists of funds and donors (commas, semicolons) are
 # not matched.
 NAME_FIRST_RE = re.compile(
-    r"^(?:Acquired through the\s+)?(?:The\s+)?(?P<name>[^,;:]+?)\s+(?:Gift|Bequest)"
+    r"^(?:Acquired through the\s+|[^,;:]*?\bfunds from the\s+)?(?:The\s+)?(?P<name>[^,;:]+?)\s+(?:Gift|Bequest)"
     r"(?:\s*\((?:both\s+)?by exchange\)|,?\s+by exchange)?\.?$",
     re.IGNORECASE,
 )
@@ -338,7 +338,7 @@ BY_EXCHANGE_RE = re.compile(r"\bby exchange\b", re.IGNORECASE)
 
 # ", Jr." / ", Inc." style suffixes that belong to the name before the comma.
 SUFFIX_RE = re.compile(
-    r"^\s*(Jr|Sr|II|III|IV|2nd|3rd|4th|Inc|Incorporated|Ltd|LLC|Co|Corp|S\.A|N\.V|GmbH|AG)\b\.?",
+    r"^\s*(Jr|Sr|II|III|IV|2nd|3rd|4th|Inc|Incorporated|Ltd|LLC|Co|Corp|S\.\s?A|N\.\s?V|GmbH|AG)\b\.?",
     re.IGNORECASE,
 )
 # "Kleiner, Bell & Co." style firm names with an internal comma.
@@ -346,6 +346,8 @@ FIRM_TAIL_RE = re.compile(
     r"^\s*([A-Z][\w'.\-]*(?:\s+[A-Z][\w'.\-]*)*),?\s*(?:&|and)\s+(Co|Company|Sons|Associates|Partners)\b\.?",
 )
 SUFFIX_END_RE = re.compile(r"(?:Jr|Sr|Inc|Ltd|Co|Corp|S\.A|N\.V)\.$")
+# Firm names made of surnames ('Skidmore, Owings and Merrill') are one donor.
+SURNAME_FIRM_RE = re.compile(r"^[A-Z][\w'’\-]+(?:, [A-Z][\w'’\-]+)+,? (?:and|&) [A-Z][\w'’\-]+\.?$")
 FUND_PREFIX_RE = re.compile(r"\bfunds?\b|purchase|committee|acquired|council", re.IGNORECASE)
 CO_DONOR_RE = re.compile(r"\band\b|&|\b(?:Mr|Mrs|Ms|Dr)\b\.?|,", re.IGNORECASE)
 
@@ -394,6 +396,8 @@ def parse_credit_line(creditline, generic_terms=()):
     head, sep, tail = seg.partition(",")
     donor = head.strip()
     remaining = tail if sep else ""
+    if SURNAME_FIRM_RE.match(seg) and not FIRM_TAIL_RE.match(remaining):
+        donor, remaining = seg, ""
     while remaining.strip():
         firm = FIRM_TAIL_RE.match(remaining)
         if firm:
@@ -402,7 +406,7 @@ def parse_credit_line(creditline, generic_terms=()):
             continue
         suffix = SUFFIX_RE.match(remaining)
         if suffix:
-            donor = f"{donor}, {_SUFFIX_CANON[suffix.group(1).lower()]}"
+            donor = f"{donor}, {_SUFFIX_CANON[suffix.group(1).lower().replace(' ', '')]}"
             remaining = remaining[suffix.end():].lstrip(" ,")
             continue
         break

@@ -321,6 +321,7 @@ def main():
     put("SixN", fint(a6["n_removed"])); put("SixShareRec", fdec(pct(a6["n_removed"], n)))
     put("SixConF", fsigned(-a6["rec_delta_f"])); put("SixConNW", fsigned(-a6["rec_delta_nw"]))
     put("SixArtConF", fsigned(-a6["art_delta_f"])); put("SixArtConNW", fsigned(-a6["art_delta_nw"]))
+    put("SixArtConNWOne", fdec(-a6["art_delta_nw"], 1))
     put("SixArtLost", fint(a6["artists_lost"])); put("SixArtLostPct", fdec(pct(a6["artists_lost"], museum["n_artists"])))
     put("SixShareNWRec", fdec(schemes.loc["Baseline", "six_share_of_nw_records"]))
     rnd = cf[cf.index.str.startswith("Random")].iloc[0]
@@ -459,51 +460,32 @@ def main():
     s_all, s_wo = record_shares(dp), record_shares(dp[dp["Unit"] != "Jean Pigozzi"])
     put("DPNineteenN", fint(s_all["n"])); put("DPNineteenNW", fdec(s_all["pct_nw"]))
     put("DPNineteenNWwoP", fdec(s_wo["pct_nw"])); put("DPNineteenPShare", fdec(pct((dp["Unit"] == "Jean Pigozzi").sum(), len(dp))))
-    # ---- random-gift null (script 57). Headline counts: significant at FDR 5% under both versions.
+    # ---- random gifts of the same structure (script 57): a supplementary check, four designs.
     nun = pd.read_csv(out("rev_null_units.csv"))
-    nun["both"] = nun["matched_sig"] & nun["pooled_sig"] & (nun["matched_dir"] == nun["pooled_dir"])
-    def null_counts(museum, share):
-        t_ = nun[(nun["museum"] == museum) & (nun["share"] == share)]
-        b_ = t_[t_["both"]]
-        return len(t_), int((b_["matched_dir"] == "up").sum()), int((b_["matched_dir"] == "down").sum()), b_
-    nu_, f_up, f_dn, f_b = null_counts("MoMA", "female")
-    _, nw_up, nw_dn, nw_b = null_counts("MoMA", "non-Western")
-    nalt_, alt_up, alt_dn, alt_b = null_counts("MoMA", "non-Western (Eastern Europe as Western)")
-    tn_, tf_up, tf_dn, tf_b = null_counts("Tate", "female")
-    _, tnw_up, tnw_dn, _ = null_counts("Tate", "non-Western")
-    put("NullUnits", fint(nu_)); put("NullDraws", "100{,}000")
-    put("NullFUp", fint(f_up)); put("NullFDown", fint(f_dn)); put("NullNWUp", fint(nw_up)); put("NullNWDown", fint(nw_dn))
-    put("NullFWithin", fint(nu_ - f_up - f_dn)); put("NullNWWithin", fint(nu_ - nw_up - nw_dn))
-    put("NullAltUnits", fint(nalt_)); put("NullAltUp", fint(alt_up)); put("NullAltDown", fint(alt_dn))
-    put("TNullUnits", fint(tn_)); put("TNullFUp", fint(tf_up)); put("TNullFDown", fint(tf_dn))
-    put("TNullNWUp", fint(tnw_up)); put("TNullNWDown", fint(tnw_dn))
+    nsum = pd.read_csv(out("rev_null_summary.csv"))
+    NULL_DESIGNS = ["rec_matched", "rec_pooled", "art_matched", "art_pooled"]
+    def nsel(museum, share):
+        return nsum[(nsum["museum"] == museum) & (nsum["share"] == share)].set_index("design").loc[NULL_DESIGNS]
+    for key, share in (("F", "female"), ("NW", "non-Western")):
+        t_ = nsel("MoMA", share)
+        flagged = t_["bh_up"] + t_["bh_down"]
+        put("NullFlagMin" + key, fint(flagged.min())); put("NullFlagMax" + key, fint(flagged.max()))
+        put("NullCannotDown" + key, fint(t_["cannot_flag_down"].min()))
+    put("NullUnits", fint(nsel("MoMA", "non-Western")["units"].iloc[0]))
+    put("NullDraws", "100{,}000")
+    put("NullAltUnits", fint(nsel("MoMA", "non-Western (Eastern Europe as Western)")["units"].iloc[0]))
+    put("NullUnderTen", fint(nsel("MoMA", "non-Western")["units_under_10_makers"].iloc[0]))
+    put("NullMedianEff", fdec(nsel("MoMA", "non-Western")["median_effective_makers"].iloc[0], 0))
     def nrow(unit, share):
         return nun[(nun["museum"] == "MoMA") & (nun["share"] == share) & (nun["unit"] == unit)].iloc[0]
     for p_, u_ in CASES:
         for key, share in (("F", "female"), ("NW", "non-Western")):
-            r_ = nrow(u_, share)
-            put(p_ + "NullExp" + key, fdec(r_["matched_expected"])); put(p_ + "NullClusters" + key, fint(r_["clusters"]))
-            # The random gifts are centred on the matched baseline of Table 1 and Table S11.
-            assert abs(r_["matched_expected"] - six.loc[u_, "exp_f" if key == "F" else "exp_nw"]) < 0.05, (u_, key)
-    # Statements made in the text about named units, checked here.
+            # The matched record draw is centred on the matched baseline of Table 1 and Table S11.
+            assert abs(nrow(u_, share)["rec_matched_expected"] - six.loc[u_, "exp_f" if key == "F" else "exp_nw"]) < 0.05, (u_, key)
+    shear_ = nrow("Jack Shear", "non-Western")
+    put("ShearNullMakers", fint(shear_["makers"])); put("ShearExpNW", fdec(shear_["rec_matched_expected"]))
+    assert all(shear_[f"{d_}_q"] >= 0.05 for d_ in NULL_DESIGNS), "supplement cites Jack Shear as a unit no design flags"
     cdc = "Judith Rothschild Foundation Contemporary Drawings Collection"
-    ALT = "non-Western (Eastern Europe as Western)"
-    def names(b_, direction):
-        return set(b_.loc[b_["matched_dir"] == direction, "unit"])
-    assert names(nw_b, "up") == {"Judith Rothschild Foundation", "Jean Pigozzi", "Patricia Phelps de Cisneros", "Nihon Keizai Shimbun",
-                                 "Jean Dubuffet", "MSGSSS"}, names(nw_b, "up")
-    assert {cdc, "Curt Valentin", "Sarah-Ann and Werner H. Kramarsky"} <= names(nw_b, "down"), names(nw_b, "down")
-    assert names(f_b, "up") == {"Agnes Gund", "Helen Kornblum", "Sarah-Ann and Werner H. Kramarsky"}, names(f_b, "up")
-    assert names(f_b, "down") == {"Philip Johnson", "Roy Lichtenstein Foundation"}, names(f_b, "down")
-    assert names(alt_b, "up") == {"Jean Pigozzi", "Patricia Phelps de Cisneros", "Nihon Keizai Shimbun", "MSGSSS"}, names(alt_b, "up")
-    assert {"Judith Rothschild Foundation", "Jean Dubuffet"} <= names(alt_b, "down"), names(alt_b, "down")
-    for u_ in ("Kleiner, Bell & Co.", "Rockefeller lineage", "Peter J. Cohen"):
-        for sh_ in ("female", "non-Western", ALT):
-            assert not nrow(u_, sh_)["both"], f"{u_} {sh_} is beyond chance; revise the text"
-    assert not nrow("Jean Pigozzi", "female")["both"] and not nrow("Judith Rothschild Foundation", "female")["both"]
-    assert not nrow("Agnes Gund", "non-Western")["both"]
-    assert tf_up == 1 and tf_dn == 0 and tnw_up == 0 and tnw_dn == 0 and set(tf_b["unit"]) == {"Curwen Studio"}
-    put("GNullExpPooledF", fdec(nrow("Agnes Gund", "female")["pooled_expected"]))
     # ---- first-entry attribution (script 55)
     ten = pd.read_csv(out("rev_ten_largest_decade_matched.csv"), index_col=0)
     put("TenFArtObs", fint(ten.loc["f", "observed"])); put("TenFArtExp", fint(ten.loc["f", "expected"]))
@@ -529,9 +511,6 @@ def main():
     assert sizes.index[0] == "Gilbert and Lila Silverman Fluxus Collection" and sizes.index[1] == "Kleiner, Bell & Co."
     multi = [u_ for u_ in sizes.index[:5] if units.loc[u_, "peak_year_share"] <= 90]
     assert multi[0] == "Kleiner, Bell & Co.", "text calls Kleiner, Bell the largest unit given over several years"
-    assert set(nw_b[nw_b["matched_dir"] == "up"]["unit"]) == {
-        "Jean Dubuffet", "Jean Pigozzi", "Judith Rothschild Foundation", "MSGSSS", "Nihon Keizai Shimbun",
-        "Patricia Phelps de Cisneros"}, "text lists the units above chance on the non-Western share"
     assert first["new_f"].idxmax() == cdc, "text names the Contemporary Drawings Collection as the leading source of new women"
     assert set(first.sort_values("new_nw", ascending=False).head(3).index) == {
         "Nihon Keizai Shimbun", "Patricia Phelps de Cisneros", "Judith Rothschild Foundation"}
@@ -714,7 +693,10 @@ def main():
         cols = [c for c in tab.columns if c != "n"]
         rows = [[CASE_TEX.get(u, tex_escape(u))] + [fint(r[c]) for c in cols] + [fint(r["n"])] for u, r in tab.iterrows()]
         write_table(name, cap, [""] + [short.get(c, c) for c in cols] + ["Total"], rows, "l" + "r" * (len(cols) + 1),
-                    "tab:s_" + name[9:-4], resize=True)
+                    "tab:s_" + name[9:-4], resize=True,
+                    note=("`Mixed regions' counts records whose makers fall in more than one of the ten regions. "
+                          f"Of these, {fint(museum['n_mixed_origin'])} have makers on both sides of the baseline Western and non-Western rule.")
+                    if name == "rev_supp_region_records.tex" else None)
     rows = []
     for s, r in schemes.iterrows():
         rows.append([tex_escape(s), fdec(r["museum_pct_nw"]), fdec(r["six_contribution_pp"], 2)]
@@ -836,26 +818,57 @@ def main():
                 "lrrrrrrr", "tab:s_decades",
                 note="Percentages are of the new artists with a gender code or with a recorded nationality, which are fewer than the new artists in the first column. The last row covers 2020 to 2024.")
 
-    # S: random-gift null, units beyond chance under both versions.
-    share_label = {"female": "female share", "non-Western": "non-Western share",
-                   "non-Western (Eastern Europe as Western)": "non-Western share, Eastern Europe as Western"}
+    # S: random gifts of the same structure, four designs (summary and per-unit tables).
+    share_label = {"female": "Female share", "non-Western": "Non-Western share",
+                   "non-Western (Eastern Europe as Western)": "Non-Western share, Eastern Europe as Western"}
+    design_label = {"rec_matched": "Record draw, matched", "rec_pooled": "Record draw, pooled",
+                    "art_matched": "Artist draw, matched", "art_pooled": "Artist draw, pooled"}
     rows = []
-    for (m_, sh_), t_ in nun.groupby(["museum", "share"], sort=False):
-        b_ = t_[t_["both"]].sort_values(["matched_dir", "records"], ascending=[False, False])
-        n_up, n_down = int((b_["matched_dir"] == "up").sum()), int((b_["matched_dir"] == "down").sum())
+    for (m_, sh_), t_ in nsum.groupby(["museum", "share"], sort=False):
         if rows:
-            rows.append(r"\hline")
-        rows.append(rf"\multicolumn{{7}}{{@{{}}l}}{{\emph{{{m_}, {share_label[sh_]} ({len(t_)} units tested, {n_up} above and {n_down} below)}}}} \\")
-        for r in b_.itertuples():
-            rows.append([tex_escape(r.unit), fint(r.records), fint(r.clusters), fdec(r.obs_share), fdec(r.matched_expected),
-                         fdec(r.pooled_expected), "above" if r.matched_dir == "up" else "below"])
+            rows.append(r"\midrule")
+        rows.append(rf"\multicolumn{{8}}{{@{{}}l}}{{\emph{{{m_}, {share_label[sh_].lower().replace('eastern europe', 'Eastern Europe').replace('western', 'Western').replace('non-Western', 'non-Western')} "
+                    rf"({int(t_['units'].iloc[0])} units)}}}} \\")
+        for r in t_.itertuples():
+            rows.append([design_label[r.design], fint(r.raw_up), fint(r.raw_down), fint(r.bh_up), fint(r.bh_down),
+                         fint(r.units - r.bh_up - r.bh_down), fint(r.cannot_flag_up), fint(r.cannot_flag_down)])
     with open(out("rev_supp_size_null.tex"), "w", encoding="utf-8") as f:
-        f.write("{\\footnotesize\\setlength{\\tabcolsep}{4pt}\n\\begin{longtable}{@{}p{0.34\\textwidth}rrrrrl@{}}\n"
-                "\\caption{Donor units whose record share departs from random gifts of the same structure, at a false discovery rate of 5\\% under both versions of the comparison. "
-                "`Clusters' are the unit's artist clusters among the records coded for the share. `Matched' and `Pooled' are the mean share (\\%) of the random gifts when records are drawn from the same department and decade "
-                "or from the whole channel.}\\label{tab:s_size_null}\\\\\n\\hline\n"
-                "Donor unit & Records & Clusters & Observed (\\%) & Matched & Pooled & Direction \\\\\n\\hline\n\\endfirsthead\n\\hline\n"
-                "Donor unit & Records & Clusters & Observed (\\%) & Matched & Pooled & Direction \\\\\n\\hline\n\\endhead\n")
+        f.write("\\begin{table}[ht]\n\\centering\n"
+                "\\tbl{Donor units flagged by the comparison with random gifts of the same structure, under four designs.}\n"
+                "{\\small\\begin{tabular}{@{}lrrrrrrr@{}}\n\\toprule\n"
+                " & \\multicolumn{2}{c}{Unadjusted} & \\multicolumn{3}{c}{Adjusted} & \\multicolumn{2}{c}{Cannot be flagged} \\\\\n"
+                "Design & Above & Below & Above & Below & Neither & Above & Below \\\\\n\\midrule\n")
+        for r in rows:
+            f.write((r if isinstance(r, str) else " & ".join(r) + r" \\") + "\n")
+        f.write("\\bottomrule\n\\end{tabular}}\n"
+                "\\begin{tabnote}`Unadjusted' counts units with a two-sided $p$ below 0.05, and `Adjusted' applies the Benjamini--Hochberg procedure at 5\\% across the units of one share. "
+                "A unit `cannot be flagged' in a direction when even the most extreme random gift in that direction (every maker drawing the same label) has an unadjusted $p$ of 0.05 or more. "
+                "The record draw gives each maker the label of a record drawn from other donors' gifts and the artist draw the label of a maker drawn from them, "
+                "matched to department and decade or pooled over the channel.\\end{tabnote}\n\\label{tab:s_size_null}\n\\end{table}\n")
+    def flag_symbols(r):
+        out_ = []
+        for d_ in NULL_DESIGNS:
+            out_.append("$\\cdot$" if r[f"{d_}_q"] >= 0.05 else ("$+$" if r[f"{d_}_dir"] == "up" else "$-$"))
+        return "\\,".join(out_)
+    def detectable(r):
+        up, dn = r["rec_matched_min_p_up"] < 0.05, r["rec_matched_min_p_down"] < 0.05
+        return "both" if up and dn else ("above" if up else ("below" if dn else "neither"))
+    rows = []
+    for sh_ in ("female", "non-Western"):
+        t_ = nun[(nun["museum"] == "MoMA") & (nun["share"] == sh_)].sort_values("records", ascending=False)
+        rows.append(("\\hline\n" if rows else "") + rf"\multicolumn{{9}}{{@{{}}l}}{{\emph{{{share_label[sh_]}}}}} \\")
+        for _, r in t_.iterrows():
+            rows.append([tex_escape(r["unit"]), fint(r["records"]), fint(r["makers"]), fdec(r["effective_makers"]), fdec(r["obs_share"]),
+                         fdec(r["rec_matched_expected"]), fdec(r["art_matched_expected"]), flag_symbols(r), detectable(r)])
+    head = "Donor unit & Rec. & Makers & Eff. & Obs. & Exp.\\ rec. & Exp.\\ art. & Flags & Detectable \\\\\n\\hline\n"
+    with open(out("rev_supp_null_units.tex"), "w", encoding="utf-8") as f:
+        f.write("\\clearpage\n{\\footnotesize\\setlength{\\tabcolsep}{3.5pt}\n\\begin{longtable}{@{}p{0.33\\textwidth}rrrrrrll@{}}\n"
+                "\\caption{Every donor unit in the comparison with random gifts, MoMA, baseline regional rule. `Makers' are the first-named makers of the unit's coded records "
+                "and `Eff.' their effective number (the inverse of the sum of squared record shares). `Obs.' is the unit's record share (\\%), "
+                "`Exp.\\ rec.' and `Exp.\\ art.' the mean share of random gifts under the matched record draw and the matched artist draw. "
+                "`Flags' gives the adjusted result under the four designs in the order record matched, record pooled, artist matched, artist pooled "
+                "($+$ above, $-$ below, $\\cdot$ not flagged). `Detectable' gives the directions in which the matched record draw could flag the unit at all.}"
+                "\\label{tab:s_null_units}\\\\\n\\hline\n" + head + "\\endfirsthead\n\\hline\n" + head + "\\endhead\n")
         for r in rows:
             f.write((r if isinstance(r, str) else " & ".join(r) + r" \\") + "\n")
         f.write("\\hline\n\\end{longtable}}\n")

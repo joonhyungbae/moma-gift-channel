@@ -1,25 +1,30 @@
 # -*- coding: utf-8 -*-
 """
-Revision analysis A2b (reviewer 1 comment 2): does a donor's gift depart from
-the gift channel more than a random gift of the same structure would?
+Revision analysis A2b (reviewer 1 comment 2), supplementary check: how does a
+donor's record share compare with random gifts that keep the gift's structure?
 
-Null. The donor's gift keeps its own structure: the same artist clusters and
-the same number of coded records in each. Every cluster is given the label
-(woman / not, non-Western / not) of a record drawn at random from other donors'
-gifts. In the matched version the record comes from the same department and
-acquisition decade as the donor's records of that cluster; in the pooled
-version from the whole channel. A gift by one artist is therefore one draw,
-and a gift spread over many artists is many.
+Structure kept. Records are grouped by their first-named maker. A random gift
+keeps the donor's makers and the number of coded records by each, and gives
+every maker one label (woman / not, non-Western / not).
 
-Because records (not artists) are drawn, the expected share of a random gift
-is the record share of other donors' gifts: in the matched version it equals
-the matched baseline of script 50 (same cells, same 30-record fallback to the
-department), and in the pooled version the channel share without the donor.
+Four designs, because "same structure" does not fix where the label comes from:
+  record draw  the label of a record drawn at random from other donors' gifts,
+               so the expected share is other donors' share of records;
+  artist draw  the label of a maker drawn at random from other donors' gifts,
+               so the expected share is other donors' share of makers;
+each either matched (same department and acquisition decade as the donor's
+records of that maker, department-wide when the cell is thin) or pooled (whole
+channel). The matched record draw is centred on the matched baseline of
+script 50.
 
-Test. The donor's observed record share is compared with 100,000 null shares.
-The p-value is two-sided (twice the smaller tail, so departures below the
-expected share count as much as departures above it). Across units the
-Benjamini-Hochberg procedure controls the false discovery rate at 5%.
+For every unit the script also reports what the check can detect: the number of
+makers, the effective number (inverse Herfindahl of record weights), and the
+smallest two-sided p-value attainable in each direction (the probability that
+every maker draws the same label, doubled). A unit whose smallest attainable
+p-value is 0.05 or more cannot be flagged in that direction whatever its share.
+
+p-values are two-sided over 100,000 draws; Benjamini-Hochberg adjusted values
+are reported beside the unadjusted ones.
 
 Outputs (output/): rev_null_units.csv, rev_null_summary.csv
 """
@@ -36,7 +41,8 @@ from rev_utils import RNG_SEED, load_gifts, out
 N_DRAWS = 100000
 CHUNK = 10000
 MIN_RECORDS, MIN_CODED, MIN_CELL = 100, 30, 30
-FDR = 0.05
+ALPHA = 0.05
+DESIGNS = ("rec_matched", "rec_pooled", "art_matched", "art_pooled")
 
 
 def bh(p):
@@ -50,54 +56,76 @@ def bh(p):
     return out_
 
 
-def run(df, unit_col, cluster_col, dept_col, flag, valid, label, share_name, rng):
+def run(df, unit_col, maker_col, dept_col, flag, valid, label, share_name, rng):
     d = df[df[valid] == 1].copy()
     d["decade"] = (d["year"] // 10) * 10
+    # One label per maker within a unit: a maker whose records carry both labels is split.
+    d["cl"] = d[maker_col].astype(str) + "|" + d[flag].astype(str)
     sizes = df[unit_col].value_counts()
     tot_s, tot_n = float(d[flag].sum()), len(d)
     cell_all = d.groupby([dept_col, "decade"])[flag].agg(["sum", "count"])
     dept_all = d.groupby(dept_col)[flag].agg(["sum", "count"])
+    # Makers present in each cell / department / channel, with the units that hold them.
+    mk = d.groupby([dept_col, "decade", "cl", unit_col])[flag].max().reset_index()
     rows = []
     for unit, own in d.groupby(unit_col):
         if sizes.get(unit, 0) < MIN_RECORDS or len(own) < MIN_CODED:
             continue
         own_cell = own.groupby([dept_col, "decade"])[flag].agg(["sum", "count"])
         own_dept = own.groupby(dept_col)[flag].agg(["sum", "count"])
-        p_pooled = (tot_s - own[flag].sum()) / (tot_n - len(own))
+        rec_pooled = (tot_s - own[flag].sum()) / (tot_n - len(own))
+        oth = mk[mk[unit_col] != unit]
+        oth_cell = oth.drop_duplicates([dept_col, "decade", "cl"]).groupby([dept_col, "decade"])[flag].agg(["sum", "count"])
+        oth_dept = oth.drop_duplicates([dept_col, "cl"]).groupby(dept_col)[flag].agg(["sum", "count"])
+        oth_all = oth.drop_duplicates("cl")[flag]
+        art_pooled = float(oth_all.mean())
 
-        def other_share(dept, dec):
-            """Share among other donors' coded records in the cell (department if the cell is thin)."""
+        def rec_share(dept, dec):
             s = cell_all.loc[(dept, dec), "sum"] - own_cell.loc[(dept, dec), "sum"]
             n = cell_all.loc[(dept, dec), "count"] - own_cell.loc[(dept, dec), "count"]
             if n >= MIN_CELL:
                 return s / n
             s = dept_all.loc[dept, "sum"] - own_dept.loc[dept, "sum"]
             n = dept_all.loc[dept, "count"] - own_dept.loc[dept, "count"]
-            return s / n if n > 0 else p_pooled
+            return s / n if n > 0 else rec_pooled
 
-        cells = own.groupby([cluster_col, dept_col, "decade"]).agg(n=(flag, "size"), lab=(flag, "max")).reset_index()
-        cells["p"] = [other_share(a, b) for a, b in zip(cells[dept_col], cells["decade"])]
-        cells["np"] = cells["n"] * cells["p"]
-        oc = cells.groupby(cluster_col).agg(n=("n", "sum"), lab=("lab", "max"), np_=("np", "sum"))
+        def art_share(dept, dec):
+            if (dept, dec) in oth_cell.index and oth_cell.loc[(dept, dec), "count"] >= MIN_CELL:
+                return oth_cell.loc[(dept, dec), "sum"] / oth_cell.loc[(dept, dec), "count"]
+            if dept in oth_dept.index and oth_dept.loc[dept, "count"] > 0:
+                return oth_dept.loc[dept, "sum"] / oth_dept.loc[dept, "count"]
+            return art_pooled
+
+        cells = own.groupby(["cl", dept_col, "decade"]).agg(n=(flag, "size"), lab=(flag, "max")).reset_index()
+        cells["rp"] = [rec_share(a, b) for a, b in zip(cells[dept_col], cells["decade"])]
+        cells["ap"] = [art_share(a, b) for a, b in zip(cells[dept_col], cells["decade"])]
+        cells["nrp"], cells["nap"] = cells["n"] * cells["rp"], cells["n"] * cells["ap"]
+        oc = cells.groupby("cl").agg(n=("n", "sum"), lab=("lab", "max"), nrp=("nrp", "sum"), nap=("nap", "sum"))
         n = oc["n"].to_numpy(dtype=float)
         w = n / n.sum()
         obs = float((n * oc["lab"].to_numpy()).sum() / n.sum())
         res = {"museum": label, "share": share_name, "unit": unit, "records": int(sizes[unit]), "coded": int(len(own)),
-               "clusters": len(oc), "obs_share": 100 * obs, "channel_share": 100 * tot_s / tot_n}
-        for version, q in (("matched", oc["np_"].to_numpy() / n), ("pooled", np.full(len(oc), p_pooled))):
+               "makers": len(oc), "effective_makers": float(1.0 / np.sum(w ** 2)), "obs_share": 100 * obs}
+        qs = {"rec_matched": oc["nrp"].to_numpy() / n, "rec_pooled": np.full(len(oc), rec_pooled),
+              "art_matched": oc["nap"].to_numpy() / n, "art_pooled": np.full(len(oc), art_pooled)}
+        for design in DESIGNS:
+            q = np.clip(qs[design], 0.0, 1.0)
             n_up = n_dn = 0
             for _ in range(N_DRAWS // CHUNK):
                 sims = (rng.random((CHUNK, len(oc))) < q) @ w
                 n_up += int(np.sum(sims >= obs - 1e-12)); n_dn += int(np.sum(sims <= obs + 1e-12))
             p_up, p_dn = (1 + n_up) / (N_DRAWS + 1), (1 + n_dn) / (N_DRAWS + 1)
             exp = float(q @ w)
-            res.update({f"{version}_expected": 100 * exp, f"{version}_p": min(1.0, 2 * min(p_up, p_dn)),
-                        f"{version}_dir": "up" if obs > exp else "down"})
+            with np.errstate(divide="ignore"):
+                min_dn = min(1.0, 2 * float(np.exp(np.sum(np.log1p(-q)))))   # every maker draws 'not'
+                min_up = min(1.0, 2 * float(np.exp(np.sum(np.log(q)))))      # every maker draws the label
+            res.update({f"{design}_expected": 100 * exp, f"{design}_p": min(1.0, 2 * min(p_up, p_dn)),
+                        f"{design}_dir": "up" if obs > exp else "down",
+                        f"{design}_min_p_down": min_dn, f"{design}_min_p_up": min_up})
         rows.append(res)
     t = pd.DataFrame(rows)
-    for version in ("matched", "pooled"):
-        t[f"{version}_q"] = bh(t[f"{version}_p"])
-        t[f"{version}_sig"] = t[f"{version}_q"] < FDR
+    for design in DESIGNS:
+        t[f"{design}_q"] = bh(t[f"{design}_p"])
     return t
 
 
@@ -113,14 +141,15 @@ def load_tate():
 def main():
     rng = np.random.default_rng(RNG_SEED)
     g = load_gifts().rename(columns={"YearAcquired": "year"})
+    g["Maker"] = g["Cluster"].str.split(",").str[0]
     alt = g["Nationality"].map(lambda s: origin_record(s, "east_europe_western"))
     g["is_NW_alt"] = (alt == "Non-Western").astype(int)
     g["o_valid_alt"] = alt.isin(["Western", "Non-Western"]).astype(int)
     t = load_tate()
     parts = [
-        run(g, "Unit", "Cluster", "Department", "is_F", "g_valid", "MoMA", "female", rng),
-        run(g, "Unit", "Cluster", "Department", "is_NW", "o_valid", "MoMA", "non-Western", rng),
-        run(g, "Unit", "Cluster", "Department", "is_NW_alt", "o_valid_alt", "MoMA", "non-Western (Eastern Europe as Western)", rng),
+        run(g, "Unit", "Maker", "Department", "is_F", "g_valid", "MoMA", "female", rng),
+        run(g, "Unit", "Maker", "Department", "is_NW", "o_valid", "MoMA", "non-Western", rng),
+        run(g, "Unit", "Maker", "Department", "is_NW_alt", "o_valid_alt", "MoMA", "non-Western (Eastern Europe as Western)", rng),
         run(t, "Unit", "cid", "dept", "is_F", "g_valid", "Tate", "female", rng),
         run(t, "Unit", "cid", "dept", "is_NW", "o_valid", "Tate", "non-Western", rng),
     ]
@@ -128,22 +157,23 @@ def main():
     units.to_csv(out("rev_null_units.csv"), index=False)
     rows = []
     for (museum, share), s in units.groupby(["museum", "share"], sort=False):
-        r = {"museum": museum, "share": share, "units": len(s)}
-        both = s[s["matched_sig"] & s["pooled_sig"] & (s["matched_dir"] == s["pooled_dir"])]
-        r["both_up"] = int((both["matched_dir"] == "up").sum()); r["both_down"] = int((both["matched_dir"] == "down").sum())
-        for v in ("matched", "pooled"):
-            sig = s[s[f"{v}_sig"]]
-            r[f"{v}_up"] = int((sig[f"{v}_dir"] == "up").sum())
-            r[f"{v}_down"] = int((sig[f"{v}_dir"] == "down").sum())
-        rows.append(r)
+        for design in DESIGNS:
+            up, dn = s[f"{design}_dir"] == "up", s[f"{design}_dir"] == "down"
+            rows.append({
+                "museum": museum, "share": share, "design": design, "units": len(s),
+                "raw_up": int((up & (s[f"{design}_p"] < ALPHA)).sum()), "raw_down": int((dn & (s[f"{design}_p"] < ALPHA)).sum()),
+                "bh_up": int((up & (s[f"{design}_q"] < ALPHA)).sum()), "bh_down": int((dn & (s[f"{design}_q"] < ALPHA)).sum()),
+                "cannot_flag_down": int((s[f"{design}_min_p_down"] >= ALPHA).sum()),
+                "cannot_flag_up": int((s[f"{design}_min_p_up"] >= ALPHA).sum()),
+            })
+        for r_ in rows[-len(DESIGNS):]:
+            r_["median_effective_makers"] = float(s["effective_makers"].median())
+            r_["units_under_10_makers"] = int((s["makers"] < 10).sum())
+            r_["units_one_maker"] = int((s["makers"] == 1).sum())
     summary = pd.DataFrame(rows)
     summary.to_csv(out("rev_null_summary.csv"), index=False)
     pd.set_option("display.width", 250); pd.set_option("display.max_colwidth", 60); pd.set_option("display.max_rows", 200)
     print(summary.to_string())
-    show = units[units["matched_sig"] & units["pooled_sig"] & (units["matched_dir"] == units["pooled_dir"])]
-    show = show.sort_values(["museum", "share", "matched_dir", "records"], ascending=[True, True, False, False])
-    print(show[["museum", "share", "unit", "records", "clusters", "obs_share", "matched_expected", "pooled_expected",
-                "matched_q", "pooled_q", "matched_dir"]].round(3).to_string())
 
 
 if __name__ == "__main__":

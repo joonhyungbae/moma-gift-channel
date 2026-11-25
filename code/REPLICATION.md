@@ -56,8 +56,9 @@ by-exchange flags). The supplement's Sections S1-S3 describe the same rules.
 | `53_rev_tate_patterns.py` | `rev_tate_units.csv`, `rev_tate_vs_moma_patterns.csv` | Tate comparison (Section 5.4; Table 3) |
 | `54_rev_gender_validation.py` | `rev_gender_validation*.csv` | Wikidata check of the gender field (Section 3.2). Reads `data/wikidata_gender_cache.csv`; pass `--offline` to forbid network access |
 | `55_rev_artist_concentration.py` | `rev_artist_*.csv`, `rev_first_entry_overview.csv`, `rev_ten_largest_decade_matched.csv`, `rev_rothschild_origin_bound.csv`, `rev_new_artists_by_decade.csv` | records versus artists, artists new to the collection by first accession in any channel, concentration, Rothschild bound (Section 5.2) |
-| `57_rev_size_null.py` | `rev_null_units.csv`, `rev_null_summary.csv` | comparison of each large donor with random gifts of the same structure, matched and pooled, two-sided, false discovery rate 5% (Sections 3.3, 5.1, 5.4) |
+| `57_rev_size_null.py` | `rev_null_units.csv`, `rev_null_summary.csv` | supplementary check: each large donor against random gifts of the same structure, four designs (record or artist draw, matched or pooled), with the number of makers and the smallest attainable p-value per unit (supplement Section S4) |
 | `56_rev_paper_assets.py` | `rev_numbers.tex`, `rev_tab_*.tex`, `rev_supp_*.tex`, `fig_volume_vs_gap.*`, `fig_record_vs_artist.*` | every number, table and figure in the article and supplement |
+| `58_rev_parser_audit_sample.py` (not in `run_all.py`) | `parser_audit_sample.csv` | fixed random sample of 300 records (200 inside the gift sample, 100 outside) with blank columns for checking the credit-line parser by hand |
 | `32`-`41` (earlier scripts) | donor profiles, named-donor Tate check | named-donor recurrence sentence in Section 5.4; otherwise superseded by 50-57 |
 
 Shared helpers: `config.py`, `coding.py`, `rev_utils.py`, `donor_bio_utils.py`,
