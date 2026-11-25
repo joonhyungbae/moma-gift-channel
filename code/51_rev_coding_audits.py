@@ -102,7 +102,7 @@ def gender_tables(gifts, cons):
     kt.to_csv(out("rev_gender_uncoded_kinds.csv"))
     for dept in gifts["Department"].unique():
         idx = unc.index[unc["Department"] == dept]
-        vc = rec_kind.reindex(idx).value_counts()
+        vc = rec_kind.reindex(idx).fillna("No constituent recorded").value_counts()
         kt[dept] = vc.reindex(kt.index).fillna(0).astype(int)
     kt.to_csv(out("rev_gender_uncoded_kinds.csv"))
 
@@ -238,7 +238,8 @@ def selection_audit(gifts):
         ("Female share, records (30+ coded)", pop["pct_f"].where(pop["g_valid"] >= 30), False, None),
         ("Non-Western share, artists (10+ coded)", pop["art_pct_nw"].where(pop["art_o_valid"] >= 10), False, None),
         ("Female share, artists (10+ coded)", pop["art_pct_f"].where(pop["art_g_valid"] >= 10), False, None),
-        ("Institutional donor, peak-year share", pop["peak_year_share"].where(pop["institutional"]), False, None),
+        ("Institutional donor with more than 90% of records in one year (records)",
+         pop["n"].where(pop["institutional"] & (pop["peak_year_share"] > 90)), False, None),
         ("Departmental spread (lowest top-department share)", pop["top_dept_share"], True, None),
     ]
     rows = []
