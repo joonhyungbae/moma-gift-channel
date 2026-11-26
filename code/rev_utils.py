@@ -145,19 +145,23 @@ def cluster_bootstrap(df, n_boot=N_BOOT, seed=RNG_SEED):
 
 
 def drop_top_cluster(df, placeholder_ids=frozenset()):
-    """Record shares after removing the donor's largest identified artist cluster.
+    """Record shares after removing every record that credits the donor's
+    largest identified artist (the constituent on the most records).
 
-    Clusters made up only of placeholder constituents (unidentified makers,
-    group labels) carry no codes and are skipped."""
+    Placeholder constituents (unidentified makers, group labels) carry no codes
+    and are skipped when the largest artist is chosen."""
     if df.empty:
         return {}
-    top = df["Cluster"].value_counts()
-    ident = [c for c in top.index
-             if not set(re.findall(r"\d+", str(c))) <= set(placeholder_ids) or not re.findall(r"\d+", str(c))]
-    top = top.loc[ident] if ident else top
-    rest = df[df["Cluster"] != top.index[0]]
-    s = record_shares(rest)
-    return {"top_cluster_n": int(top.iloc[0]), "top_cluster_share": pct(top.iloc[0], len(df)),
+    ids = df["Cluster"].astype(str).map(lambda c: set(re.findall(r"\d+", c)) - set(placeholder_ids))
+    counts = pd.Series([i for s_ in ids for i in s_]).value_counts()
+    if counts.empty:
+        s = record_shares(df)
+        return {"top_cluster_n": 0, "top_cluster_share": 0.0, "pct_f_wo_top": s["pct_f"], "g_valid_wo_top": s["g_valid"],
+                "pct_nw_wo_top": s["pct_nw"], "o_valid_wo_top": s["o_valid"]}
+    top = counts.index[0]
+    has_top = ids.map(lambda s_: top in s_)
+    s = record_shares(df[~has_top])
+    return {"top_cluster_n": int(has_top.sum()), "top_cluster_share": pct(has_top.sum(), len(df)),
             "pct_f_wo_top": s["pct_f"], "g_valid_wo_top": s["g_valid"],
             "pct_nw_wo_top": s["pct_nw"], "o_valid_wo_top": s["o_valid"]}
 

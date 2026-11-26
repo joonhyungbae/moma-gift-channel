@@ -320,6 +320,11 @@ def main():
     a6 = cf.loc["All six"]
     put("SixN", fint(a6["n_removed"])); put("SixShareRec", fdec(pct(a6["n_removed"], n)))
     put("SixConF", fsigned(-a6["rec_delta_f"])); put("SixConNW", fsigned(-a6["rec_delta_nw"]))
+    # The same joint figure with Abby Aldrich Rockefeller's records in place of the family lineage (referee 2, comment 6).
+    _five = [u_ for _, u_ in CASES if u_ != "Rockefeller lineage"]
+    _mask = gifts["Unit"].isin(_five) | gifts["Donor"].eq("Abby Aldrich Rockefeller")
+    _all, _rest = record_shares(gifts), record_shares(gifts[~_mask])
+    put("SixAbbyConF", fsigned(_all["pct_f"] - _rest["pct_f"])); put("SixAbbyConNW", fsigned(_all["pct_nw"] - _rest["pct_nw"]))
     put("SixArtConF", fsigned(-a6["art_delta_f"])); put("SixArtConNW", fsigned(-a6["art_delta_nw"]))
     put("SixArtConNWOne", fdec(-a6["art_delta_nw"], 1))
     put("SixArtLost", fint(a6["artists_lost"])); put("SixArtLostPct", fdec(pct(a6["artists_lost"], museum["n_artists"])))
@@ -370,6 +375,9 @@ def main():
     put("NBlocks", fint(len(blocks))); put("PctBlocks", fdec(pct(len(blocks), len(bigu)), 0))
     put("NBlocksMaleWestern", fint(((tg == "M") & (to == "Western")).sum()))
     put("NBlocksFemale", fint((tg == "F").sum())); put("NBlocksNW", fint((to == "Non-Western").sum()))
+    put("NBlocksBoth", fint(((tg == "F") & (to == "Non-Western")).sum())); put("NBlocksNonPerson", fint(tg.isna().sum()))
+    assert ((tg == "M") & (to == "Western")).sum() + (to == "Non-Western").sum() + (tg == "F").sum() \
+        - ((tg == "F") & (to == "Non-Western")).sum() + tg.isna().sum() == len(blocks), "single-artist breakdown in Section 5.1 must add up"
     ev = bigu[bigu["peak_year_share"] > 90]
     put("NEvents", fint(len(ev))); put("PctEvents", fdec(pct(len(ev), len(bigu)), 0))
     put("EventsRecShare", fdec(pct(ev["n"].sum(), n)))
@@ -533,6 +541,7 @@ def main():
     put("NOtherParserGain", fint(n - int(name_first.sum()) - 49740))  # 49,740 is the submitted sample size
     assert n - int(name_first.sum()) - 49740 > 0
     put("SixConNWOne", fdec(schemes.loc["Baseline", "six_contribution_pp"], 1))
+    put("SchEESixSigned", fsigned(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"]))
     put("SchEESixOne", fdec(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"], 1))
     put("NIndig", fint(regrec.loc["All donor-identified gifts", "Indigenous peoples of North America and Australia"]))
     put("JFirstNewNW", fint(first.loc["Judith Rothschild Foundation", "new_nw"]))
@@ -607,7 +616,7 @@ def main():
                 "\\begin{tabnote}`New' counts artists new to the collection through the donor, whose earliest MoMA accession in any channel is a gift from the donor. "
                 "Shares (\\%) are of coded records and of coded artists. "
                 "`Matched gap' is the record share minus the share of other donors' gifts in the same departments and decades. "
-                "`Contrib.' is the gift-channel share minus the share without the donor's gifts. `rec.' counts records and `art.' artists. Gaps and contributions are in percentage points. "
+                "`Contrib.' is the gift-channel share minus the share without the donor's gifts. `rec.' counts records and `art.' artists. Gaps and contributions are in percentage points and are computed from unrounded shares. "
                 "$^{a}$Fewer than half of the donor's records carry the code. "
                 "$^{b}$Contribution to the non-Western share of records when Eastern Europe and the former USSR count as Western (percentage points).\\end{tabnote}\n"
                 "\\label{tab:cases}\n\\end{table}\n")
@@ -633,6 +642,7 @@ def main():
     trows.append(r"\multicolumn{3}{l}{\emph{Pattern rules of Table~\ref{tab:donor_type_taxonomy}, units with 100 or more records other than the six anchors}} \\")
     trows.append(["Units", fint(typsum["non-anchor units"]), fint(tate_rules.loc["Tate", "units"])])
     trows.append(["Matching exactly one pattern", fint(typsum["non-anchor clean"]), fint(tate_rules.loc["Tate", "one pattern"])])
+    trows.append(["Matching more than one pattern", fint(typsum["non-anchor ambiguous"]), fint(tate_rules.loc["Tate", "several"])])
     trows.append(["Matching the single-artist rule", fint(typsum["type count (non-anchor, any match): Single-artist gift"]),
                   fint(tate_rules.loc["Tate", "Single-artist gift"])])
     trows.append(["Matching no pattern", fint(typsum["non-anchor unclassified"]), fint(tate_rules.loc["Tate", "none"])])
@@ -669,7 +679,7 @@ def main():
     write_table("rev_supp_gender_kinds.tex", "What the records without a gender code name.",
                 ["Kind of maker", "Records", r"\%", r"A\&D", r"D\&P", "M\\&P", r"P\&S", "Photo."], rows, "lrrrrrrr", "tab:s_gender_kinds",
                 note=r"A\&D Architecture \& Design, D\&P Drawings \& Prints, M\&P Media and Performance, P\&S Painting \& Sculpture.")
-    rows = [[tex_escape(r["rule"]), fdec(r["numerator"], 0), fdec(r["denominator"], 0), fdec(r["pct_f"], 2)] for _, r in galt.iterrows()]
+    rows = [[tex_escape(r["rule"]), fint(round(r["numerator"])), fint(round(r["denominator"])), fdec(r["pct_f"], 2)] for _, r in galt.iterrows()]
     write_table("rev_supp_gender_rules.tex", "Female share of the gift channel under alternative counting rules.",
                 ["Rule", "Numerator", "Denominator", r"\% female"], rows, r"p{0.62\textwidth}rrr", "tab:s_gender_rules")
     rows = [[tex_escape(m[0].upper() + m[1:]), fint(v) if float(v) == int(float(v)) and float(v) > 100 else (fint(v) if float(v) == int(float(v)) else fdec(v, 2))] for m, v in gval.items()]
@@ -719,12 +729,12 @@ def main():
                      fdec(r["exp_f"]), fdec(r["exp_nw"])])
     write_table("rev_supp_cases_dependence.tex",
                 "The six cases: record shares, artist-resampling intervals, shares without the largest artist, and matched expectations.",
-                ["Donor", "Artist clusters", r"Largest (\%)", r"\% female", "Interval", "Without largest",
+                ["Donor", "Artist clusters", r"Largest artist (\%)", r"\% female", "Interval", "Without largest",
                  r"\% non-W.", "Interval", "Without largest", "Expected F", "Expected NW"], rows, "lrrrrrrrrrr", "tab:s_dependence",
                 resize=True,
                 note="Intervals are 2.5th and 97.5th percentiles over 5{,}000 resamples of the donor's artist clusters. "
-                     "`Expected' is the share of other donors' gifts in the same departments and decades. `Largest' is the share of the largest artist cluster among the donor's records, "
-                     "which is smaller than the top artist's share in Table~\\ref{tab:s_typology} when the artist also appears on jointly credited records.")
+                     "`Expected' is the share of other donors' gifts in the same departments and decades. `Largest artist' is the share of the donor's records that credit its largest identified artist, "
+                     "and `Without largest' the share after those records are removed.")
 
     # S: sub-eras.
     rows = [[CASE_TEX[r["case"]], f"{int(r['start'])}--{int(r['end'])}" if r["start"] != r["end"] else str(int(r["start"])),
@@ -787,7 +797,7 @@ def main():
     for m, r in conc.iterrows():
         shuf = "" if pd.isna(r.get("shuffled_mean")) else f"{fint(r['shuffled_mean'])} [{fint(r['shuffled_lo'])}, {fint(r['shuffled_hi'])}]"
         t10 = "" if pd.isna(r.get("top10_shuffled_mean")) else f"{fdec(r['top10_shuffled_mean'])} [{fdec(r['top10_shuffled_lo'])}, {fdec(r['top10_shuffled_hi'])}]"
-        rows.append([tex_escape(m.capitalize()), fint(r["n_flagged"]), fint(r["units_supplying_any"]), fint(r["units_for_half"]), shuf,
+        rows.append([tex_escape(m.capitalize().replace("non-western", "non-Western")), fint(r["n_flagged"]), fint(r["units_supplying_any"]), fint(r["units_for_half"]), shuf,
                      fdec(r["top10_share"]), t10])
     write_table("rev_supp_concentration.tex", "Concentration of female and non-Western records and artists across donor units.",
                 ["", "Count", "Units supplying any", "Units for half", "Label-shuffled", r"Ten leading sources (\%)", "Label-shuffled"],
@@ -862,7 +872,7 @@ def main():
                          fdec(r["rec_matched_expected"]), fdec(r["art_matched_expected"]), flag_symbols(r), detectable(r)])
     head = "Donor unit & Rec. & Makers & Eff. & Obs. & Exp.\\ rec. & Exp.\\ art. & Flags & Detectable \\\\\n\\hline\n"
     with open(out("rev_supp_null_units.tex"), "w", encoding="utf-8") as f:
-        f.write("\\clearpage\n{\\footnotesize\\setlength{\\tabcolsep}{3.5pt}\n\\begin{longtable}{@{}p{0.33\\textwidth}rrrrrrll@{}}\n"
+        f.write("\\clearpage\n{\\footnotesize\\setlength{\\tabcolsep}{3.5pt}\n\\begin{longtable}{@{}p{0.31\\textwidth}rrrrrrll@{}}\n"
                 "\\caption{Every donor unit in the comparison with random gifts, MoMA, baseline regional rule. `Makers' are the first-named makers of the unit's coded records "
                 "and `Eff.' their effective number (the inverse of the sum of squared record shares). `Obs.' is the unit's record share (\\%), "
                 "`Exp.\\ rec.' and `Exp.\\ art.' the mean share of random gifts under the matched record draw and the matched artist draw. "
