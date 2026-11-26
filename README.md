@@ -1,15 +1,14 @@
-# MoMA gift channel: donor biographies, 1929-2024
+# MoMA named-donor gifts by record and by artist, 1929-2024
 
-Replication code and data for *Collections grow by volume but diversify by
-exception: donor biographies in MoMA's gift channel, 1929-2024* (Museum
-Management and Curatorship).
+Replication code and data for *Counting women and non-Western artists in MoMA's named-donor gifts by record and by artist, 1929-2024* (Museum Management and Curatorship).
 
-The paper reads nearly a century of MoMA's donor-identified gift records as a
-sequence of donor biographies and asks what each named donor changed about whom
-the collection represents. The headline finding is that gift volume and
-representational impact come apart: the largest-volume donors leave the
-collection's gender and geographic mix where they found it, while the donors who
-move that mix do so through rare single-year mass gifts.
+The paper reads MoMA's donor-identified gift records donor by donor and counts
+each gift in two ways, as catalogue records and as distinct artists. Shares of
+women and of non-Western artists differ between the two counts, movements in
+record shares come from a few gifts and depend on where the regional boundary
+is drawn, and artists new to the collection arrive through donors of every
+size. Every number, table and figure in the article and its supplement is
+written by `code/56_rev_paper_assets.py`.
 
 ## Layout
 

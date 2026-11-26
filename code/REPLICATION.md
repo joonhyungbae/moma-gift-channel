@@ -1,7 +1,7 @@
 # Replication guide
 
-Replication for *Collections grow by volume but diversify by exception: donor
-biographies in MoMA's gift channel, 1929-2024* (Museum Management and Curatorship).
+Replication for *Counting women and non-Western artists in MoMA's named-donor gifts by record and by artist, 1929-2024*
+(Museum Management and Curatorship).
 
 ## Environment
 

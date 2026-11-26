@@ -1,7 +1,7 @@
 """
-Run the full donor-biographies analysis pipeline for the paper
-"Collections grow by volume but diversify by exception: donor biographies in
-MoMA's gift channel, 1929-2024" (Museum Management and Curatorship).
+Run the full analysis pipeline for the paper
+"Counting women and non-Western artists in MoMA's named-donor gifts by record and by artist, 1929-2024"
+(Museum Management and Curatorship).
 
 Usage:
     cd <repository root> && python code/run_all.py
