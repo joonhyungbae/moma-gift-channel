@@ -26,11 +26,11 @@ from rev_utils import RNG_SEED, out, pct
 from coding import INSTITUTIONAL_DONOR_RE as INSTITUTIONAL_RE  # noqa: E402
 
 DEFAULT = {
-    "min_volume": 250,        # volume contributor: at least this many records
+    "min_volume": 250,        # volume gift: at least this many records
     "dept_single": 90.0,      # top-department share at or above: single-department gift
     "near_gap": 5.0,          # neither record share exceeds the museum-wide share by more than this
-    "max_top_artist": 20.0,   # volume contributor: no artist above this share of records
-    "era_years": 60,          # founding lineage: active era at least this long
+    "max_top_artist": 20.0,   # volume gift: no artist above this share of records
+    "era_years": 60,          # founding-lineage gift: active era at least this long
     "top_artist": 90.0,       # single-artist: one artist above this share of records
     "placeholder": 50.0,      # anonymous archive: records by unidentified makers above this share
     "peak_year": 90.0,        # institutional mass gift: peak-year share above this
@@ -40,13 +40,13 @@ DEFAULT = {
 }
 
 ANCHOR_TYPE = {
-    "Kleiner, Bell & Co.": "Volume contributor", "Rockefeller lineage": "Founding lineage",
-    "Jean Pigozzi": "Single-artist gift", "Peter J. Cohen": "Anonymous-archive donor",
-    "Judith Rothschild Foundation": "Institutional mass-gift", "Agnes Gund": "Cross-departmental diversifying donor",
+    "Kleiner, Bell & Co.": "Volume gift", "Rockefeller lineage": "Founding-lineage gift",
+    "Jean Pigozzi": "Single-artist gift", "Peter J. Cohen": "Anonymous-archive gift",
+    "Judith Rothschild Foundation": "Institutional block gift", "Agnes Gund": "Cross-departmental gift",
 }
 
-TYPES = ["Volume contributor", "Founding lineage", "Single-artist gift", "Anonymous-archive donor",
-         "Institutional mass-gift", "Cross-departmental diversifying donor"]
+TYPES = ["Volume gift", "Founding-lineage gift", "Single-artist gift", "Anonymous-archive gift",
+         "Institutional block gift", "Cross-departmental gift"]
 
 
 def apply_rules(r, t):

@@ -389,9 +389,9 @@ def main():
     put("TypOthers", fint(typsum["non-anchor units"]))
     put("TypClean", fint(typsum["non-anchor clean"])); put("TypAmbig", fint(typsum["non-anchor ambiguous"]))
     put("TypNone", fint(typsum["non-anchor unclassified"]))
-    for key, ty in (("Vol", "Volume contributor"), ("Found", "Founding lineage"), ("Single", "Single-artist gift"),
-                    ("Anon", "Anonymous-archive donor"), ("Inst", "Institutional mass-gift"),
-                    ("Cross", "Cross-departmental diversifying donor")):
+    for key, ty in (("Vol", "Volume gift"), ("Found", "Founding-lineage gift"), ("Single", "Single-artist gift"),
+                    ("Anon", "Anonymous-archive gift"), ("Inst", "Institutional block gift"),
+                    ("Cross", "Cross-departmental gift")):
         put("Typ" + key, fint(typsum[f"type count (non-anchor, any match): {ty}"]))
     put("TypCleanMin", fint(typsens["clean"].min())); put("TypCleanMax", fint(typsens["clean"].max()))
     put("TypNoneMin", fint(typsens["unclassified"].min())); put("TypNoneMax", fint(typsens["unclassified"].max()))
@@ -438,9 +438,9 @@ def main():
     for p, lab in (("M", "MoMA"), ("T", "Tate")):
         r = tate_rules.loc[lab]
         put(p + "RulesUnits", fint(r["units"])); put(p + "RulesOne", fint(r["one pattern"])); put(p + "RulesNone", fint(r["none"]))
-        put(p + "RulesSingle", fint(r["Single-artist gift"])); put(p + "RulesVol", fint(r["Volume contributor"]))
-        put(p + "RulesInst", fint(r["Institutional mass-gift"])); put(p + "RulesFound", fint(r["Founding lineage"]))
-        put(p + "RulesCross", fint(r["Cross-departmental diversifying donor"])); put(p + "RulesAnon", fint(r["Anonymous-archive donor"]))
+        put(p + "RulesSingle", fint(r["Single-artist gift"])); put(p + "RulesVol", fint(r["Volume gift"]))
+        put(p + "RulesInst", fint(r["Institutional block gift"])); put(p + "RulesFound", fint(r["Founding-lineage gift"]))
+        put(p + "RulesCross", fint(r["Cross-departmental gift"])); put(p + "RulesAnon", fint(r["Anonymous-archive gift"]))
     put("ShearConNWEE", fsigned(pd.read_csv(out("rev_region_scheme_top_contributors.csv")).query(
         "scheme == 'Eastern Europe and former USSR as Western' and unit == 'Jack Shear'")["contribution_pp"].iloc[0]))
     for p_, u_ in (("Parkett", "Parkett"), ("CisFirst", "Patricia Phelps de Cisneros"), ("KornFirst", "Helen Kornblum")):
@@ -523,7 +523,7 @@ def main():
                                                               "Israel and Turkey as Western")]
     put("SchOtherMin", fdec(min(others), 2)); put("SchOtherMax", fdec(max(others), 2))
     put("SampleSharePct", fdec(pct(n, len(main_all)), 0))
-    vol_others = typ[(~typ["is_case"]) & typ["types"].fillna("").str.contains("Volume contributor")].index.tolist()
+    vol_others = typ[(~typ["is_case"]) & typ["types"].fillna("").str.contains("Volume gift")].index.tolist()
     assert set(vol_others) == {"Lawrence Benenson", "Curt Valentin"}, vol_others
     stern = main_all["CreditLine"].fillna("").str.fullmatch(r"The Louis E\. Stern Collection").sum()
     anon = main_all["CreditLine"].fillna("").str.fullmatch(r"(?i)anonymous gift|given anonymously").sum()
@@ -764,8 +764,8 @@ def main():
             f.write(" & ".join(r) + r" \\" + "\n")
         f.write("\\hline\n\\end{longtable}}\n")
     thr_label = {"min_volume": "Minimum records, volume rule", "dept_single": "Top-department share, single-department rules (\\%)", "near_gap": "Allowed excess over gift-channel share (points)",
-                 "era_years": "Active era, founding lineage (years)", "top_artist": "Top-artist share, single-artist rule (\\%)",
-                 "placeholder": "Unidentified-maker share, anonymous archive (\\%)", "peak_year": "Peak-year share, institutional mass-gift (\\%)",
+                 "era_years": "Active era, founding-lineage rule (years)", "top_artist": "Top-artist share, single-artist rule (\\%)",
+                 "placeholder": "Unidentified-maker share, anonymous archive (\\%)", "peak_year": "Peak-year share, institutional block gift (\\%)",
                  "dept_spread": "Top-department share, cross-departmental rule (\\%)", "artist_gap": "Artist-level gap, cross-departmental rule (points)",
                  "max_top_artist": "Largest artist share, volume rule (\\%)"}
     rows = [[thr_label.get(r["threshold"], tex_escape(r["threshold"])), fdec(r["value"], 1).rstrip("0").rstrip("."), "yes" if r["default"] else "",
