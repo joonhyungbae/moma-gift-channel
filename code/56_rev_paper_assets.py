@@ -255,6 +255,9 @@ def main():
     put("WdAgree", fint(gval["agreement (n)"]))
     put("WdAgreePct", fdec(gval["agreement (%)"], 2))
     put("WdDisagree", fint(gval["both sources give a binary code"] - gval["agreement (n)"]))
+    _dis = pd.read_csv(out("rev_gender_validation_disagreements.csv"))
+    # Supplement S2: Russell Lee (wrong link), three women coded as men, one man coded as a woman.
+    assert set(_dis["name"]) == {"Russell Lee", "Marta Minujín", "Juul Kraijer", "Gunnel Nyman", "Carel Blazer"}, set(_dis["name"])
     nb = (cons["gender"] == "NB").sum()
     put("NNonBinaryCons", fint(cons.loc[cons["gender"] == "NB", "cid"].nunique()))
 
