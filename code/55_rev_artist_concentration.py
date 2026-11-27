@@ -225,6 +225,14 @@ def main():
     rate = rest[rest["OV"]].groupby("decade")["NW"].mean()
     exp["nw_excl_rothschild"] = {"observed": int(m["NW"].sum()), "coded": int(len(m)),
                                  "expected": float(m["decade"].map(rate).fillna(rest.loc[rest["OV"], "NW"].mean()).sum())}
+    # Reference range: the female / non-Western label shuffled among first-entry artists of the same decade.
+    for key, flag, valid, excl in (("f", "F", "GV", set()), ("nw", "NW", "OV", set()), ("nw_excl_rothschild", "NW", "OV", set(ROTHSCHILD))):
+        d = fs[fs[valid]]
+        x = d[flag].to_numpy()
+        sel = (d["unit"].isin(top10) & ~d["unit"].isin(excl)).to_numpy()
+        grp = list(pd.Series(np.arange(len(d))).groupby(d["decade"].to_numpy()).indices.values())
+        sims = [strat_perm(x, grp, rng)[sel].sum() for _ in range(N_SHUFFLE_ARTISTS)]
+        exp[key]["shuffled_lo"], exp[key]["shuffled_hi"] = np.percentile(sims, 2.5), np.percentile(sims, 97.5)
     pd.DataFrame(exp).T.to_csv(out("rev_ten_largest_decade_matched.csv"))
     drows = []
     for dec, s in fs.groupby("decade"):

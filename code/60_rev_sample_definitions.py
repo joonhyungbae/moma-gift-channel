@@ -8,8 +8,10 @@ Definitions
                           by exchange of an earlier gift excluded (the article)
   with exchange           as main, plus the by-exchange records under the original donor
   without collections     as main, minus the named-collection credit lines
-  first revision          without collections, with exchange (the definition of the
-                          first revision)
+  neither change          without collections, with exchange
+  without fund-led        as main, minus records whose credit line opens with a
+                          museum fund or purchase formula
+  MoMA nationality only   as main, with MoMA's nationality field and no Wikidata fill
 
 For each: records, donor units, record and artist shares, the six cases' joint
 record-level contribution, and the ten largest record-level contributions
@@ -26,7 +28,9 @@ from rev_utils import (CASE_LABEL, artist_frame, artist_names, artist_shares, ar
 
 DEFS = [("main", {}), ("with exchange", {"include_exchange": True}),
         ("without collections", {"include_collections": False}),
-        ("first revision", {"include_collections": False, "include_exchange": True})]
+        ("neither change", {"include_collections": False, "include_exchange": True}),
+        ("without fund-led", {"exclude_fund_led": True}),
+        ("MoMA nationality only", {"moma_nationality": True})]
 SIX = set(CASE_LABEL.values())
 
 
@@ -49,6 +53,23 @@ def summary(g, names):
             "pct_f": museum["pct_f"], "pct_nw": museum["pct_nw"],
             "art_pct_f": art["art_pct_f"], "art_pct_nw": art["art_pct_nw"],
             "six_contrib_f": museum["pct_f"] - rest["pct_f"], "six_contrib_nw": museum["pct_nw"] - rest["pct_nw"]}
+    # Units grouped by records per artist, against the channel's own ratio.
+    n_art = cons[~cons["placeholder"]].groupby("unit")["cid"].nunique()
+    rpa = (sizes / n_art.reindex(sizes.index)).reindex(c.index)
+    ratio = len(g) / art["n_artists"]
+    out_["channel_records_per_artist"] = ratio
+    few = rpa >= ratio
+    out_["units_few_artists"] = int(few.sum())
+    for k, rc, ac in (("f", "rf", "af"), ("nw", "rn", "an")):
+        out_[f"few_rec_sum_{k}"] = c.loc[few, rc].abs().sum(); out_[f"few_art_sum_{k}"] = c.loc[few, ac].abs().sum()
+        out_[f"many_rec_sum_{k}"] = c.loc[~few, rc].abs().sum(); out_[f"many_art_sum_{k}"] = c.loc[~few, ac].abs().sum()
+    gu = g[g["Unit"] == "Agnes Gund"]
+    if len(gu):
+        gs = record_shares(gu)
+        gc = cons[(cons["unit"] == "Agnes Gund") & ~cons["placeholder"]].drop_duplicates("cid")
+        gf, ggv = (gc["gender"] == "F").sum(), gc["gender"].isin(["F", "M"]).sum()
+        out_.update({"gund_records": len(gu), "gund_pct_f": gs["pct_f"], "gund_art_gap_f": 100 * gf / ggv - art["art_pct_f"],
+                     "gund_art_coded": int(ggv), "gund_top_dept_share": 100 * gu["Department"].value_counts().iloc[0] / len(gu)})
     for k, rc, ac in (("f", "rf", "af"), ("nw", "rn", "an")):
         top = c[rc].abs().sort_values(ascending=False).index[:10]
         out_[f"top10_rec_sum_{k}"] = c.loc[top, rc].abs().sum()

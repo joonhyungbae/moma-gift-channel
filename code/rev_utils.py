@@ -48,13 +48,23 @@ def pct(num, den):
 # --------------------------------------------------------------------------
 
 
-def load_gifts(**sample):
+def load_gifts(exclude_fund_led=False, moma_nationality=False, **sample):
     """Donor-identified gift records with analytic unit and cluster columns.
 
     Keyword arguments go to load_moma_donor_gifts (include_collections,
     include_exchange) for the sample-definition check; the default is the main
-    analysis."""
-    df = assign_case(load_moma_donor_gifts(**sample))
+    analysis. exclude_fund_led drops records whose credit line opens with a
+    museum fund or purchase formula; moma_nationality uses MoMA's nationality
+    field without the Wikidata fill."""
+    df = load_moma_donor_gifts(**sample)
+    if exclude_fund_led:
+        df = df[~df["fund_led"]].copy()
+    if moma_nationality:
+        from coding import origin_record
+        df["Nationality"] = df["Nationality_MoMA"]
+        geo = df["Nationality"].apply(origin_record)
+        df["GeographicOrigin"] = geo.where(geo != "Mixed")
+    df = assign_case(df.reset_index(drop=True))
     # Analytic unit: the Rockefeller family strings form one unit, every other
     # donor string is its own unit.
     df["Unit"] = df["CaseDonor"].where(df["CaseDonor"] == "Rockefeller lineage", df["Donor"])

@@ -53,7 +53,7 @@ def fdec(v, d=1):
 def fsigned(v, d=2):
     v = float(v)
     if round(v, d) == 0:
-        v = 0.0
+        return f"\\ensuremath{{{0:.{d}f}}}"
     sign = "+" if v >= 0 else "-"
     return f"\\ensuremath{{{sign}{abs(v):.{d}f}}}"
 
@@ -100,7 +100,7 @@ def csigned(v, d=2):
         return "--"
     v = float(v)
     if round(v, d) == 0:
-        v = 0.0
+        return f"${0:.{d}f}$"
     return f"${'+' if v >= 0 else '-'}{abs(v):.{d}f}$"
 
 
@@ -209,6 +209,33 @@ def main():
         put("RestMedRecCon" + K, fdec(_r[_rest].median(), 3)); put("RestMedArtCon" + K, fdec(_a[_rest].median(), 3))
         assert _a[_top].sum() < 0.7 * _r[_top].sum()  # the largest record-level movements shrink by artist
         assert 0.67 < _a[_rest].median() / _r[_rest].median() < 1.5  # the other large units move about equally
+    _sd = pd.read_csv(out("rev_sample_definitions.csv"), index_col=0)
+    _m = _sd.loc["main"]
+    put("ChanRPA", fdec(_m["channel_records_per_artist"], 1)); put("NFewArt", fint(_m["units_few_artists"]))
+    put("NManyArt", fint(_m["units_100"] - _m["units_few_artists"]))
+    for K, k in (("F", "f"), ("NW", "nw")):
+        for grp in ("few", "many"):
+            put(grp.capitalize() + "Rec" + K, fdec(_m[f"{grp}_rec_sum_{k}"], 2)); put(grp.capitalize() + "Art" + K, fdec(_m[f"{grp}_art_sum_{k}"], 2))
+    for d_, r_ in _sd.iterrows():  # abstract and Section 5.2 hold under every definition
+        for k in ("f", "nw"):
+            assert r_[f"few_art_sum_{k}"] < 0.3 * r_[f"few_rec_sum_{k}"], (d_, k)
+            assert r_[f"many_art_sum_{k}"] > r_[f"many_rec_sum_{k}"], (d_, k)
+    _gf = _sd.loc["without fund-led"]
+    put("GundNoFundN", fint(_gf["gund_records"])); put("GundNoFundF", fdec(_gf["gund_pct_f"]))
+    put("GundNoFundArtGap", fsigned(_gf["gund_art_gap_f"], 1)); put("GundNoFundTopDept", fdec(_gf["gund_top_dept_share"], 0))
+    # Section 5.2 examples: Stern and Shear hold many records per artist; Cisneros and the CDC hold few.
+    _rpa = units["n"] / units["n_artists"]
+    for _u in ("Louis E. Stern Collection", "Jack Shear"):
+        assert _rpa[_u] >= _m["channel_records_per_artist"], _u
+    for _u in ("Patricia Phelps de Cisneros", "Judith Rothschild Foundation Contemporary Drawings Collection"):
+        assert _rpa[_u] < _m["channel_records_per_artist"], _u
+    # Section 4.1: Kleiner female share above the channel for records and below it for artists; non-Western below at both.
+    _k = units.loc["Kleiner, Bell & Co."]
+    _kv = [units.loc["Kleiner, Bell & Co.", "contrib_f"], units.loc["Kleiner, Bell & Co.", "contrib_nw"],
+           loo.loc["Kleiner, Bell & Co.", "art_contrib_f"], loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"]]
+    assert min(_kv) == loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"] and max(_kv) == units.loc["Kleiner, Bell & Co.", "contrib_f"]
+    assert _k["gap_f"] > 0 and _k["art_gap_f"] < 0 and _k["gap_nw"] < 0 and _k["art_gap_nw"] < 0
+    assert _gf["gund_art_gap_f"] >= 10 and _gf["gund_art_coded"] >= 30 and _gf["gund_top_dept_share"] <= 60  # still cross-departmental
     _st = "Louis E. Stern Collection"
     _sg = gifts[gifts["Unit"] == _st]
     _ss = record_shares(_sg)
@@ -268,6 +295,8 @@ def main():
     put("PctUncodedOrigin", fdec(pct(museum["n_uncoded_origin"], n)))
     put("NArtists", fint(museum["n_artists"]))
     put("ArtBaseF", fdec(museum["art_pct_f"], 2)); put("ArtBaseFOne", fdec(museum["art_pct_f"], 1))
+    put("RPAWomen", fdec(museum["f"] / museum["art_f"], 1)); put("RPAMen", fdec((museum["g_valid"] - museum["f"]) / (museum["art_g_valid"] - museum["art_f"]), 1))
+    assert museum["f"] / museum["art_f"] < (museum["g_valid"] - museum["f"]) / (museum["art_g_valid"] - museum["art_f"])
     put("NArtF", fint(museum["art_f"])); put("NArtGValid", fint(museum["art_g_valid"]))
     put("ArtBaseNW", fdec(museum["art_pct_nw"], 2)); put("ArtBaseNWOne", fdec(museum["art_pct_nw"], 1))
     put("NArtNW", fint(museum["art_nw"])); put("NArtOValid", fint(museum["art_o_valid"]))
@@ -467,6 +496,9 @@ def main():
                     ("Anon", "Anonymous-archive gift"), ("Inst", "Institutional block gift"),
                     ("Cross", "Cross-departmental gift")):
         put("Typ" + key, fint(typsum[f"type count (non-anchor, any match): {ty}"]))
+    _cl = typ[(~typ["is_case"]) & (typ["status"] == "clean")]
+    assert (_cl["types"] == "Single-artist gift").sum() > len(_cl) / 2  # 'most of them through the single-artist pattern'
+    assert (typ.loc[["Louis E. Stern Collection", "Gilbert and Lila Silverman Fluxus Collection"], "status"] == "unclassified").all()
     assert int(float(typsum["type count (non-anchor, any match): Founding-lineage gift"])) == 0  # text: 'the founding-lineage pattern by none'
     assert int(float(typsum["type count (non-anchor, any match): Cross-departmental gift"])) == 1  # 'one further unit (Cisneros)'
     assert int(float(typsum["type count (non-anchor, any match): Anonymous-archive gift"])) == 1  # 'one further unit (Kidder Smith)'
@@ -487,7 +519,7 @@ def main():
 
     # Tate
     T = lambda row, col: tate.loc[row, col]
-    for col, p in (("MoMA", "M"), ("Tate", "T")):
+    for col, p in (("MoMA", "M"), ("Tate", "T"), ("MoMA 1929-2013", "MThirteen")):
         put(p + "TateRecords", fint(float(T("gift_records", col)))); put(p + "TateUnits", fint(float(T("donor_units", col))))
         put(p + "TateBig", fint(float(T("units_100plus", col))))
         put(p + "TateTopOne", fdec(float(T("top_1pct_share_of_records", col))))
@@ -512,7 +544,7 @@ def main():
     put("NClusterFeatures", "eight")
     put("TypAnchorsStableMin", fint(typsens["anchors_own_pattern"].min()))
     # Tate rules
-    for p, lab in (("M", "MoMA"), ("T", "Tate")):
+    for p, lab in (("M", "MoMA"), ("T", "Tate"), ("MThirteen", "MoMA 1929-2013 (non-anchor)")):
         r = tate_rules.loc[lab]
         put(p + "RulesUnits", fint(r["units"])); put(p + "RulesOne", fint(r["one pattern"])); put(p + "RulesNone", fint(r["none"]))
         put(p + "RulesSingle", fint(r["Single-artist gift"])); put(p + "RulesVol", fint(r["Volume gift"]))
@@ -585,6 +617,12 @@ def main():
     put("TenNWArtObs", fint(ten.loc["nw", "observed"])); put("TenNWArtExp", fint(ten.loc["nw", "expected"]))
     put("TenNWArtCmp", "more" if ten.loc["nw", "observed"] > ten.loc["nw", "expected"] else "fewer")
     put("TenNWArtObsNoJ", fint(ten.loc["nw_excl_rothschild", "observed"])); put("TenNWArtExpNoJ", fint(ten.loc["nw_excl_rothschild", "expected"]))
+    for k_, key_ in (("F", "f"), ("NW", "nw"), ("NWNoJ", "nw_excl_rothschild")):
+        put("Ten" + k_ + "Lo", fint(ten.loc[key_, "shuffled_lo"])); put("Ten" + k_ + "Hi", fint(ten.loc[key_, "shuffled_hi"]))
+    # Section 5.2: women and non-Western artists within the shuffled range; without Rothschild, below it.
+    assert ten.loc["f", "shuffled_lo"] <= ten.loc["f", "observed"] <= ten.loc["f", "shuffled_hi"]
+    assert ten.loc["nw", "shuffled_lo"] <= ten.loc["nw", "observed"] <= ten.loc["nw", "shuffled_hi"]
+    assert ten.loc["nw_excl_rothschild", "observed"] < ten.loc["nw_excl_rothschild", "shuffled_lo"]
     assert ten.loc["nw", "observed"] > ten.loc["nw", "expected"] and ten.loc["nw_excl_rothschild", "observed"] < ten.loc["nw_excl_rothschild", "expected"]
     fe = pd.read_csv(out("rev_first_entry_overview.csv")).iloc[0]
     put("NArtCollection", fint(fe["artists_in_collection"])); put("NFirstEntryGift", fint(fe["first_entry_by_identified_gift"]))
@@ -708,44 +746,45 @@ def main():
                 "{\\footnotesize\\setlength{\\tabcolsep}{3.2pt}\\begin{tabular}{@{}lrrrrrr@{}}\n\\toprule\n"
                 "\\multicolumn{7}{@{}l}{\\emph{(b) Non-Western share}} \\\\\n"
                 "Donor & " + head5 + " & Alt.\\ rule$^{b}$ \\\\\n\\midrule\n" + case_rows("nw") + "\n\\bottomrule\n\\end{tabular}}\n\\end{minipage}}\n"
-                "\\begin{tabnote}`New' counts artists new to the collection through the donor, whose earliest MoMA accession in any channel is a gift from the donor. "
-                "Shares (\\%) are of coded records and of coded artists. "
-                "`Matched gap' is the record share minus the share of other donors' gifts in the same departments and decades. "
-                "`Contrib.' is the gift-channel share minus the share without the donor's gifts. `rec.' counts records and `art.' artists, each artist divided among donors in proportion to records. Gaps and contributions are in percentage points and are computed from unrounded shares. "
+                "\\begin{tabnote}`New' counts artists new to the collection through the donor. Measures are defined in Section~\\ref{sec:data}. Gaps and contributions are in percentage points from unrounded shares, and `art.' divides each artist among donors in proportion to records. "
                 "$^{a}$Fewer than half of the donor's records carry the code. "
                 "$^{b}$Contribution to the non-Western share of records when Eastern Europe and the former USSR count as Western (percentage points).\\end{tabnote}\n"
                 "\\label{tab:cases}\n\\end{table}\n")
 
-    # Table: MoMA and Tate patterns.
-    def trow(label, key, d=1, signed=False, integer=False):
-        vals = []
-        for col in ("MoMA", "Tate"):
-            v = float(tate.loc[key, col])
-            vals.append(fint(v) if integer else (csigned(v) if signed else fdec(v, d)))
-        return [label] + vals
+    # Table: MoMA and Tate patterns (MoMA also over the years the Tate file covers).
+    COLS = ("MoMA", "MoMA 1929-2013", "Tate")
+    # Section 5.4: MoMA's 1929-2013 figures are close to its full-period figures.
+    for _key, _tol in (("top_1pct_share_of_records", 3), ("units_peak_year_over_90", 8), ("units_top_artist_over_90", 6)):
+        assert abs(float(tate.loc[_key, "MoMA"]) - float(tate.loc[_key, "MoMA 1929-2013"])) < _tol, _key
+    def trow(label, key, d=1, integer=False):
+        return [label] + [fint(float(tate.loc[key, c])) if integer else fdec(float(tate.loc[key, c]), d) for c in COLS]
+    def nrow(label, key):
+        return [label] + [f"{int(float(tate.loc[key + '_n', c]))} ({fdec(float(tate.loc[key, c]), 0)})" for c in COLS]
+    r13 = tate_rules.loc["MoMA 1929-2013 (non-anchor)"]
     trows = [
         trow("Gift records naming a donor", "gift_records", integer=True),
         trow("Donor units", "donor_units", integer=True),
         trow("Units with at least 100 records", "units_100plus", integer=True),
         trow(r"Share of records held by the top 1\% of units (\%)", "top_1pct_share_of_records"),
         r"\midrule",
-        r"\multicolumn{3}{l}{\emph{Among units with at least 100 records}} \\",
-        trow(r"Units with more than 90\% of records in one year (\%)", "units_peak_year_over_90", 0),
-        trow(r"Units with more than 90\% of records by one artist (\%)", "units_top_artist_over_90", 0),
+        r"\multicolumn{4}{l}{\emph{Units with at least 100 records, number (\%)}} \\",
+        nrow(r"More than 90\% of records in one year", "units_peak_year_over_90"),
+        nrow(r"More than 90\% of records by one artist", "units_top_artist_over_90"),
     ]
     trows.append(r"\midrule")
-    trows.append(r"\multicolumn{3}{l}{\emph{Pattern rules of Table~\ref{tab:donor_type_taxonomy}, units with at least 100 records (at MoMA other than the six anchors)}} \\")
-    trows.append(["Units", fint(typsum["non-anchor units"]), fint(tate_rules.loc["Tate", "units"])])
-    trows.append(["Matching exactly one pattern", fint(typsum["non-anchor clean"]), fint(tate_rules.loc["Tate", "one pattern"])])
-    trows.append(["Matching more than one pattern", fint(typsum["non-anchor ambiguous"]), fint(tate_rules.loc["Tate", "several"])])
+    trows.append(r"\multicolumn{4}{l}{\emph{Pattern rules of Table~\ref{tab:donor_type_taxonomy}, units with at least 100 records (at MoMA other than the six anchors)}} \\")
+    trows.append(["Units", fint(typsum["non-anchor units"]), fint(r13["units"]), fint(tate_rules.loc["Tate", "units"])])
+    trows.append(["Matching exactly one pattern", fint(typsum["non-anchor clean"]), fint(r13["one pattern"]), fint(tate_rules.loc["Tate", "one pattern"])])
+    trows.append(["Matching more than one pattern", fint(typsum["non-anchor ambiguous"]), fint(r13["several"]), fint(tate_rules.loc["Tate", "several"])])
     trows.append(["Matching the single-artist rule", fint(typsum["type count (non-anchor, any match): Single-artist gift"]),
-                  fint(tate_rules.loc["Tate", "Single-artist gift"])])
-    trows.append(["Matching no pattern", fint(typsum["non-anchor unclassified"]), fint(tate_rules.loc["Tate", "none"])])
-    write_table("rev_tab_tate.tex", "Gift patterns at MoMA and at the Tate, computed with comparable definitions.",
-                ["", "MoMA", "Tate"], trows, "lrr", "tab:tate",
+                  fint(r13["Single-artist gift"]), fint(tate_rules.loc["Tate", "Single-artist gift"])])
+    trows.append(["Matching no pattern", fint(typsum["non-anchor unclassified"]), fint(r13["none"]), fint(tate_rules.loc["Tate", "none"])])
+    write_table("rev_tab_tate.tex", "Gift patterns at MoMA and at the Tate, with credit lines parsed by the same rules.",
+                ["", "MoMA", "MoMA, 1929--2013", "Tate"], trows, "lrrr", "tab:tate",
                 note="Both museums' credit lines are parsed with the same rules for donor names and dedication clauses. "
+                     "The public Tate file ends in 2013, and the middle column restricts MoMA to the same years. "
                      "Tate origin is coded from place of birth and MoMA origin from nationality, and the Tate's departments are coarser. "
-                     "The public Tate file ends in 2013. Tate credit lines that name an acquisition channel (for example the Turner Bequest) are excluded.")
+                     "Tate credit lines that name an acquisition channel (for example the Turner Bequest) are excluded.")
 
     # ------------------------------------------------------------ supplement
     # S: every donor unit with 100 or more records, MoMA and Tate (one table; replaces the earlier top-20,
@@ -876,31 +915,27 @@ def main():
                      "from the donor's mean change and at least the larger of 10 records and 10\\% of the donor's peak year. At most three breaks are kept.")
 
     # S: definitions of the gift channel (script 60).
-    if os.path.exists(out("rev_sample_definitions.csv")):
-        sd = pd.read_csv(out("rev_sample_definitions.csv"), index_col=0)
-        lab = {"main": "Main analysis", "with exchange": "With by-exchange records",
-               "without collections": "Without named collections", "first revision": "First revision"}
-        rows = [[lab[k], fint(r["records"]), fint(r["units"]), fdec(r["pct_f"]), fdec(r["pct_nw"]),
-                 fdec(r["art_pct_f"]), fdec(r["art_pct_nw"]), csigned(r["six_contrib_nw"]),
-                 f"{r['top10_rec_sum_f']:.2f} / {r['top10_art_sum_f']:.2f}",
-                 f"{r['top10_rec_sum_nw']:.2f} / {r['top10_art_sum_nw']:.2f}"] for k, r in sd.iterrows()]
-        write_table("rev_supp_sample_definitions.tex", "Main results under four definitions of the gift channel.",
-                    ["Definition", "Records", "Units", r"\% F rec.", r"\% NW rec.", r"\% F art.", r"\% NW art.",
-                     "Six, NW", "Top ten, F", "Top ten, NW"], rows, "lrrrrrrrrr", "tab:s_sample_definitions", resize=True,
-                    note="The main analysis includes credit lines that consist of a named collection and excludes records "
-                         "acquired by exchange of an earlier gift. `Six, NW' is the six cases' joint contribution to the "
-                         "non-Western share of records. `Top ten' gives, for the ten units with the largest record-level "
-                         "contributions in absolute value, the sum of those contributions and the sum of the same units' "
-                         "artist-level contributions (points).")
-        put("SdFirstF", fdec(sd.loc["first revision", "pct_f"])); put("SdFirstNW", fdec(sd.loc["first revision", "pct_nw"]))
-        put("SdExchF", fdec(sd.loc["with exchange", "pct_f"])); put("SdExchNW", fdec(sd.loc["with exchange", "pct_nw"]))
-        put("SdNoCollF", fdec(sd.loc["without collections", "pct_f"])); put("SdNoCollNW", fdec(sd.loc["without collections", "pct_nw"]))
-        for k_, l_ in (("Main", "main"), ("First", "first revision"), ("Exch", "with exchange"), ("NoColl", "without collections")):
-            for kk in ("f", "nw"):
-                put(f"Sd{k_}TopRec{kk.upper()}", fdec(sd.loc[l_, f"top10_rec_sum_{kk}"], 2))
-                put(f"Sd{k_}TopArt{kk.upper()}", fdec(sd.loc[l_, f"top10_art_sum_{kk}"], 2))
-            assert sd.loc[l_, "top10_art_sum_f"] < sd.loc[l_, "top10_rec_sum_f"]
-            assert sd.loc[l_, "top10_art_sum_nw"] < sd.loc[l_, "top10_rec_sum_nw"]
+    sd = pd.read_csv(out("rev_sample_definitions.csv"), index_col=0)
+    lab = {"main": "Main analysis", "with exchange": "With by-exchange records",
+           "without collections": "Without named collections", "neither change": "Without either change",
+           "without fund-led": "Without fund-led records", "MoMA nationality only": "MoMA nationality only"}
+    rows = [r"\multicolumn{7}{@{}l}{\emph{(a) Sample and shares (\%)}} \\"]
+    rows += [[lab[k], fint(r["records"]), fint(r["units"]), fdec(r["pct_f"]), fdec(r["pct_nw"]),
+              fdec(r["art_pct_f"]), fdec(r["art_pct_nw"])] for k, r in sd.iterrows()]
+    rows += [r"\midrule", r"\multicolumn{7}{@{}l}{\emph{(b) Contributions, records / artists (points)}} \\",
+             r" & Six, F & Six, NW & Few, F & Few, NW & Many, F & Many, NW \\", r"\midrule"]
+    rows += [[lab[k], f"{r['six_contrib_f']:+.2f}", f"{r['six_contrib_nw']:+.2f}",
+              f"{r['few_rec_sum_f']:.2f} / {r['few_art_sum_f']:.2f}", f"{r['few_rec_sum_nw']:.2f} / {r['few_art_sum_nw']:.2f}",
+              f"{r['many_rec_sum_f']:.2f} / {r['many_art_sum_f']:.2f}", f"{r['many_rec_sum_nw']:.2f} / {r['many_art_sum_nw']:.2f}"]
+             for k, r in sd.iterrows()]
+    write_table("rev_supp_sample_definitions.tex", "Main results under six definitions of the gift channel.",
+                ["Definition", "Records", "Units", "F rec.", "NW rec.", "F art.", "NW art."], rows, "lrrrrrr",
+                "tab:s_sample_definitions", resize=True,
+                note="The main analysis includes credit lines that consist of a named collection and excludes records acquired "
+                     "by exchange of an earlier gift. Fund-led records open with a museum fund or purchase formula before the gift. "
+                     "`Six' is the six cases' joint contribution to the share of records. `Few' and `Many' sum the absolute "
+                     "contributions of single units with at least 100 records that hold at least as many records per artist as "
+                     "the gift channel (`Few') or fewer (`Many'), counted by record and by artist.")
 
     # S: Rockefeller.
     rows = [[tex_escape(pn), fint(r["n"]), fint(r["n_artists"]), f"{int(r['era_start'])}--{int(r['era_end'])}",

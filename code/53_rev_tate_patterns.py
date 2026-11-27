@@ -181,6 +181,8 @@ def pattern_summary(label, df, pairs, units, base, arts):
            "units_peak_year_over_50": pct((units["peak_year_share"] > 50).sum(), len(units)),
            "units_top_artist_over_90": pct((units["top_artist_share"] > 90).sum(), len(units)),
            "units_top_artist_over_50": pct((units["top_artist_share"] > 50).sum(), len(units)),
+           "units_peak_year_over_90_n": int((units["peak_year_share"] > 90).sum()),
+           "units_top_artist_over_90_n": int((units["top_artist_share"] > 90).sum()),
            "median_peak_year_share": units["peak_year_share"].median(),
            "median_top_artist_share": units["top_artist_share"].median()}
     for key, col, valid, mv in (("f", "gap_f", "g_valid", 30), ("nw", "gap_nw", "o_valid", 30)):
@@ -223,7 +225,8 @@ def moma_tables():
         "a_f": (cons["gender"] == "F").astype(int).to_numpy(),
         "a_gv": cons["gender"].isin(["F", "M"]).astype(int).to_numpy(),
         "a_nw": (cons["origin"] == "Non-Western").astype(int).to_numpy(),
-        "a_ov": cons["origin"].notna().astype(int).to_numpy()})
+        "a_ov": cons["origin"].notna().astype(int).to_numpy(),
+        "year": g["year"].reindex(cons["rec"]).to_numpy()})
     unid = cons_all.groupby("rec")["unidentified"].max().reindex(g.index).fillna(False).astype(int)
     g["unidentified"] = unid.to_numpy()
     g["dept"] = g["Department"]
@@ -243,8 +246,12 @@ def main():
     t_units.sort_values("n", ascending=False).to_csv(out("rev_tate_units.csv"))
     moma, mp = moma_tables()
     m_units, m_base, m_arts = unit_table(moma, mp)
+    # MoMA restricted to the years the public Tate file covers.
+    m13, mp13 = moma[moma["year"] <= 2013], mp[mp["year"] <= 2013]
+    m13_units, m13_base, m13_arts = unit_table(m13, mp13)
     rows = [pattern_summary("MoMA", moma, mp, m_units, m_base, m_arts),
-            pattern_summary("Tate", tate, tp, t_units, t_base, t_arts)]
+            pattern_summary("Tate", tate, tp, t_units, t_base, t_arts),
+            pattern_summary("MoMA 1929-2013", m13, mp13, m13_units, m13_base, m13_arts)]
     # Lower threshold as well, since the Tate's named-donor gift channel is smaller.
     t50, _, _ = unit_table(tate, tp, min_n=50)
     m50, _, _ = unit_table(moma, mp, min_n=50)
@@ -255,7 +262,10 @@ def main():
         "typology", os.path.join(os.path.dirname(os.path.abspath(__file__)), "52_rev_typology.py"))
     typ = importlib.util.module_from_spec(spec); spec.loader.exec_module(typ)
     rule_rows = []
-    for label, units in (("MoMA", m_units), ("Tate", t_units), ("MoMA (units with 50+ records)", m50),
+    from rev_utils import CASE_LABEL
+    m13_others = m13_units[~m13_units.index.isin(set(CASE_LABEL.values()))]
+    for label, units in (("MoMA", m_units), ("Tate", t_units), ("MoMA 1929-2013 (non-anchor)", m13_others),
+                         ("MoMA (units with 50+ records)", m50),
                          ("Tate (units with 50+ records)", t50)):
         matched, status = typ.classify(units, typ.DEFAULT)
         r = {"museum": label, "units": len(units), "one pattern": int((status == "clean").sum()),
