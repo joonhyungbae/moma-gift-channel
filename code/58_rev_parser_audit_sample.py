@@ -27,7 +27,7 @@ def main():
     inside = g.sample(N_IN, random_state=RNG_SEED)[["ObjectID", "CreditLine", "Donor", "Unit", "co_donor", "fund_led", "by_exchange"]]
     inside.insert(2, "in_sample", True)
     rest = allrec[~allrec["ObjectID"].isin(g["ObjectID"])]
-    rest = rest[rest["CreditLine"].fillna("").str.contains(r"gift|bequest|given|donat", case=False, regex=True)]
+    rest = rest[rest["CreditLine"].fillna("").str.contains(r"gift|bequest|given|donat|collection|generosity|exchange", case=False, regex=True)]
     outside = rest.sample(N_OUT, random_state=RNG_SEED)[["ObjectID", "CreditLine"]]
     outside["in_sample"] = False
     t = pd.concat([inside, outside], ignore_index=True).rename(columns={"Donor": "parsed_donor", "Unit": "donor_unit"})
