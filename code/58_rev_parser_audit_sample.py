@@ -7,14 +7,10 @@ Draws a fixed random sample of records from the five departments, 1929-2024:
       and the three flags the parser returns;
   100 records outside it whose credit line mentions a gift or bequest, to check
       that they were rightly left out.
-The columns human_donor, human_in_sample and note are left blank for a person
-to fill in. The parser's error rate is the share of rows where the human
-reading differs.
-
 Output (output/): parser_audit_sample.csv
 
 The sample depends on the gift channel at the time it is drawn. The set that was
-read (2026-11-27) is frozen in moma_paper/audit/audit_ai.csv; script 62 applies
+read (2026-11-27) is frozen in audit/audit_ai.csv; script 62 applies
 the current parser to those records.
 """
 
@@ -35,8 +31,6 @@ def main():
     outside = rest.sample(N_OUT, random_state=RNG_SEED)[["ObjectID", "CreditLine"]]
     outside["in_sample"] = False
     t = pd.concat([inside, outside], ignore_index=True).rename(columns={"Donor": "parsed_donor", "Unit": "donor_unit"})
-    for col in ("human_donor", "human_in_sample", "note"):
-        t[col] = ""
     t.to_csv(out("parser_audit_sample.csv"), index=False)
     print(f"{len(t)} rows written ({N_IN} inside the sample, {N_OUT} outside); "
           f"{len(rest):,} outside records mention a gift or bequest")

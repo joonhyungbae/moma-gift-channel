@@ -4,14 +4,14 @@ Compare the parser with an independent reading of the 300 audit credit lines
 (not part of run_all.py).
 
 Inputs
-  moma_paper/audit/audit_ai.csv    a blind reading, by a language model given only
+  audit/audit_ai.csv    a blind reading, by a language model given only
                                    the published rules (supplement S1), of the 300
                                    credit lines script 58 drew on 2026-11-27, before
                                    the two parser fixes it led to. The ObjectIDs in
                                    this file are the fixed audit set.
   the current parser (rev_utils.load_gifts), applied to the same records
 Output
-  moma_paper/audit/parser_audit_compared.csv  one row per record, with an
+  audit/parser_audit_compared.csv  one row per record, with an
       'agree' flag and the published rule that settles each disagreement
   printed summary: agreement on inclusion and on the donor name
 """
@@ -27,7 +27,7 @@ from config import PROJECT_ROOT  # noqa: E402
 from coding import donor_key  # noqa: E402
 from rev_utils import load_collection, load_gifts  # noqa: E402
 
-AUDIT = os.path.join(PROJECT_ROOT, "moma_paper", "audit")
+AUDIT = os.path.join(PROJECT_ROOT, "audit")
 
 # Remaining disagreements and the published rule (supplement S1) that settles each.
 # The reader saw one credit line at a time, so rules that depend on the whole file

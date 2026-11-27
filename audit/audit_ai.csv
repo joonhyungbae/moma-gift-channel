@@ -1,0 +1,301 @@
+row,ObjectID,ai_in_sample,ai_donor,ai_note
+1,194179,no,,'Acquired through the generosity of' without gift formula
+2,90657,yes,Sarah-Ann and Werner H. Kramarsky,
+3,4207,yes,Ralph O. Smith Co.,
+4,11462,yes,Mrs. Jacquelynn Shlaes,
+5,8211,yes,Philip Johnson,text after first 'gift of'; collection name before it is not the donor
+6,9788,no,,"AMBIGUOUS: name-first bequest followed by 'and Purchase'; name-first form as written allows only '(by exchange)' after Gift/Bequest, so not parsed; if tolerated, donor would be Walter Thayer"
+7,70377,no,,anonymous; 'Given' form
+8,119790,no,,role label
+9,86532,yes,Mr. and Mrs. Ralph F. Colin,
+10,13992,yes,"Edgar Kaufmann, Jr.",suffix kept
+11,156146,yes,Lawrence Benenson,
+12,42041,no,,"generosity/fund, no gift formula; collection named with other text"
+13,462811,no,,role label
+14,221779,yes,Jan Christiaan Braun,dedication removed
+15,185108,no,,anonymous
+16,36536,no,,"no 'gift of'; only an honoree is named, donor unnamed"
+17,2322,yes,John C. Waddell,
+18,16821,yes,Judith Rothschild Foundation,
+19,1023,no,,role label (plural 'the architects')
+20,299441,yes,Jean Pigozzi,text after 'gift of'
+21,22745,yes,Louis E. Stern Collection,named collection alone
+22,22969,yes,Louis E. Stern Collection,named collection alone
+23,58248,yes,David H. McAlpin,
+24,71822,no,,role label
+25,69528,yes,Carol O. Selle,
+26,456725,no,,role label
+27,289862,yes,Tamar Cohen,
+28,131756,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+29,28873,yes,Louis E. Stern Collection,named collection alone
+30,95062,yes,Richard S. Zeisler,name-first bequest
+31,78793,yes,Mr. and Mrs. George M. Jaffin,
+32,28258,yes,Judith Rothschild Foundation,trailing parenthetical dropped (base name occurs)
+33,7524,yes,Philip Johnson,text after first 'gift of'; collection name before it is not the donor
+34,20168,yes,Louis E. Stern Collection,named collection alone
+35,58524,yes,New York Times Collection,named collection alone
+36,126138,no,,role label
+37,60532,yes,Celeste Bartos,
+38,174422,yes,Peter J. Cohen,
+39,114413,yes,Lee Friedlander,dedication removed
+40,44385,yes,Frances F. L. Beatty,
+41,455608,no,,role label
+42,203111,no,,'Acquired through the generosity of' without gift formula
+43,7734,no,,role label
+44,21116,yes,Louis E. Stern Collection,named collection alone
+45,20411,yes,Louis E. Stern Collection,named collection alone
+46,106226,no,,role label
+47,63966,yes,Cartón y Papel de México,"AMBIGUOUS: 'S.A' is a corporate suffix but not in the listed suffixes, so cut at the comma; if the list is illustrative the donor is 'Cartón y Papel de México, S.A'"
+48,12208,yes,Josef Albers Foundation,
+49,441202,yes,Jack Shear,
+50,24195,yes,Louis E. Stern Collection,named collection alone
+51,74531,yes,Dorothy C. Miller,
+52,3299,no,,role label
+53,196996,yes,Lawrence Benenson,'and the Committee on' clause removed
+54,462643,no,,role label
+55,46381,no,,role label
+56,67872,yes,Business Committee for the Arts,institutional name
+57,59534,no,,role label (plural)
+58,458627,no,,role label
+59,46028,no,,"exchange, no gift formula"
+60,297196,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+61,28733,yes,Louis E. Stern Collection,named collection alone
+62,41767,no,,"generosity/fund, no gift formula; collection named with other text"
+63,60615,no,,role label
+64,83191,no,,anonymous
+65,127351,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+66,63300,no,,role label
+67,184351,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+68,61124,yes,Associates of the Department of Prints and Illustrated Books,"museum support group, institutional name, not a role label"
+69,161657,yes,Judith Rothschild Foundation,
+70,420846,yes,Helen Kornblum,dedication removed
+71,119524,no,,role label
+72,459230,no,,role label
+73,162974,yes,French National Railroads,
+74,76828,yes,Abby Aldrich Rockefeller,Rockefeller lineage unit
+75,188637,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+76,467905,no,,role label
+77,138130,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+78,199373,yes,Jacob and Yael Samuel,
+79,198771,yes,Lawrence Benenson,'and the Committee on' clause removed
+80,462272,no,,role label
+81,67478,yes,Abby Aldrich Rockefeller,Rockefeller lineage unit
+82,7728,yes,New York Times,
+83,76184,yes,"Kleiner, Bell & Co.",firm name across comma
+84,182015,yes,MSGSSS,
+85,74452,yes,"Kleiner, Bell & Co.",firm name across comma
+86,11951,no,,role label
+87,23510,yes,Louis E. Stern Collection,named collection alone
+88,65474,yes,Kynaston McShine,
+89,27341,yes,Louis E. Stern Collection,named collection alone
+90,93132,yes,Curt Valentin,
+91,142901,yes,Paula Cooper,
+92,38559,yes,Kasmin Limited,
+93,77467,yes,"Kleiner, Bell & Co.",firm name across comma
+94,176993,yes,Roy Lichtenstein Foundation,dedication removed
+95,473615,no,,role label
+96,42727,no,,"generosity/fund, no gift formula; collection named with other text"
+97,56191,no,,role label
+98,74061,yes,"Kleiner, Bell & Co.",firm name across comma
+99,470974,no,,role label
+100,3175,yes,"ICF, Inc.",suffix kept
+101,88467,yes,David Teiger,dedication removed
+102,69797,yes,Abby Aldrich Rockefeller,Rockefeller lineage unit
+103,469042,no,,role label
+104,11668,yes,Mrs. Alfred A. Knopf,
+105,38229,yes,Riklis Collection of McCrory Corporation,named collection alone
+106,77995,yes,Mrs. Samuel Bronfman,first name before comma; co-donor
+107,458599,no,,role label
+108,26349,yes,Louis E. Stern Collection,named collection alone
+109,13176,no,,anonymous; 'Given' form
+110,277149,yes,Peter J. Cohen,
+111,440809,yes,Jack Shear,
+112,38881,no,,"generosity/fund, no gift formula; collection named with other text"
+113,37132,yes,Norman Alexander,
+114,504194,yes,Helen and Sam Zell,
+115,143577,yes,Mr. and Mrs. Ralph F. Colin,
+116,10993,yes,Mrs. René d'Harnoncourt,
+117,1873,yes,"D. Stanley Corcoran, Inc.",suffix kept
+118,470881,no,,role label
+119,122021,yes,Jerry I. Speyer and Katherine G. Farley,text before first comma; co-donor
+120,127457,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+121,136392,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+122,97243,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+123,25396,yes,Louis E. Stern Collection,named collection alone
+124,22290,yes,Louis E. Stern Collection,named collection alone
+125,458371,no,,role label
+126,134133,yes,Lee and Ann Fensterstock,dedication removed
+127,19934,no,,role label
+128,27787,yes,Louis E. Stern Collection,named collection alone
+129,43577,no,,"generosity/fund, no gift formula; collection named with other text"
+130,60061,no,,"fund; 'given by' form, no gift formula"
+131,12155,yes,Josef Albers Foundation,
+132,53713,yes,Nihon Keizai Shimbun,
+133,176193,yes,Roy Lichtenstein Foundation,dedication removed
+134,2523,yes,"Edgar Kaufmann, Jr.",suffix kept
+135,81977,yes,Agnes Gund and Lewis B. Cullman,dedication removed; co-donor
+136,8873,no,,role label
+137,104216,yes,Ninah and Michael Lynne,
+138,31238,yes,Louis E. Stern Collection,named collection alone
+139,124562,yes,Art & Project/Depot VBVR,"name-first form; one combined name, not a list"
+140,143706,no,,role label
+141,32070,no,,"text before first comma is 'the author', a role label; named people follow only as appositions"
+142,66936,yes,Victor S. Riesenfeld,
+143,31314,yes,Louis E. Stern Collection,named collection alone
+144,37112,yes,Norman Alexander,
+145,106578,no,,role label
+146,76611,yes,"Kleiner, Bell & Co.",firm name across comma
+147,77938,yes,"Kleiner, Bell & Co.",firm name across comma
+148,45335,no,,role label
+149,33074,yes,Family of James Castle,AMBIGUOUS: family named after a person; if James Castle is the artist this is a relation-to-artist role label and would be out; the line itself carries a proper name so kept
+150,132040,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+151,441294,yes,Jack Shear,
+152,24199,yes,Louis E. Stern Collection,named collection alone
+153,467774,no,,role label
+154,45418,no,,role label
+155,194035,no,,'Acquired through the generosity of' without gift formula
+156,26436,yes,Louis E. Stern Collection,named collection alone
+157,3449,yes,Alfred H. Barr,
+158,20741,yes,Louis E. Stern Collection,named collection alone
+159,58713,yes,New York Times Collection,named collection alone
+160,6345,no,,role label
+161,95677,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+162,31787,yes,Louis E. Stern Collection,named collection alone
+163,299289,yes,Jean Pigozzi,text after 'gift of'
+164,38919,no,,"generosity/fund, no gift formula; collection named with other text"
+165,166460,yes,Hudgins Family,dedication removed
+166,34777,yes,Julia Feininger,
+167,76048,yes,"Kleiner, Bell & Co.",firm name across comma
+168,39523,no,,"generosity/fund, no gift formula; collection named with other text"
+169,39871,no,,"generosity/fund, no gift formula; collection named with other text"
+170,5178,no,,role label
+171,168696,no,,role label
+172,97267,no,,"AMBIGUOUS: name-first gift followed by a purchase/partial-gift parenthetical; name-first form as written allows only '(by exchange)' after Gift, and there is no literal 'gift of'; if tolerated, donor would be Judith Rothschild Foundation Contemporary Drawings Collection"
+173,82974,yes,Edward Steichen,
+174,83995,yes,Thomas Walther,text after 'gift of'
+175,11301,yes,Judith Rothschild Foundation,
+176,470276,no,,role label
+177,440227,yes,Jack Shear,
+178,118426,no,,role label
+179,296512,yes,Susan and Peter MacGill,
+180,38313,yes,Agnes Gund,
+181,49629,no,,role label
+182,85870,yes,Miss Ettie Stettheimer,
+183,150795,no,,role label
+184,202961,yes,Juan Yarur Torres,"fund-led; text after 'gift of', dedication removed"
+185,142315,yes,Lee Friedlander,
+186,103122,yes,"Business Committee for the Arts, Inc.",suffix kept
+187,71746,no,,role label
+188,96264,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+189,71939,yes,Ms. Joan Palevsky,
+190,164577,no,,role label
+191,68430,yes,Abby Aldrich Rockefeller,Rockefeller lineage unit
+192,166018,yes,Dr. and Mrs. William Tsiaras,
+193,131736,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+194,440342,yes,Jack Shear,
+195,9260,no,,role label
+196,71315,no,,role label
+197,96428,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+198,198425,yes,Lawrence Benenson,'and the Committee on' clause removed
+199,470702,no,,role label
+200,25306,yes,Louis E. Stern Collection,named collection alone
+201,67339,yes,J.B. Neumann,
+202,32439,yes,"Kleiner, Bell & Co.",firm name across comma
+203,441478,yes,Jack Shear,
+204,46489,yes,Thomas C. Melzer,
+205,76042,yes,Abby Aldrich Rockefeller,Rockefeller lineage unit
+206,88474,yes,David Teiger,dedication removed
+207,279901,no,,"joint ownership via generosity, no gift formula"
+208,193810,no,,'Acquired through the generosity of' without gift formula
+209,459121,no,,role label
+210,193051,yes,Toyo Ito & Associates,"', Architects' is not a listed suffix nor a 'Kleiner, Bell & Co.' firm form; cut at comma"
+211,171303,no,,"generosity/funds, no gift formula"
+212,199651,yes,Jacob and Yael Samuel,dedication removed
+213,106444,no,,role label
+214,82428,yes,Beth Goldberg Nash and Joshua Nash,
+215,440232,yes,Jack Shear,
+216,608,yes,Lily Auchincloss,first name before comma; co-donor
+217,499534,yes,Helen and Sam Zell,
+218,423834,yes,International Council of The Museum of Modern Art,"museum council, institutional name"
+219,198413,yes,Lawrence Benenson,'and the Committee on' clause removed
+220,277646,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+221,161617,yes,Judith Rothschild Foundation,trailing parenthetical dropped (base name occurs)
+222,77221,yes,"Kleiner, Bell & Co.",firm name across comma
+223,780,no,,role label
+224,130502,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+225,481788,no,,role label
+226,154514,yes,Jeanne Thayer,
+227,175994,yes,Roy Lichtenstein Foundation,dedication removed
+228,68326,yes,Julia Feininger,
+229,74157,yes,"Kleiner, Bell & Co.",firm name across comma
+230,2629,yes,Mrs. Susan G. Rossbach,
+231,84208,yes,Howard Stein,
+232,114385,yes,Azzedine Alaia and the Suzanne Slesin Purchase Fund,"no comma, so text runs through 'and the ... Purchase Fund' (no listed clause matches); first-named person is Azzedine Alaia"
+233,9327,no,,role label
+234,440319,yes,Jack Shear,
+235,11691,yes,Curt Valentin,name-first bequest
+236,21986,yes,Louis E. Stern Collection,named collection alone
+237,20446,yes,Louis E. Stern Collection,named collection alone
+238,28911,yes,Judith Rothschild Foundation,trailing parenthetical dropped (base name occurs)
+239,1199,yes,"Bonniers, Inc.",suffix kept
+240,419703,yes,Alan Shestack,
+241,72991,yes,"Kleiner, Bell & Co.",firm name across comma
+242,469139,no,,role label
+243,462967,no,,role label
+244,81534,yes,Joseph Helman,
+245,70884,no,,anonymous; 'Given' form
+246,1046,no,,role label
+247,7678,yes,Philip Johnson,text after first 'gift of'; collection name before it is not the donor
+248,43302,no,,"generosity/fund, no gift formula; collection named with other text"
+249,162926,yes,French National Railroads,
+250,41100,no,,"generosity/fund, no gift formula; collection named with other text"
+251,61975,yes,Associates of the Department of Prints and Illustrated Books,"museum support group, institutional name, not a role label"
+252,79076,yes,Janet and George M. Jaffin,
+253,135261,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+254,102482,no,,'Acquired through the generosity of' without gift formula
+255,150562,no,,role label
+256,128150,yes,Gilbert and Lila Silverman Fluxus Collection,name-first form
+257,107332,no,,role label (plural)
+258,78545,yes,Mrs. David M. Levy,
+259,465465,no,,role label
+260,454425,no,,role label
+261,456384,no,,role label
+262,63245,yes,Abby Aldrich Rockefeller,Rockefeller lineage unit
+263,470064,no,,role label
+264,77704,yes,"Kleiner, Bell & Co.",firm name across comma
+265,44290,yes,Merle Armitage,
+266,71149,no,,role label
+267,46086,yes,Paul F. Walter,
+268,27099,yes,Louis E. Stern Collection,named collection alone
+269,83254,no,,anonymous
+270,487048,no,,role label
+271,134851,yes,Speyer Family Foundation,double space in 'Gift  of' read as the gift-of formula; first name before comma; co-donor
+272,19318,yes,"Walter P. Chrysler, Jr.",suffix kept
+273,40056,no,,"generosity/fund, no gift formula; collection named with other text"
+274,20389,yes,Louis E. Stern Collection,named collection alone
+275,81082,no,,by exchange
+276,117287,yes,Sarah-Ann and Werner H. Kramarsky,
+277,122123,no,,role label (plural)
+278,10977,yes,Curt Valentin,name-first bequest
+279,49751,yes,Celeste Bartos,
+280,26950,yes,Louis E. Stern Collection,named collection alone
+281,407366,yes,Helen Kornblum,dedication removed
+282,200480,yes,Jacob and Yael Samuel,dedication removed
+283,181755,no,,anonymous
+284,96995,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+285,12454,no,,by exchange
+286,96228,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+287,14963,yes,Limited Editions Club,
+288,486545,yes,Jaime Davidovich Foundation,
+289,17365,yes,Celeste and Armand Bartos,"trailing parenthetical '(in perpetuity)' dropped, assuming the base name occurs elsewhere as a donor"
+290,459376,no,,role label
+291,404858,yes,Monroe Wheeler,
+292,43910,yes,Frank Crowninshield,
+293,26873,yes,Donald Karshan,dedication removed
+294,97794,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+295,95794,yes,Judith Rothschild Foundation Contemporary Drawings Collection,name-first form; separate unit
+296,54740,no,,role label
+297,122551,yes,Art & Project/Depot VBVR,"name-first form; one combined name, not a list"
+298,63721,yes,Mrs. Bertha M. Slattery,
+299,73395,yes,Mr. and Mrs. Ralph F. Colin,
+300,416408,yes,Louis E. Stern Collection,named collection alone
