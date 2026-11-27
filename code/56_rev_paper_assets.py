@@ -669,29 +669,37 @@ def main():
                      "The public Tate file ends in 2013. Tate credit lines that name an acquisition channel (for example the Turner Bequest) are excluded.")
 
     # ------------------------------------------------------------ supplement
-    # S: every donor unit with 100 or more records (replaces the earlier top-20 and pattern tables).
+    # S: every donor unit with 100 or more records, MoMA and Tate (one table; replaces the earlier top-20,
+    # pattern and Tate unit tables).
     PAT_CODE = {"Volume gift": "V", "Founding-lineage gift": "L", "Single-artist gift": "S", "Anonymous-archive gift": "A",
                 "Institutional block gift": "I", "Cross-departmental gift": "C"}
-    rows = []
+    def codes_of(t):
+        return "".join(PAT_CODE[t_.strip()] for t_ in t.split(";")) if isinstance(t, str) and t.strip() else "--"
+    def unit_row(name, n, art, era, peak, dept, artist, pf, gv, pnw, ov, cf, cnw, pat, star=False):
+        return [tex_escape(name) + (r"$^{\ast}$" if star else ""), fint(n), fint(art), fint(era), fdec(peak, 0), fdec(dept, 0), fdec(artist, 0),
+                cell(pf, dash_if=gv < 30), cell(pnw, dash_if=ov < 30), csigned(cf), csigned(cnw), pat]
+    rows = [r"\multicolumn{12}{@{}l}{\emph{(a) MoMA}} \\"]
     for u, r in typ.sort_values("n", ascending=False).iterrows():
         uu = units.loc[u]
-        codes = "".join(PAT_CODE[t_.strip()] for t_ in r["types"].split(";")) if isinstance(r["types"], str) and r["types"] else ""
-        rows.append([tex_escape(u) + (r"$^{\ast}$" if r["is_case"] else ""), fint(r["n"]), fint(r["n_artists"]),
-                     f"{int(uu['era_start'])}--{str(int(uu['era_end']))[2:]}" if uu["era_start"] != uu["era_end"] else str(int(uu["era_start"])),
-                     fdec(r["peak_year_share"], 0), fdec(r["top_dept_share"], 0), fdec(r["top_artist_share"], 0),
-                     cell(uu["pct_f"], dash_if=uu["g_valid"] < 30), cell(uu["pct_nw"], dash_if=uu["o_valid"] < 30), codes or "--"])
-    head = ("Donor unit & Rec. & Art. & Years & Peak & Dept. & Artist & Fem. & Non-W. & Pat. \\\\\n"
-            " & & & & yr (\\%) & (\\%) & (\\%) & (\\%) & (\\%) & \\\\\n\\midrule\n")
+        rows.append(unit_row(u, r["n"], r["n_artists"], r["era_years"], r["peak_year_share"], r["top_dept_share"], r["top_artist_share"],
+                             uu["pct_f"], uu["g_valid"], uu["pct_nw"], uu["o_valid"], uu["contrib_f"], uu["contrib_nw"], codes_of(r["types"]), r["is_case"]))
+    rows.append(r"\midrule" + "\n" + r"\multicolumn{12}{@{}l}{\emph{(b) Tate}} \\")
+    for u, r in tate_units.sort_values("n", ascending=False).iterrows():
+        rows.append(unit_row(u, r["n"], r["n_artists"], r["era_years"], r["peak_year_share"], r["top_dept_share"], r["top_artist_share"],
+                             r["pct_f"], r["g_valid"], r["pct_nw"], r["o_valid"], r["contrib_f"], r["contrib_nw"], codes_of(r.get("patterns"))))
+    head = ("Donor unit & Rec. & Art. & Era & Peak & Dept. & Artist & Fem. & Non-W. & Con. & Con. & Pat. \\\\\n"
+            " & & & (yr) & yr (\\%) & (\\%) & (\\%) & (\\%) & (\\%) & F & NW & \\\\\n\\midrule\n")
     with open(out("rev_supp_units.tex"), "w", encoding="utf-8") as f:
-        f.write("{\\scriptsize\\setlength{\\tabcolsep}{3pt}\n\\begin{longtable}{@{}p{0.40\\textwidth}rrlrrrrrl@{}}\n"
-                "\\caption{Every donor unit with 100 or more records, by number of records. $^{\\ast}$Anchor case. "
-                "`Peak yr' is the share of records accessioned in the busiest year, `Dept.' the share in the largest department, and `Artist' the share by the largest artist. "
-                "Female and non-Western shares are of coded records, and a dash marks fewer than 30 coded records (typically gifts by unidentified makers). "
+        f.write("{\\scriptsize\\setlength{\\tabcolsep}{3pt}\n\\begin{longtable}{@{}p{0.34\\textwidth}rrrrrrrrrrl@{}}\n"
+                "\\caption{Every donor unit with 100 or more records at MoMA (a) and at the Tate (b), by number of records. $^{\\ast}$Anchor case. "
+                "`Era' is the span from first to last accession, `Peak yr' the share of records accessioned in the busiest year, `Dept.' the share in the largest department, "
+                "and `Artist' the share by the largest artist. Female and non-Western shares are of coded records, and a dash marks fewer than 30 coded records (typically gifts by unidentified makers). "
+                "`Con.' is the unit's contribution to the museum's gift-record share (percentage points). "
                 "`Pat.' gives the patterns of Table~2 in the article that the unit matches: V volume gift, L founding-lineage gift, S single-artist gift, "
-                "A anonymous-archive gift, I institutional block gift, C cross-departmental gift.}\\label{tab:s_units}\\\\\n\\toprule\n"
+                "A anonymous-archive gift, I institutional block gift, C cross-departmental gift. Tate departments and origin are coded as described in Section~\\ref{sec:s_tate}.}\\label{tab:s_units}\\\\\n\\toprule\n"
                 + head + "\\endfirsthead\n\\toprule\n" + head + "\\endhead\n\\bottomrule\n\\endlastfoot\n")
         for r in rows:
-            f.write(" & ".join(r) + r" \\" + "\n")
+            f.write((r if isinstance(r, str) else " & ".join(r) + r" \\") + "\n")
         f.write("\\end{longtable}}\n")
 
     # S: gender denominators.
@@ -794,7 +802,7 @@ def main():
              fint(r["anchors_own_pattern"]), fint(r["clean"]), fint(r["ambiguous"]), fint(r["unclassified"]), fint(r["types_populated"])] for _, r in typsens.iterrows()]
     write_table("rev_supp_typology_sensitivity.tex", "Classification of the non-anchor units when one threshold is moved at a time.",
                 ["Threshold", "Value", "Default", "Anchors on own pattern", "One pattern", "Several", "None", "Patterns populated"], rows, r"p{0.42\textwidth}rlrrrrr",
-                "tab:s_typsens", resize=True, size=r"\footnotesize")
+                "tab:s_typsens", resize=True, size=r"\scriptsize")
     rows = [[fint(r["k"]), fdec(r["kmeans_silhouette"], 3), fdec(r["ward_silhouette"], 3), fdec(r["shuffled_mean"], 3),
              fdec(r["shuffled_p95"], 3), fint(r["kmeans_smallest_cluster"])] for _, r in clus.iterrows()]
     write_table("rev_supp_clustering.tex", "Cluster structure of the donor feature space.",
@@ -829,10 +837,11 @@ def main():
     rows = [[tex_escape(u), fint(r["n_records"]), fint(r["new_artists"]), fint(r["new_nw"])] for u, r in lead.iterrows()]
     lead = first.sort_values("new_f", ascending=False).head(8)
     rows2 = [[tex_escape(u), fint(r["n_records"]), fint(r["new_artists"]), fint(r["new_f"])] for u, r in lead.iterrows()]
-    write_table("rev_supp_first_source_nw.tex", "Donor units through which the most non-Western artists first entered the collection.",
-                ["Donor unit", "Records", "New artists", "Non-Western"], rows, r"p{0.55\textwidth}rrr", "tab:s_first_nw")
-    write_table("rev_supp_first_source_f.tex", "Donor units through which the most female artists first entered the collection.",
-                ["Donor unit", "Records", "New artists", "Female"], rows2, r"p{0.55\textwidth}rrr", "tab:s_first_f")
+    both_rows = [[a_[0], a_[2], a_[3], b_[0], b_[2], b_[3]] for a_, b_ in zip(rows, rows2)]
+    write_table("rev_supp_first_source.tex", "Donor units through which the most non-Western artists (left) and the most female artists (right) first entered the collection.",
+                [r"Donor unit", "New", r"Non-W.", r"Donor unit", "New", "Female"], both_rows,
+                r"p{0.33\textwidth}rr@{\hspace{14pt}}p{0.33\textwidth}rr", "tab:s_first", size=r"\footnotesize",
+                note="`New' counts the unit's artists who are new to the collection, and the last column of each half how many of them are non-Western or female.")
     rows = [["1929" if r["decade"] == 1920 else str(int(r["decade"])) + "s", fint(r["new_artists"]), fint(r["new_f"]), cell(r["pct_f"]), fint(r["units_with_new_f"]),
              fint(r["new_nw"]), cell(r["pct_nw"]), fint(r["units_with_new_nw"])] for _, r in decades.iterrows()]
     write_table("rev_supp_decades.tex", "Artists first entering the collection through a donor-identified gift, by decade.",
@@ -911,12 +920,6 @@ def main():
     write_table("rev_supp_selection.tex", "The five most extreme donor units on each selection axis (units with 100 or more records). $^{\\ast}$Selected case.",
                 ["Axis", "Rank", "Donor unit", "Value", "Records"], rows, r"p{0.3\textwidth}rp{0.42\textwidth}rr", "tab:s_selection",
                 size=r"\footnotesize")
-    rows = [[tex_escape(u), fint(r["n"]), fint(r["n_artists"]), fint(r["era_years"]), fdec(r["peak_year_share"], 0),
-             fdec(r["top_artist_share"], 0), cell(r["pct_f"]), cell(r["pct_nw"]), csigned(r["contrib_f"]), csigned(r["contrib_nw"])]
-            for u, r in tate_units.sort_values("n", ascending=False).iterrows()]
-    write_table("rev_supp_tate_units.tex", "Tate donor units with 100 or more gift records.",
-                ["Donor unit", "Records", "Artists", "Era (yr)", r"Peak yr \%", r"Top artist \%", r"\% female", r"\% non-W.", "Contrib. F", "Contrib. NW"],
-                rows, r"p{0.34\textwidth}rrrrrrrrr", "tab:s_tate_units", resize=True)
 
     # =============================================================== figures
     # Figure 1: volume versus gap, all units with 30+ coded records.
