@@ -260,6 +260,7 @@ def load_moma_donor_gifts(include_collections=True, include_exchange=False):
         "ObjectID",
         "Nationality",
         "Nationality_MoMA",
+        "AccessionNumber",
         "NationalityFilled",
         "Gender",
         "GeoDetail",

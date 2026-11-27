@@ -36,7 +36,7 @@ import numpy as np
 import pandas as pd
 
 from coding import origin_record
-from rev_utils import RNG_SEED, load_gifts, out
+from rev_utils import DOMINANT_SHARE, RNG_SEED, load_gifts, out
 
 N_DRAWS = 100000
 CHUNK = 10000
@@ -80,14 +80,23 @@ def run(df, unit_col, maker_col, dept_col, flag, valid, label, share_name, rng):
         oth_all = oth.drop_duplicates("cl")[flag]
         art_pooled = float(oth_all.mean())
 
+        # Reference: other units' records, leaving out any unit that holds more than
+        # DOMINANT_SHARE of a cell (as in rev_utils.matched_expectation).
+        ref = d[d[unit_col] != unit]
+        cu = ref.groupby([dept_col, "decade", unit_col]).size()
+        dom = (cu / cu.groupby(level=[0, 1]).transform("sum"))
+        dom = dom[dom > DOMINANT_SHARE].index
+        if len(dom):
+            ref = ref[~pd.MultiIndex.from_frame(ref[[dept_col, "decade", unit_col]]).isin(dom)]
+        ref_cell = ref.groupby([dept_col, "decade"])[flag].agg(["sum", "count"])
+        ref_dept = ref.groupby(dept_col)[flag].agg(["sum", "count"])
+
         def rec_share(dept, dec):
-            s = cell_all.loc[(dept, dec), "sum"] - own_cell.loc[(dept, dec), "sum"]
-            n = cell_all.loc[(dept, dec), "count"] - own_cell.loc[(dept, dec), "count"]
-            if n >= MIN_CELL:
-                return s / n
-            s = dept_all.loc[dept, "sum"] - own_dept.loc[dept, "sum"]
-            n = dept_all.loc[dept, "count"] - own_dept.loc[dept, "count"]
-            return s / n if n > 0 else rec_pooled
+            if (dept, dec) in ref_cell.index and ref_cell.loc[(dept, dec), "count"] >= MIN_CELL:
+                return ref_cell.loc[(dept, dec), "sum"] / ref_cell.loc[(dept, dec), "count"]
+            if dept in ref_dept.index and ref_dept.loc[dept, "count"] > 0:
+                return ref_dept.loc[dept, "sum"] / ref_dept.loc[dept, "count"]
+            return rec_pooled
 
         def art_share(dept, dec):
             if (dept, dec) in oth_cell.index and oth_cell.loc[(dept, dec), "count"] >= MIN_CELL:

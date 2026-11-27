@@ -92,10 +92,11 @@ def main():
     # The label is shuffled within the decade of first entry (artists) or within
     # department and decade (records), since the shares change over time.
     fs["decade"] = (fs["year"] // 10) * 10
+    fs["dept"] = collection["Department"].reindex(fs["rec"]).to_numpy()
     for label, flag, valid in (("female artists", "F", "GV"), ("non-Western artists", "NW", "OV")):
         d = fs[fs[valid]]
         u, x = d["unit"].to_numpy(), d[flag].to_numpy()
-        grp = list(pd.Series(np.arange(len(d))).groupby(d["decade"].to_numpy()).indices.values())
+        grp = list(pd.Series(np.arange(len(d))).groupby((d["dept"].astype(str) + d["decade"].astype(str)).to_numpy()).indices.values())
         nh = [half_cover(u, strat_perm(x, grp, rng)) for _ in range(N_SHUFFLE_ARTISTS)]
         nt = [top_share(u, strat_perm(x, grp, rng)) for _ in range(N_SHUFFLE_ARTISTS)]
         rows.append({"measure": label, "n_flagged": int(x.sum()), "n_coded": len(d),
@@ -230,7 +231,7 @@ def main():
         d = fs[fs[valid]]
         x = d[flag].to_numpy()
         sel = (d["unit"].isin(top10) & ~d["unit"].isin(excl)).to_numpy()
-        grp = list(pd.Series(np.arange(len(d))).groupby(d["decade"].to_numpy()).indices.values())
+        grp = list(pd.Series(np.arange(len(d))).groupby((d["dept"].astype(str) + d["decade"].astype(str)).to_numpy()).indices.values())
         sims = [strat_perm(x, grp, rng)[sel].sum() for _ in range(N_SHUFFLE_ARTISTS)]
         exp[key]["shuffled_lo"], exp[key]["shuffled_hi"] = np.percentile(sims, 2.5), np.percentile(sims, 97.5)
     pd.DataFrame(exp).T.to_csv(out("rev_ten_largest_decade_matched.csv"))

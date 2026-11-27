@@ -12,6 +12,8 @@ Definitions
   without fund-led        as main, minus records whose credit line opens with a
                           museum fund or purchase formula
   MoMA nationality only   as main, with MoMA's nationality field and no Wikidata fill
+  Rothschild units merged as main, with the Contemporary Drawings Collection in the
+                          Judith Rothschild Foundation's unit
 
 For each: records, donor units, record and artist shares, the six cases' joint
 record-level contribution, and the ten largest record-level contributions
@@ -30,7 +32,8 @@ DEFS = [("main", {}), ("with exchange", {"include_exchange": True}),
         ("without collections", {"include_collections": False}),
         ("neither change", {"include_collections": False, "include_exchange": True}),
         ("without fund-led", {"exclude_fund_led": True}),
-        ("MoMA nationality only", {"moma_nationality": True})]
+        ("MoMA nationality only", {"moma_nationality": True}),
+        ("Rothschild units merged", {"merge_rothschild": True})]
 SIX = set(CASE_LABEL.values())
 
 

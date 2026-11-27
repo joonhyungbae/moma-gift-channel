@@ -220,6 +220,53 @@ def main():
         for k in ("f", "nw"):
             assert r_[f"few_art_sum_{k}"] < 0.3 * r_[f"few_rec_sum_{k}"], (d_, k)
             assert r_[f"many_art_sum_{k}"] > r_[f"many_rec_sum_{k}"], (d_, k)
+    # Works (script 61): a third count.
+    _wc = pd.read_csv(out("rev_works_channel.csv")).iloc[0]
+    _wu = pd.read_csv(out("rev_works_units.csv"), index_col=0)
+    put("NWorksMulti", fint(gifts.groupby("Work")["Unit"].nunique().gt(1).sum()))
+    put("NWorks", fint(_wc["works"])); put("WorkBaseF", fdec(_wc["work_pct_f"])); put("WorkBaseNW", fdec(_wc["work_pct_nw"]))
+    for p_, u_ in (("Stern", "Louis E. Stern Collection"), ("P", "Jean Pigozzi"), ("J", "Judith Rothschild Foundation"),
+                   ("Shear", "Jack Shear"), ("K", "Kleiner, Bell & Co."), ("R", "Rockefeller lineage"), ("C", "Peter J. Cohen"),
+                   ("G", "Agnes Gund")):
+        put(p_ + "Works", fint(_wu.loc[u_, "n_works"]))
+        put(p_ + "WorkConF", fsigned(_wu.loc[u_, "work_contrib_f"])); put(p_ + "WorkConNW", fsigned(_wu.loc[u_, "work_contrib_nw"]))
+    _rpa_u = (units["n"] / units["n_artists"]).reindex(_wu.index)
+    _few_u = _rpa_u >= _m["channel_records_per_artist"]
+    for K, k in (("F", "f"), ("NW", "nw")):
+        put("FewWork" + K, fdec(_wu.loc[_few_u, f"work_contrib_{k}"].abs().sum(), 2))
+        put("ManyWork" + K, fdec(_wu.loc[~_few_u, f"work_contrib_{k}"].abs().sum(), 2))
+    # Section 5.1/5.2 and abstract: Stern shrinks at the work count; Rothschild does not.
+    assert abs(_wu.loc["Louis E. Stern Collection", "work_contrib_nw"]) < 0.2 * abs(units.loc["Louis E. Stern Collection", "contrib_nw"])
+    assert _wu.loc["Judith Rothschild Foundation", "work_contrib_nw"] > 0.8 * units.loc["Judith Rothschild Foundation", "contrib_nw"]
+    # Decomposition (Section 3.3, 5.2): where record-level movement comes from, and gaps at the two counts.
+    _bb = units.loc[units.index.isin(big.index)].join(loo[["art_contrib_f", "art_contrib_nw", "artist_weight"]])
+    _fewb = (_bb["n"] / _bb["n_artists"]) >= _m["channel_records_per_artist"]
+    for K, k in (("F", "f"), ("NW", "nw")):
+        _rc = _bb[f"contrib_{k}"].abs()
+        put("FewMovePct" + K, fdec(pct(_rc[_fewb].sum(), _rc.sum()), 0))
+        _g = _bb[[f"gap_{k}", f"art_gap_{k}"]].dropna()
+        _g = _g[_g[f"gap_{k}"].abs() > 0]
+        put("GapRatio" + K, fdec((_g[f"art_gap_{k}"].abs() / _g[f"gap_{k}"].abs()).median(), 1))
+        assert pct(_rc[_fewb].sum(), _rc.sum()) > 50  # 'half or more of the movement'
+        assert (_g[f"art_gap_{k}"].abs() / _g[f"gap_{k}"].abs()).median() >= 1  # 'the gaps themselves are not smaller at the artist count'
+    put("FewRecPct", fdec(pct(_bb.loc[_fewb, "n"].sum(), len(gifts)), 0))
+    # Table: the two groups at three counts (sums of absolute single-unit contributions, points).
+    _tw = _wu.reindex(_bb.index)
+    _ar = loo.reindex(_bb.index)
+    trows_c = []
+    for lab_, m_ in ((f"At least {fdec(_m['channel_records_per_artist'], 1)} records per artist", _fewb), ("Fewer records per artist", ~_fewb)):
+        trows_c.append([lab_, fint(m_.sum()), fdec(pct(_bb.loc[m_, "n"].sum(), len(gifts)), 0),
+                        fdec(pct(_bb.loc[m_, "artist_weight"].sum(), museum["n_artists"]), 0),
+                        fdec(_bb.loc[m_, "contrib_f"].abs().sum(), 2), fdec(_tw.loc[m_, "work_contrib_f"].abs().sum(), 2),
+                        fdec(_ar.loc[m_, "art_contrib_f"].abs().sum(), 2),
+                        fdec(_bb.loc[m_, "contrib_nw"].abs().sum(), 2), fdec(_tw.loc[m_, "work_contrib_nw"].abs().sum(), 2),
+                        fdec(_ar.loc[m_, "art_contrib_nw"].abs().sum(), 2)])
+    write_table("rev_tab_counts.tex", "Units with at least 100 records, grouped by records per artist: their share of the gift channel and their contributions at three counts.",
+                ["", "Units", r"\% rec.", r"\% art.", "F rec.", "F work", "F art.", "NW rec.", "NW work", "NW art."], trows_c,
+                "lrrrrrrrrr", "tab:counts", resize=True,
+                note="Contributions are sums of the absolute contributions of single units, in percentage points. "
+                     "`\\% art.' is the units' share of the gift channel's artists, each artist divided among donors in proportion to records.")
+    put("FewArtPct", fdec(pct(_bb.loc[_fewb, "artist_weight"].sum(), museum["n_artists"]), 0))
     _gf = _sd.loc["without fund-led"]
     put("GundNoFundN", fint(_gf["gund_records"])); put("GundNoFundF", fdec(_gf["gund_pct_f"]))
     put("GundNoFundArtGap", fsigned(_gf["gund_art_gap_f"], 1)); put("GundNoFundTopDept", fdec(_gf["gund_top_dept_share"], 0))
@@ -258,6 +305,7 @@ def main():
     assert loo.loc[_cdc, "art_contrib_f"] >= units.loc[_cdc, "contrib_f"]
     # Section 4.2: Rockefeller non-Western share below the channel at both counts, female close for records, below for artists.
     _rk = units.loc["Rockefeller lineage"]
+    assert abs(_rk["gap_f_matched"]) < 2 and abs(_rk["gap_nw_matched"]) < 2  # Section 4.2: close to the composition of its departments
     assert _rk["gap_nw"] < 0 and _rk["art_gap_nw"] < 0 and abs(_rk["gap_f"]) < 2 and _rk["art_gap_f"] < 0
 
     # ---------------------------------------------------------------- gender
@@ -503,6 +551,7 @@ def main():
     _cl = typ[(~typ["is_case"]) & (typ["status"] == "clean")]
     assert (_cl["types"] == "Single-artist gift").sum() > len(_cl) / 2  # 'most of them through the single-artist pattern'
     assert (typ.loc[["Louis E. Stern Collection", "Gilbert and Lila Silverman Fluxus Collection"], "status"] == "unclassified").all()
+    put("TypCleanSingle", fint((_cl["types"] == "Single-artist gift").sum()))
     assert int(float(typsum["type count (non-anchor, any match): Founding-lineage gift"])) == 0  # text: 'the founding-lineage pattern by none'
     assert int(float(typsum["type count (non-anchor, any match): Cross-departmental gift"])) == 1  # 'one further unit (Cisneros)'
     assert int(float(typsum["type count (non-anchor, any match): Anonymous-archive gift"])) == 1  # 'one further unit (Kidder Smith)'
@@ -613,7 +662,7 @@ def main():
     shear_ = nrow("Jack Shear", "non-Western")
     put("ShearNullMakers", fint(shear_["makers"])); put("ShearExpNW", fdec(shear_["rec_matched_expected"]))
     put("ShearPctNW", fdec(shear_["obs_share"]))
-    assert all(shear_[f"{d_}_q"] >= 0.05 for d_ in NULL_DESIGNS), "supplement cites Jack Shear as a unit no design flags"
+    assert shear_["rec_matched_q"] < 0.05 and shear_["art_matched_q"] >= 0.05 and shear_["art_pooled_q"] >= 0.05, "supplement S4 sentence on Jack Shear"
     cdc = "Judith Rothschild Foundation Contemporary Drawings Collection"
     # ---- first-entry attribution (script 55)
     ten = pd.read_csv(out("rev_ten_largest_decade_matched.csv"), index_col=0)
@@ -625,7 +674,7 @@ def main():
         put("Ten" + k_ + "Lo", fint(ten.loc[key_, "shuffled_lo"])); put("Ten" + k_ + "Hi", fint(ten.loc[key_, "shuffled_hi"]))
     # Section 5.2: women and non-Western artists within the shuffled range; without Rothschild, below it.
     assert ten.loc["f", "shuffled_lo"] <= ten.loc["f", "observed"] <= ten.loc["f", "shuffled_hi"]
-    assert ten.loc["nw", "shuffled_lo"] <= ten.loc["nw", "observed"] <= ten.loc["nw", "shuffled_hi"]
+    assert ten.loc["nw", "observed"] < ten.loc["nw", "shuffled_lo"]  # non-Western below the range
     assert ten.loc["nw_excl_rothschild", "observed"] < ten.loc["nw_excl_rothschild", "shuffled_lo"]
     assert ten.loc["nw", "observed"] > ten.loc["nw", "expected"] and ten.loc["nw_excl_rothschild", "observed"] < ten.loc["nw_excl_rothschild", "expected"]
     fe = pd.read_csv(out("rev_first_entry_overview.csv")).iloc[0]
@@ -671,6 +720,12 @@ def main():
     stern = main_all["CreditLine"].fillna("").str.fullmatch(r"The Louis E\. Stern Collection").sum()
     anon = main_all["CreditLine"].fillna("").str.fullmatch(r"(?i)anonymous gift|given anonymously").sum()
     put("NStern", fint(stern)); put("NAnon", fint(anon))
+    _cl = main_all["CreditLine"].fillna("")
+    _gen = _cl.str.contains("generosity", case=False) & ~_cl.str.contains(r"\b(?:gift|bequest)\b", case=False)
+    put("NGenerosity", fint(_gen.sum()))
+    _gund_funded = (_cl.str.fullmatch(r"Acquired through the generosity of Agnes Gund\.?") | _cl.str.startswith("Agnes Gund Purchase Fund")
+                    | _cl.str.contains(r"Fund and Agnes Gund$", regex=True))
+    put("NGundFunded", fint(_gund_funded.sum()))
     name_first = ~gifts["CreditLine"].fillna("").map(lambda c: bool(GIFT_PHRASE_RE.search(c))) & ~gifts["collection_only"]
     put("NNameFirst", fint(name_first.sum()))
     put("NCollOnly", fint(gifts["collection_only"].sum()))
@@ -925,7 +980,8 @@ def main():
     sd = pd.read_csv(out("rev_sample_definitions.csv"), index_col=0)
     lab = {"main": "Main analysis", "with exchange": "With by-exchange records",
            "without collections": "Without named collections", "neither change": "Without either change",
-           "without fund-led": "Without fund-led records", "MoMA nationality only": "MoMA nationality only"}
+           "without fund-led": "Without fund-led records", "MoMA nationality only": "MoMA nationality only",
+           "Rothschild units merged": "Rothschild units merged"}
     rows = [r"\multicolumn{7}{@{}l}{\emph{(a) Sample and shares (\%)}} \\"]
     rows += [[lab[k], fint(r["records"]), fint(r["units"]), fdec(r["pct_f"]), fdec(r["pct_nw"]),
               fdec(r["art_pct_f"]), fdec(r["art_pct_nw"])] for k, r in sd.iterrows()]
@@ -935,7 +991,7 @@ def main():
               f"{r['few_rec_sum_f']:.2f} / {r['few_art_sum_f']:.2f}", f"{r['few_rec_sum_nw']:.2f} / {r['few_art_sum_nw']:.2f}",
               f"{r['many_rec_sum_f']:.2f} / {r['many_art_sum_f']:.2f}", f"{r['many_rec_sum_nw']:.2f} / {r['many_art_sum_nw']:.2f}"]
              for k, r in sd.iterrows()]
-    write_table("rev_supp_sample_definitions.tex", "Main results under six definitions of the gift channel.",
+    write_table("rev_supp_sample_definitions.tex", "Main results under seven definitions of the gift channel.",
                 ["Definition", "Records", "Units", "F rec.", "NW rec.", "F art.", "NW art."], rows, "lrrrrrr",
                 "tab:s_sample_definitions", resize=True,
                 note="The main analysis includes credit lines that consist of a named collection and excludes records acquired "

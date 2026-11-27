@@ -48,7 +48,7 @@ def pct(num, den):
 # --------------------------------------------------------------------------
 
 
-def load_gifts(exclude_fund_led=False, moma_nationality=False, **sample):
+def load_gifts(exclude_fund_led=False, moma_nationality=False, merge_rothschild=False, **sample):
     """Donor-identified gift records with analytic unit and cluster columns.
 
     Keyword arguments go to load_moma_donor_gifts (include_collections,
@@ -65,10 +65,15 @@ def load_gifts(exclude_fund_led=False, moma_nationality=False, **sample):
         geo = df["Nationality"].apply(origin_record)
         df["GeographicOrigin"] = geo.where(geo != "Mixed")
     df = assign_case(df.reset_index(drop=True))
+    # Work: the accession number before its part suffix ('401.2003.1-16' -> '401.2003').
+    df["Work"] = df["AccessionNumber"].astype(str).str.extract(r"^(\d+\.\d{4})", expand=False).fillna(
+        pd.Series("rec:" + df.index.astype(str), index=df.index))
     # Analytic unit: the Rockefeller family strings form one unit, every other
     # donor string is its own unit.
     df["Unit"] = df["CaseDonor"].where(df["CaseDonor"] == "Rockefeller lineage", df["Donor"])
     df.loc[df["CaseDonor"] == "Kleiner", "Unit"] = "Kleiner, Bell & Co."
+    if merge_rothschild:
+        df.loc[df["Unit"] == "Judith Rothschild Foundation Contemporary Drawings Collection", "Unit"] = "Judith Rothschild Foundation"
     df["Decade"] = (df["YearAcquired"] // 10) * 10
     df["Cluster"] = df["ConstituentID"].astype(str).str.replace(r"\s+", "", regex=True)
     missing = df["ConstituentID"].isna()
@@ -212,13 +217,25 @@ def drop_top_cluster(df, placeholder_ids=frozenset()):
             "pct_nw_wo_top": s["pct_nw"], "o_valid_wo_top": s["o_valid"]}
 
 
+DOMINANT_SHARE = 0.20  # a unit holding more than this share of a reference cell is left out of that cell
+
+
 def matched_expectation(df_unit, df_ref):
     """Share expected for a unit if, within each department x decade cell, its
-    records had the composition of all other donors' gifts in that cell."""
+    records had the composition of other donors' gifts in that cell. Units that
+    hold more than DOMINANT_SHARE of a cell's coded records are left out of that
+    cell's reference, so that one large gift does not set the expectation."""
     res = {}
     for flag, valid, key in (("is_F", "g_valid", "f"), ("is_NW", "o_valid", "nw")):
         u = df_unit[df_unit[valid] == 1]
         r = df_ref[df_ref[valid] == 1]
+        if "Unit" in r.columns and len(r):
+            cu = r.groupby(["Department", "Decade", "Unit"]).size()
+            share = cu / cu.groupby(level=[0, 1]).transform("sum")
+            dom = share[share > DOMINANT_SHARE].index
+            if len(dom):
+                key_ = pd.MultiIndex.from_frame(r[["Department", "Decade", "Unit"]])
+                r = r[~key_.isin(dom)]
         if u.empty:
             res[f"exp_{key}"] = np.nan
             continue

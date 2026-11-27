@@ -42,7 +42,8 @@ STEPS = [
     ("55_rev_artist_concentration", 900),  # artist-level concentration, first-source attribution, Rothschild bound
     ("54_rev_gender_validation", 900),     # MoMA gender field vs Wikidata; reads data/wikidata_gender_cache.csv, queries only uncached items
     ("57_rev_size_null", 900),             # size-matched random-gift null for donor gaps, MoMA and Tate
-    ("60_rev_sample_definitions", 900),    # main results under four definitions of the gift channel (supplement)
+    ("60_rev_sample_definitions", 900),
+    ("61_rev_works", 600),                 # a third count: works (accession numbers without part suffix)    # main results under four definitions of the gift channel (supplement)
     ("56_rev_paper_assets", 600),          # rev_numbers.tex, main and supplement tables, Figures 1-2; copies them to moma_paper/output/
 ]
 
