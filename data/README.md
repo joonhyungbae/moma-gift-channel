@@ -35,3 +35,12 @@ slightly different totals than the paper.
 are derived from the public Tate collection
 (https://github.com/tategallery/collection) and are shipped here because the
 cross-museum check (paper §5.3) reads them directly.
+
+## Wikidata caches
+
+- `wikidata_gender_cache.csv`: Wikidata `sex or gender` statements for the
+  gender check (`code/54_rev_gender_validation.py`).
+- `wikidata_origin_cache.csv` and `wikidata_origin_search.jsonl`: nationality
+  for gift-channel artists without one in MoMA's metadata, built by
+  `code/59_rev_wikidata_origin.py` and read by `code/01_data_preprocessing.py`.
+  Both are shipped so that the pipeline runs without network access.

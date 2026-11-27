@@ -26,6 +26,37 @@ def load_artworks(path):
     return pd.read_csv(path, low_memory=False)
 
 
+ORIGIN_CACHE = os.path.join(DATA_DIR, "wikidata_origin_cache.csv")
+
+
+def fill_nationality(df):
+    """Fill blank positional nationality tokens from the Wikidata origin cache.
+
+    Returns the new Nationality column and the number of tokens filled per record.
+    MoMA's own entries are never changed.
+    """
+    from coding import UNKNOWN_NATIONALITY, split_ids, split_paren_tokens
+    if not os.path.isfile(ORIGIN_CACHE):
+        return df["Nationality"], pd.Series(0, index=df.index)
+    c = pd.read_csv(ORIGIN_CACHE, dtype={"cid": str})
+    c = c[(c["status"] == "matched") & c["nationality_term"].notna()]
+    fill = dict(zip(c["cid"], c["nationality_term"]))
+    nat, n_filled = df["Nationality"].copy(), pd.Series(0, index=df.index)
+    for i, ids, value in zip(df.index, df["ConstituentID"].map(split_ids), df["Nationality"]):
+        if not any(cid in fill for cid in ids):
+            continue
+        toks = split_paren_tokens(value)
+        toks += [""] * (len(ids) - len(toks))
+        k = 0
+        for pos, cid in enumerate(ids):
+            if cid in fill and toks[pos].strip().lower() in UNKNOWN_NATIONALITY:
+                toks[pos], k = fill[cid], k + 1
+        if k:
+            nat.at[i] = " ".join(f"({t})" for t in toks)
+            n_filled.at[i] = k
+    return nat, n_filled
+
+
 def main():
     # data/ 에서 Artworks 실제 파일 탐지 (Artworks.csv 또는 Artworks_full.csv 등)
     artworks_path = get_artworks_path()
@@ -82,6 +113,13 @@ def main():
         df["Gender_Grouped"] = df["Gender"].apply(gender_grouped)
     else:
         df["Gender_Grouped"] = "Other/Unknown"
+
+    # Nationality left blank by MoMA, filled from the artist's country of birth
+    # in Wikidata (data/wikidata_origin_cache.csv, built by 59_rev_wikidata_origin.py)
+    if "Nationality" in df.columns:
+        df["Nationality_MoMA"] = df["Nationality"]
+        df["Nationality"], df["NationalityFilled"] = fill_nationality(df)
+        print(f"Nationality filled from Wikidata on {int((df['NationalityFilled'] > 0).sum())} records")
 
     # GeographicOrigin from Nationality
     if "Nationality" in df.columns:

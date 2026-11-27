@@ -49,7 +49,7 @@ by-exchange flags). The supplement's Sections S1-S3 describe the same rules.
 
 | Script | Produces | Paper element |
 | --- | --- | --- |
-| `01_data_preprocessing.py` | `data/processed_moma_data.csv` | sample construction (Section 3.1) |
+| `01_data_preprocessing.py` | `data/processed_moma_data.csv` | sample construction (Section 3.1); fills blank nationality slots from `data/wikidata_origin_cache.csv` (Section 3.2), keeping MoMA's field as `Nationality_MoMA` |
 | `50_rev_levels_baselines.py` | `rev_units.csv`, `rev_six_cases.csv`, `rev_museum.csv`, `rev_joint_counterfactual.csv`, `rev_volume_gap_association.csv`, `rev_suberas.csv` | records and artists, gap / contribution / matched gap, cluster resampling (Sections 3.3, 4, 5.1; Table 1) |
 | `51_rev_coding_audits.py` | `rev_gender_*.csv`, `rev_region_*.csv`, `rev_rockefeller*.csv`, `rev_selection_audit.csv` | gender and origin coding (Section 3.2), regional rules, Rockefeller disaggregation, case selection (Section 3.4) |
 | `52_rev_typology.py` | `rev_typology_*.csv` | six gift patterns, threshold sensitivity, cluster structure (Section 5.3; Table 2) |
@@ -58,6 +58,7 @@ by-exchange flags). The supplement's Sections S1-S3 describe the same rules.
 | `55_rev_artist_concentration.py` | `rev_artist_*.csv`, `rev_first_entry_overview.csv`, `rev_ten_largest_decade_matched.csv`, `rev_rothschild_origin_bound.csv`, `rev_new_artists_by_decade.csv` | records versus artists, artists new to the collection by first accession in any channel, concentration, Rothschild bound (Section 5.2) |
 | `57_rev_size_null.py` | `rev_null_units.csv`, `rev_null_summary.csv` | supplementary check: each large donor against random gifts of the same structure, four designs (record or artist draw, matched or pooled), with the number of makers and the smallest attainable p-value per unit (supplement Section S4) |
 | `56_rev_paper_assets.py` | `rev_numbers.tex`, `rev_tab_*.tex`, `rev_supp_*.tex`, `fig_volume_vs_gap.*`, `fig_record_vs_artist.*` | every number, table and figure in the article and supplement |
+| `59_rev_wikidata_origin.py` (not in `run_all.py`) | `data/wikidata_origin_cache.csv`, `data/wikidata_origin_search.jsonl` | builds the cache read by step 01: for gift-channel artists without a nationality in MoMA's metadata, the present-day country of birth (or citizenship) from Wikidata when the artist is identified through MoMA's Wiki QID, the MoMA artist ID (P2174), or a strict name match (Section 3.2; supplement Section S3). Network access through the Wikidata Query Service; `--offline` reads the cache only |
 | `58_rev_parser_audit_sample.py` (not in `run_all.py`) | `parser_audit_sample.csv` | fixed random sample of 300 records (200 inside the gift sample, 100 outside) with blank columns for checking the credit-line parser by hand |
 | `32`-`41` (earlier scripts) | donor profiles, named-donor Tate check | named-donor recurrence sentence in Section 5.4; otherwise superseded by 50-57 |
 

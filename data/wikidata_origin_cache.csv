@@ -1,0 +1,816 @@
+cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_candidates,n_passing,qid,wd_label,wd_birth,country,rule,nationality_term
+23323,Russian Book Collection,,,91,True,Q79462211,Wikidata MoMA artist ID,no match,1,0,,,,,,
+23756,Boris Kustodiev,,Q313275,64,True,Q313275,MoMA Wiki QID,matched,1,1,Q313275,B. Kustodiev,1878.0,Russia,place of birth,Russian
+23473,David Shterenberg,,,59,True,Q4526845,Wikidata MoMA artist ID,matched,1,1,Q4526845,David Chterenberg,1881.0,Ukraine,place of birth,Ukrainian
+23503,Kseniia Boguslavskaia,1892.0,,57,True,Q77353154,Wikidata MoMA artist ID,matched,1,1,Q77353154,Kseniia Boguslavskaia,1892.0,,,
+23315,Mstislav Dobuzhinskii,1875.0,,57,True,Q972018,Wikidata MoMA artist ID,matched,1,1,Q972018,Dobuzinskij,1875.0,Russia,place of birth,Russian
+24145,Leonid Akishin,,,50,True,,,no candidate,0,0,,,,,,
+24146,David Buryshkin,,,50,True,Q4100019,Wikidata MoMA artist ID,matched,1,1,Q4100019,David Buryshkin,1890.0,Ukraine,place of birth,Ukrainian
+24147,The Decorative Arts Institute,,,50,True,,,no candidate,0,0,,,,,,
+24148,Duplitskii,,,50,True,,,no candidate,0,0,,,,,,
+24149,Izoram,,,50,True,,,no candidate,0,0,,,,,,
+24150,Sarra Lebedeva,,,50,True,Q4255842,Wikidata MoMA artist ID,matched,1,1,Q4255842,Sarra Dmitrievna Lebedeva,1892.0,Russia,place of birth,Russian
+24151,The October Brigade,,,50,True,,,no match,2,0,,,,,,
+24153,N. A. Trotskii,,,50,True,,,no match,1,0,,,,,,
+24378,"Proletkult, Leningrad",,,50,True,,,no candidate,0,0,,,,,,
+14602,Sergei Chekhonin,,,20,True,Q4515257,Wikidata MoMA artist ID,matched,1,1,Q4515257,S.V. Chekhonin,1878.0,Russia,place of birth,Russian
+24280,Valentin Kataev,,,17,True,Q333873,Wikidata MoMA artist ID,matched,1,1,Q333873,Valentin Kataev,1897.0,Ukraine,place of birth,Ukrainian
+14632,Boris Grigor'ev,,,16,True,Q432523,Wikidata MoMA artist ID,matched,1,1,Q432523,B. D. Grigorʹev,1886.0,Russia|Soviet Union|Tsardom of Russia,place of birth,Russian
+23753,Ivan Bilibin,,Q312024,15,True,Q312024,MoMA Wiki QID,matched,1,1,Q312024,Ivan Bilibin,1876.0,Russia,place of birth,Russian
+23754,Leonid Brailovskii,,,14,True,,,matched,1,1,Q4095733,Leonid Brailovsky,1867.0,Ukraine,place of birth,Ukrainian
+23755,L. E. Chirikov,,,14,True,,,no candidate,0,0,,,,,,
+23757,Georgi Shlikht,,,14,True,,,no candidate,0,0,,,,,,
+23736,Adol'f Strakhov,,,9,True,Q79460771,Wikidata MoMA artist ID,matched,1,1,Q79460771,Adol'f Strakhov,,,,
+23495,Ekaterina Turova,,,8,True,Q79461017,Wikidata MoMA artist ID,matched,1,1,Q79461017,Ekaterina Turova,,,,
+24230,Nikolai Il'in,,,8,True,Q79461858,Wikidata MoMA artist ID,matched,1,1,Q79461858,Nikolai Il'in,,,,
+23635,Boris Erdman,,,8,True,Q4532384,Wikidata MoMA artist ID,matched,1,1,Q4532384,Boris Robertovitch Erdman,1899.0,Russian Empire|Soviet Union,citizenship,Russian
+23353,Georgii Iakulov,,,7,True,Q1509157,Wikidata MoMA artist ID,matched,1,1,Q1509157,Georges Jakoulov,1884.0,Georgia,place of birth,Georgian
+23505,Sergei Makletsov,,,6,True,Q79462243,Wikidata MoMA artist ID,matched,1,1,Q79462243,Sergei Makletsov,,,,
+12124,Pavel Filonov,1883.0,Q466187,5,True,Q466187,MoMA Wiki QID,matched,1,1,Q466187,Pavel Filonov,1883.0,Russia,place of birth,Russian
+23819,David Bergelson,,,5,True,Q561771,Wikidata MoMA artist ID,matched,1,1,Q561771,David Bergelson,1884.0,Russian Empire|Soviet Union,citizenship,Russian
+23820,Dvorye Chorol,,,5,True,,,no candidate,0,0,,,,,,
+23998,Petr Galadzhev,,,5,True,Q4132171,Wikidata MoMA artist ID,matched,1,1,Q4132171,Petr Galadzhev,1900.0,Ukraine,place of birth,Ukrainian
+12997,Natal'ia Nagorskaia,,,5,True,Q134413890,Wikidata MoMA artist ID,matched,1,1,Q134413890,Natal'ia Nagorskaia,,,,
+14185,Aleksei Remizov,1877.0,,4,True,Q1340503,Wikidata MoMA artist ID,matched,1,1,Q1340503,Aleksei Remisov,1877.0,Russia,place of birth,Russian
+23530,Sigizmund Valishevskii,,,4,True,Q245397,Wikidata MoMA artist ID,matched,1,1,Q245397,Sigizmund Valishevskii,1897.0,Russia,place of birth,Russian
+23891,Vadym Meller,,,4,True,Q1377165,Wikidata MoMA artist ID,matched,1,1,Q1377165,Vadim Georgiiovič Meller,1884.0,Russia,place of birth,Russian
+24265,Mikhail Maslianenko,,,4,True,Q117120277,Wikidata MoMA artist ID,matched,1,1,Q117120277,Mikhail Maslianenko,,,,
+24001,Vladimir Izenberg,,,4,True,Q79462580,Wikidata MoMA artist ID,matched,1,1,Q79462580,Vladimir Izenberg,,,,
+23725,Illarion Pleshchinskii,,,4,True,Q134413905,Wikidata MoMA artist ID,matched,1,1,Q134413905,Illarion Pleshchinskii,,,,
+14976,Mikhail Tarkhanov,,,4,True,Q134413894,Wikidata MoMA artist ID,matched,1,1,Q134413894,Mikhail Tarkhanov,,,,
+24204,Aleksandr Surikov,,,4,True,Q134413948,Wikidata MoMA artist ID,matched,1,1,Q134413948,Aleksandr Surikov,,,,
+23355,Vasyl' Krychevs'kyi,,,4,True,,,ambiguous,2,2,,,,,,
+23384,Marianna Erlikh,,,3,True,Q117118812,Wikidata MoMA artist ID,matched,1,1,Q117118812,Marianna Erlikh,,,,
+23778,Iosef Chaikov,1888.0,,3,True,Q4506792,Wikidata MoMA artist ID,matched,1,1,Q4506792,I. M. Tschaikow,1888.0,Ukraine,place of birth,Ukrainian
+24094,Nikolai Denisovskii,,,3,True,Q117118611,Wikidata MoMA artist ID,matched,1,1,Q117118611,Nikolai Denisovskii,,,,
+13113,Grigorii Bershadskii,,,3,True,Q79461156,Wikidata MoMA artist ID,matched,1,1,Q79461156,Grigorii Bershadskii,,,,
+24557,Evgenii Nekrasov,,,3,True,Q4316577,Wikidata MoMA artist ID,matched,1,1,Q4316577,Evgeniĭ Nekrasov,1956.0,Russia,place of birth,Russian
+24227,A. Karra,,,3,True,Q134413952,Wikidata MoMA artist ID,matched,1,1,Q134413952,A. Karra,,,,
+24210,Bor. R.,,,3,True,,,no match,7,0,,,,,,
+23516,Volodymyr Bobryts'kyi,,,3,True,Q117118093,Wikidata MoMA artist ID,matched,1,1,Q117118093,Volodymyr Bobryts'kyi,,,,
+23524,Mykola Myshchenko,,,3,True,Q134413897,Wikidata MoMA artist ID,matched,1,1,Q134413897,Mykola Myshchenko,,,,
+23386,Nadezhda Liubavina,1892.0,,3,True,Q134413329,Wikidata MoMA artist ID,matched,1,1,Q134413329,Nadezhda Liubavina,1892.0,,,
+23568,Valentina Khodasevich,,,3,True,Q20086648,Wikidata MoMA artist ID,matched,1,1,Q20086648,Valentina Khodasevich,1894.0,Russia,place of birth,Russian
+23831,Vasilii Masiutin,,,3,True,Q20068418,Wikidata MoMA artist ID,matched,1,1,Q20068418,Masyuta-Soroka Masyutin,1884.0,Russian Empire,citizenship,Russian
+24045,Boris Titov,,,3,True,,,no match,4,0,,,,,,
+24073,Aleksei Levin,,,3,True,Q134413927,Wikidata MoMA artist ID,matched,1,1,Q134413927,Aleksei Levin,,,,
+24117,Ivan Rerberg,,,3,True,Q982097,Wikidata MoMA artist ID,matched,1,1,Q982097,Ivan Ivanovich Rerberg,1869.0,Russia,place of birth,Russian
+23713,Marko Kyrnars'kyi,,,3,True,Q134413902,Wikidata MoMA artist ID,matched,1,1,Q134413902,Marko Kyrnars'kyi,,,,
+24103,Vasyl' Kasiian,,,3,True,Q4216595,Wikidata MoMA artist ID,matched,1,1,Q4216595,V.I. Kasijan,1896.0,Ukraine,place of birth,Ukrainian
+24004,Valentina Kulagina-Klutsis,,,3,True,,,matched,1,1,Q20007151,Valentina Kulagina,1902.0,Russia,place of birth,Russian
+24178,Boris Fridkin,,,3,True,Q134413945,Wikidata MoMA artist ID,matched,1,1,Q134413945,Boris Fridkin,,,,
+23468,Ivan Padalka,,,3,True,Q12137432,Wikidata MoMA artist ID,matched,1,1,Q12137432,Ivan Ivanovych Padalka,1894.0,Ukraine,place of birth,Ukrainian
+24131,Vasyl' Sedliar,,,3,True,Q12151494,Wikidata MoMA artist ID,matched,1,1,Q12151494,Vasily Sedlyar,1899.0,Soviet Union,place of birth,Russian
+24086,Aleksandr Tyshler,,,3,True,Q4467231,Wikidata MoMA artist ID,matched,1,1,Q4467231,Aleksandr Dzin-Dzich-Svil,1898.0,Ukraine,place of birth,Ukrainian
+12312,Vasilii Chekrygin,1897.0,,2,True,Q4508331,Wikidata MoMA artist ID,matched,1,1,Q4508331,Vasili Nikolaevich Chekrygin,1897.0,Russia|Russian Empire|Soviet Union|Tsardom of Russia,place of birth,Russian
+23327,Iosif Shkol'nik,,,2,True,Q4525263,Wikidata MoMA artist ID,matched,1,1,Q4525263,Iosif Shkolnik,1883.0,Ukraine,place of birth,Ukrainian
+23367,Viktor Bart,1887.0,,2,True,Q4078646,Wikidata MoMA artist ID,matched,1,1,Q4078646,Victor Barthe,1887.0,Russia|Russian Empire|Soviet Union,place of birth,Russian
+12410,Illarion Skuie,,,2,True,,,no candidate,0,0,,,,,,
+23613,Aleksandr Bazhbeuk-Melikov,1891.0,,2,True,,,matched,1,1,Q4075091,Alek'sandr Bazhbeuk-Melik'yan,1891.0,Georgia,place of birth,Georgian
+23614,Mikhail Kalashnikov,,,2,True,Q167573,Wikidata MoMA artist ID,matched,1,1,Q167573,Mikhail Kalashnikov,1919.0,Russia|Russian Empire|Soviet Union,place of birth,Russian
+23630,Nikolai Chernyshev,1885.0,,2,True,Q125483925,Wikidata MoMA artist ID,matched,1,1,Q125483925,Nikolai Chernyshev,1861.0,,,
+23631,Sergei Gerasimov,1885.0,,2,True,Q1755821,Wikidata MoMA artist ID,matched,1,1,Q1755821,S. Gherasimoff,1885.0,Russia|Russian Empire|Soviet Union|Tsardom of Russia,place of birth,Russian
+23665,Solomon Iudovin,1892.0,,2,True,Q4306341,Wikidata MoMA artist ID,matched,1,1,Q4306341,Solomon Borisovich Yudovin,1892.0,Belarus,place of birth,Belarusian
+23772,Elena Bedumovaia,,,2,True,Q117117973,Wikidata MoMA artist ID,matched,1,1,Q117117973,Elena Bedumovaia,,,,
+13434,Moisei Levin,,,2,True,Q79461807,Wikidata MoMA artist ID,matched,1,1,Q79461807,Moisei Levin,,,,
+23518,Volodymyr Diakov,,,2,True,,,no candidate,0,0,,,,,,
+23521,Borys Kosariev,,,2,True,,,matched,1,1,Q4234765,Borys Kosarev,1897.0,Ukraine,place of birth,Ukrainian
+24285,Georgii Tsapok,,,2,True,Q134413957,Wikidata MoMA artist ID,matched,1,1,Q134413957,Georgii Tsapok,,,,
+24186,El'brus Gutnov,,,2,True,Q117119263,Wikidata MoMA artist ID,matched,1,1,Q117119263,Elbrus Aleksandrovich Gutnov,1906.0,Soviet Union,citizenship,Russian
+24187,N. Spirov,,,2,True,,,no candidate,0,0,,,,,,
+23404,Sandro Fazini,,,2,True,Q2388395,Wikidata MoMA artist ID,matched,1,1,Q2388395,Aleksandr Arnol'dovič Fazini,1893.0,Ukraine,place of birth,Ukrainian
+23446,Georgii Zolotukhin,,,2,True,,,no candidate,0,0,,,,,,
+14161,Iurii Degen,,,2,True,,,no candidate,0,0,,,,,,
+23720,Grigorii Miller,,,2,True,Q134413904,Wikidata MoMA artist ID,matched,1,1,Q134413904,Grigorii Miller,,,,
+14286,Maria Lagorio,,,2,True,Q133761569,Wikidata MoMA artist ID,matched,1,1,Q133761569,Maria Lagorio,1893.0,Poland,place of birth,Polish
+23845,Mikhail Sokolov,,,2,True,Q18145434,Wikidata MoMA artist ID,matched,1,1,Q18145434,Mikhail G. Sokolov,1875.0,Russia,place of birth,Russian
+23766,Aleksandr Arnshtam,,,2,True,Q86723703,Wikidata MoMA artist ID,matched,1,1,Q86723703,Aleksandr Arnshtam,1880.0,Russia,place of birth,Russian
+24010,Ivan Manatiev,,,2,True,Q134413920,Wikidata MoMA artist ID,matched,1,1,Q134413920,Ivan Manatiev,,,,
+24076,Leonid Khyzhins'kyi,,,2,True,Q134413928,Wikidata MoMA artist ID,matched,1,1,Q134413928,Leonid Khyzhins'kyi,,,,
+24331,Dmitrii Sobolev,,,2,True,Q134413959,Wikidata MoMA artist ID,matched,1,1,Q134413959,Dmitrii Sobolev,,,,
+24393,Vera Ivanova,,,2,True,Q134413969,Wikidata MoMA artist ID,matched,1,1,Q134413969,Vera Ivanova,,,,
+15146,Issacher Ber Ryback,,,2,True,Q79461280,Wikidata MoMA artist ID,matched,1,1,Q79461280,Issacher Ber Ryback,,,,
+24365,Oleksii Marenkov,,,2,True,Q134413964,Wikidata MoMA artist ID,matched,1,1,Q134413964,Oleksii Marenkov,,,,
+24255,Oleksii Usachov,,,2,True,Q134413955,Wikidata MoMA artist ID,matched,1,1,Q134413955,Oleksii Usachov,,,,
+24215,Evgen Mei,,,2,True,Q134413949,Wikidata MoMA artist ID,matched,1,1,Q134413949,Evgen Mei,,,,
+24346,B. K.,,,2,True,Q134413962,Wikidata MoMA artist ID,matched,1,1,Q134413962,B. K.,,,,
+24174,H. S. Hural'nik,,,2,True,,,no candidate,0,0,,,,,,
+24049,O. Ruban,,,2,True,Q134413924,Wikidata MoMA artist ID,matched,1,1,Q134413924,O. Ruban,,,,
+24237,Mecheslav Dobrokovskii,,,2,True,Q134413954,Wikidata MoMA artist ID,matched,1,1,Q134413954,Mecheslav Dobrokovskii,,,,
+24024,F.P.K.,,,1,True,Q134413922,Wikidata MoMA artist ID,matched,1,1,Q134413922,F.P.K.,,,,
+23398,Nina Kul'bina,,,1,True,,,no candidate,0,0,,,,,,
+12310,Lev Shekhtel [Lev Zhegin],,,1,True,Q4178606,Wikidata MoMA artist ID,matched,1,1,Q4178606,L. F. Zhegin,1892.0,Russia,place of birth,Russian
+12315,Sergei Podgaevskii,,,1,True,Q79462245,Wikidata MoMA artist ID,matched,1,1,Q79462245,Sergei Podgaevskii,1889.0,,,
+23615,Il'ia Rogovin,,,1,True,,,no candidate,0,0,,,,,,
+23933,Beno Gordeziani,,,1,True,Q30610315,Wikidata MoMA artist ID,matched,1,1,Q30610315,Beno Gordeziani,1894.0,,,
+24026,Ser-Gei [Sergei Skripitsyn],,,1,True,,,no candidate,0,0,,,,,,
+23712,Aleksandr Labas,,,1,True,Q4251819,Wikidata MoMA artist ID,matched,1,1,Q4251819,Aleksandr Arkad'evic Labas,1900.0,Russia,place of birth,Russian
+23723,Viktor Pal'mov,1888.0,,1,True,Q2060728,Wikidata MoMA artist ID,matched,1,1,Q2060728,Victor Nikolaevich Palmov,1888.0,Russia,place of birth,Russian
+23718,Ben-Zion Tsukherman,,,1,True,,,no candidate,0,0,,,,,,
+12996,Mikhail Plaksin,,,1,True,Q79461758,Wikidata MoMA artist ID,matched,1,1,Q79461758,Mikhail Plaksin,,,,
+13003,Khabias [pseudonym Of Nina Komarova],,,1,True,Q79461470,Wikidata MoMA artist ID,matched,1,1,Q79461470,Khabias,,,,
+23876,Liubov' Kozintseva,,,1,True,Q79461511,Wikidata MoMA artist ID,matched,1,1,Q79461511,Liubov' Kozintseva,,,,
+23918,P. S. Chichkanov,,,1,True,,,no candidate,0,0,,,,,,
+23668,Mikhail Gerasimov,,,1,True,,,ambiguous,7,4,,,,,,
+23919,E. S. Samorodov,,,1,True,,,no candidate,0,0,,,,,,
+23920,V. I. Ter-Pogosov,,,1,True,,,no candidate,0,0,,,,,,
+23865,Marko Epshtein,,,1,True,Q117118806,Wikidata MoMA artist ID,matched,1,1,Q117118806,Mark Epshteĭn,1899.0,Belarus,place of birth,Belarusian
+23866,Grigorii Roze,,,1,True,Q94615943,Wikidata MoMA artist ID,matched,1,1,Q94615943,Grigoriy Roze,1900.0,Ukraine,place of birth,Ukrainian
+132427,Krasnyi proletarii,,,1,True,,,no candidate,0,0,,,,,,
+43906,M. Dabrokovski,,,1,True,,,no candidate,0,0,,,,,,
+43907,V. Liushin,,,1,True,Q23068076,Wikidata MoMA artist ID,matched,1,1,Q23068076,V. Liushin,1898.0,,,
+24524,N. Golubchikov,,,1,True,,,no match,1,0,,,,,,
+24554,Vitalii Lavrov,,,1,True,Q134413980,Wikidata MoMA artist ID,matched,1,1,Q134413980,Vitalii Lavrov,,,,
+13325,N. Nekrasov,,,1,True,Q79459669,Wikidata MoMA artist ID,matched,1,1,Q79459669,N. Nekrasov,,,,
+24027,M. Menkov,,,1,True,,,no match,3,0,,,,,,
+24469,L. Shteiner,,,1,True,Q117121179,Wikidata MoMA artist ID,matched,1,1,Q117121179,L. Shteiner,,,,
+25074,N. Danylov,,,1,True,Q134413983,Wikidata MoMA artist ID,matched,1,1,Q134413983,N. Danylov,,,,
+24181,Leonid Zusman,,,1,True,Q18634359,Wikidata MoMA artist ID,matched,1,1,Q18634359,Leonid Pavlovich Zusman,1906.0,Belarus,place of birth,Belarusian
+23843,Oleh Shymkov,,,1,True,,,no candidate,0,0,,,,,,
+24246,V. Vorus'kii,,,1,True,,,no candidate,0,0,,,,,,
+13678,Aleksei Chicherin,,,1,True,Q15061328,Wikidata MoMA artist ID,matched,1,1,Q15061328,Aleksei Chicherin,1900.0,Soviet Union,citizenship,Russian
+13807,Kornelii Zelinskii,,,1,True,Q12546421,Wikidata MoMA artist ID,matched,1,1,Q12546421,Kornelii Zelinskii,1896.0,Russia,place of birth,Russian
+23888,Henke Meller,,,1,True,Q79461227,Wikidata MoMA artist ID,matched,1,1,Q79461227,Henke Meller,,,,
+13705,Boris Naumov,,,1,True,Q79459621,Wikidata MoMA artist ID,matched,1,1,Q79459621,Boris Naumov,,,,
+24300,I. Sunderland,,,1,True,Q134413958,Wikidata MoMA artist ID,matched,1,1,Q134413958,I. Sunderland,,,,
+23520,Aleksandr Gladkov,,,1,True,Q4139292,Wikidata MoMA artist ID,matched,1,1,Q4139292,Aleksandr Gladkov,1912.0,Principality of Chernigov|Russia|Russian Empire|Soviet Union|Tsardom of Russia,place of birth,Russian
+23523,Miankal',,,1,True,,,no candidate,0,0,,,,,,
+23526,Boeslav Tsybys,,,1,True,,,no candidate,0,0,,,,,,
+13088,Il'ia Erenburg,,Q348497,1,True,Q348497,MoMA Wiki QID,matched,1,1,Q348497,Ilya Ehrenburg,1891.0,Ukraine,place of birth,Ukrainian
+24649,Collective of Masters of Analytical Art-Pavel Filonov’s School,,,1,True,Q117113436,Wikidata MoMA artist ID,no match,1,0,,,,,,
+24636,Elena Bortsova,,,1,True,,,no candidate,0,0,,,,,,
+24637,Tat’iana Glebova,,,1,True,,,matched,1,1,Q4139625,Tat'jana Nikolaevna Glebova,1900.0,Russia,place of birth,Russian
+24638,Nina Ivanova,,,1,True,Q4196426,Wikidata MoMA artist ID,matched,1,1,Q4196426,Nina Aleksandrovna Ivanova,1919.0,Russia,place of birth,Russian
+24639,Efraim Lesov,,,1,True,Q122603397,Wikidata MoMA artist ID,matched,1,1,Q122603397,Efraim Zalmanovich Lesov,1904.0,Russia,place of birth,Russian
+24640,Mikhail Makarov,,,1,True,,,ambiguous,7,2,,,,,,
+24641,Vladimir Meshkov,,,1,True,Q4292474,Wikidata MoMA artist ID,matched,1,1,Q4292474,Vladimir Ilich Meshkov,1919.0,Russia,place of birth,Russian
+24642,Alisa Poret,,,1,True,Q4372972,Wikidata MoMA artist ID,matched,1,1,Q4372972,A. Poret,1902.0,Russia,place of birth,Russian
+24643,Nina Soboleva,,,1,True,Q112534719,Wikidata MoMA artist ID,matched,1,1,Q112534719,,1923.0,,,
+24644,Liubov’ Tagrina,,,1,True,,,no candidate,0,0,,,,,,
+24645,Mikhail’ Tsybasov,,,1,True,,,no match,1,0,,,,,,
+24646,Konstantin Vakhremeev,,,1,True,,,no candidate,0,0,,,,,,
+24647,Sofia Zaklikovskaia,,,1,True,,,no candidate,0,0,,,,,,
+24648,Pavel Zal’tsman,,,1,True,,,matched,1,1,Q4185612,Pavel Yakovlevich Zaltsman,1912.0,Moldova,place of birth,Moldovan
+24386,Elizaveta Dorfman,,,1,True,Q4167123,Wikidata MoMA artist ID,matched,1,1,Q4167123,Elizaveta Dorfman,1899.0,Russia,place of birth,Russian
+24387,B. Tatarinov,,,1,True,,,no candidate,0,0,,,,,,
+23313,Boris Anisfeld,,,1,True,Q1961456,Wikidata MoMA artist ID,matched,1,1,Q1961456,Anisfeld,1878.0,Moldova,place of birth,Moldovan
+23314,Vladimir Chembers,,,1,True,Q15061458,Wikidata MoMA artist ID,matched,1,1,Q15061458,Vladimir Chambers,1877.0,Russia,place of birth,Russian
+23316,Aleksandr Iakovlev,,,1,True,,,ambiguous,7,2,,,,,,
+23300,Aleksandr Andreev,,,1,True,,,matched,7,1,Q3609491,Aleksandr Andreev,1879.0,Bulgaria,place of birth,Bulgarian
+23302,A. A. Nikolaev,,,1,True,,,no match,7,0,,,,,,
+23303,N. M. Siniagin,,,1,True,,,no candidate,0,0,,,,,,
+23304,Liudmila Shmit-Ryzhova,,,1,True,,,no candidate,0,0,,,,,,
+23305,Evgenii Vashchenko,,,1,True,,,no candidate,0,0,,,,,,
+23371,A. Gribatnikov,,,1,True,,,no candidate,0,0,,,,,,
+23372,Nikolai Grigoriev,,,1,True,Q48953976,Wikidata MoMA artist ID,matched,1,1,Q48953976,Nikolai Grigoriev,1890.0,Russia,place of birth,Russian
+23373,I. Mikhel'son,,,1,True,,,no match,1,0,,,,,,
+23374,N. Semenov,,,1,True,,,no match,7,0,,,,,,
+23370,Nadezhda Burliuk,,,1,True,,,no candidate,0,0,,,,,,
+23839,Sergei Poliakov,,,1,True,,,matched,4,1,Q384860,Serge Georgievich Poliakoff,1900.0,Russia,place of birth,Russian
+23399,V. Ul'ianishchev,,,1,True,,,no candidate,0,0,,,,,,
+23448,Aleksandr Lopukhin,,,1,True,Q47456230,Wikidata MoMA artist ID,matched,1,1,Q47456230,Aleksandr Lopukhin,1897.0,Russian Empire|Soviet Union,citizenship,Russian
+23443,Fedor Platov,,,1,True,,,no match,1,0,,,,,,
+23457,Gushchin Nikolai,,,1,True,Q4153141,Wikidata MoMA artist ID,matched,1,1,Q4153141,Nikolay Gushchin,1888.0,Russia|Russian Empire|Soviet Union,place of birth,Russian
+23506,E. Ravdel,,,1,True,,,no candidate,0,0,,,,,,
+23507,A. Slavin,,,1,True,,,no match,7,0,,,,,,
+23508,N. Tsitskovskii,,,1,True,,,no candidate,0,0,,,,,,
+23509,Vitalii Usenko,,,1,True,,,no match,1,0,,,,,,
+23480,Leonid Golubev-Bagriaporobnii,,,1,True,Q134413896,Wikidata MoMA artist ID,matched,1,1,Q134413896,Leonid Golubev-Bagriaporobnii,,,,
+23529,Vasilii Katanian,,,1,True,,,no candidate,0,0,,,,,,
+23485,Vera Mukhina,,,1,True,Q234601,Wikidata MoMA artist ID,matched,1,1,Q234601,Vera Ignat'Evna Mukhina,1889.0,Latvia,place of birth,Latvian
+23588,N. K.,,,1,True,Q134413898,Wikidata MoMA artist ID,matched,1,1,Q134413898,N. K.,,,,
+23655,D. P. Gordeev,,,1,True,,,no candidate,0,0,,,,,,
+14187,W. Baxter,,,1,True,Q134378939,Wikidata MoMA artist ID,matched,1,1,Q134378939,W. Baxter,,,,
+23618,Liverii Bazankur,,,1,True,Q134413900,Wikidata MoMA artist ID,matched,1,1,Q134413900,Liverii Bazankur,,,,
+23699,N. Bugoslavskaia,,,1,True,,,no candidate,0,0,,,,,,
+23700,D. El'kina,,,1,True,,,no candidate,0,0,,,,,,
+23701,A. Kurskaia,,,1,True,,,no candidate,0,0,,,,,,
+23703,Aleksandr Volkov,,,1,True,Q2642780,Wikidata MoMA artist ID,matched,1,1,Q2642780,Aleksandr N. Volkov,1886.0,Uzbekistan,place of birth,Uzbekistani
+14200,Aleksei Ganin,,,1,True,Q134378942,Wikidata MoMA artist ID,matched,1,1,Q134378942,Aleksei Ganin,,,,
+23667,Vasilii Komardenkov,,,1,True,Q134413901,Wikidata MoMA artist ID,matched,1,1,Q134413901,Vasilii Komardenkov,,,,
+23628,Hryhorii Bondarenko,,,1,True,Q4093195,Wikidata MoMA artist ID,matched,1,1,Q4093195,Grigory Antonovich Bondarenko,1892.0,Ukraine,place of birth,Ukrainian
+23760,Boris Zenkevich,,,1,True,Q134413907,Wikidata MoMA artist ID,matched,1,1,Q134413907,Boris Zenkevich,,,,
+23746,M. Andreevskaia,,,1,True,,,no candidate,0,0,,,,,,
+23747,D. Fedorov,,,1,True,,,no match,7,0,,,,,,
+23749,Vera Vil'koviskaia,,,1,True,,,no candidate,0,0,,,,,,
+23750,N. S. Shikalov,,,1,True,,,no candidate,0,0,,,,,,
+23744,A. Vabbe,,,1,True,Q134413906,Wikidata MoMA artist ID,matched,1,1,Q134413906,A. Vabbe,,,,
+23851,N. Borovkov,,,1,True,,,no candidate,0,0,,,,,,
+23852,A. Nikitin,,,1,True,,,no match,7,0,,,,,,
+23853,V. Zhmurov,,,1,True,,,no candidate,0,0,,,,,,
+23797,N. Istselennov,,,1,True,Q134413909,Wikidata MoMA artist ID,matched,1,1,Q134413909,N. Istselennov,,,,
+24276,Konstantin Rotov,,,1,True,Q4398653,Wikidata MoMA artist ID,matched,1,1,Q4398653,Konstantin Pavlovich Rotov,1902.0,Russia,place of birth,Russian
+23837,Viacheslav Pakulin,,,1,True,Q134413911,Wikidata MoMA artist ID,matched,1,1,Q134413911,Viacheslav Pakulin,,,,
+23779,Iurii Cherkesov,,,1,True,,,no candidate,0,0,,,,,,
+23895,Georgii Noskov,,,1,True,Q134414182,Wikidata MoMA artist ID,matched,1,1,Q134414182,Georgii Noskov,,,,
+23897,A. Paramonov,,,1,True,Q134413913,Wikidata MoMA artist ID,matched,1,1,Q134413913,A. Paramonov,,,,
+23947,Sergei Pozharskii,,,1,True,Q4368682,Wikidata MoMA artist ID,matched,1,1,Q4368682,S. M. Pozharskiĭ,1900.0,Soviet Union,citizenship,Russian
+23948,V. I. Pozharskii,,,1,True,,,no candidate,0,0,,,,,,
+23951,L. Ridiger,,,1,True,Q134413915,Wikidata MoMA artist ID,matched,1,1,Q134413915,L. Ridiger,,,,
+14384,Nikolai Tikhonov,,,1,True,,,ambiguous,7,4,,,,,,
+24008,D. M.,,,1,True,Q134413918,Wikidata MoMA artist ID,matched,1,1,Q134413918,D. M.,,,,
+24568,Nikolai Alekseev,,,1,True,Q134414185,Wikidata MoMA artist ID,matched,1,1,Q134414185,Nikolai Alekseev,,,,
+23540,Vadim Falileev,,,1,True,Q85867456,Wikidata MoMA artist ID,matched,1,1,Q85867456,V. D. Falileev,1879.0,Russia,place of birth,Russian
+23599,Petr Konchalovskii,,,1,True,Q2626131,Wikidata MoMA artist ID,matched,1,1,Q2626131,P. P. Konchalovsky,1876.0,Ukraine,place of birth,Ukrainian
+23600,Aleksei Morgunov,,,1,True,Q17350355,Wikidata MoMA artist ID,matched,1,1,Q17350355,Aleksei Alekseevich Morgunov,1884.0,Russian Empire|Soviet Union,citizenship,Russian
+23601,N. Rozenfel'd,,,1,True,,,no match,1,0,,,,,,
+23602,Svetlov,,,1,True,,,no candidate,0,0,,,,,,
+23704,Vera Aleksandrova,,,1,True,Q21635386,Wikidata MoMA artist ID,matched,1,1,Q21635386,Vera Aleksandrova,1895.0,Russian Empire|United States,citizenship,American
+23857,Vera Pestel,,,1,True,Q15079457,Wikidata MoMA artist ID,matched,1,1,Q15079457,Efremovna Pestel,1886.0,Russia,place of birth,Russian
+23858,Sergei Romanovich,,,1,True,,,matched,7,1,Q4397253,Sergey Mikhaylovich Romanovich,1894.0,Russia,place of birth,Russian
+14561,A. Anatolev,,,1,True,,,no match,1,0,,,,,,
+24268,M. Litvak,,,1,True,Q134413956,Wikidata MoMA artist ID,matched,1,1,Q134413956,M. Litvak,,,,
+23764,Mikhail Babenchikov,,,1,True,,,no candidate,0,0,,,,,,
+23770,Aleksei Baev,,,1,True,Q134413908,Wikidata MoMA artist ID,matched,1,1,Q134413908,Aleksei Baev,,,,
+23894,Carlo Gozzi,,,1,True,,,ambiguous,2,2,,,,,,
+24063,B. Timov,,,1,True,Q134413925,Wikidata MoMA artist ID,matched,1,1,Q134413925,B. Timov,,,,
+24072,G. Riftin,,,1,True,Q134413926,Wikidata MoMA artist ID,matched,1,1,Q134413926,G. Riftin,,,,
+23988,K.E.B.,,,1,True,Q134413916,Wikidata MoMA artist ID,matched,1,1,Q134413916,K.E.B.,,,,
+23944,Anna Ostroumova-Lebedeva,,,1,True,Q562945,Wikidata MoMA artist ID,matched,1,1,Q562945,A. P. Ostroumova-Lebedeva,1871.0,Russia,place of birth,Russian
+24090,Evgenii Goliakhovskii,,,1,True,,,no candidate,0,0,,,,,,
+23604,Viacheslav Ivanov,,,1,True,,,matched,7,1,Q361318,Vyacheslav Ivanov,1866.0,Russia,place of birth,Russian
+24542,Vladimir Roberg,,,1,True,,,no candidate,0,0,,,,,,
+24048,Iurii Sadylenko,,,1,True,Q134413923,Wikidata MoMA artist ID,matched,1,1,Q134413923,Iurii Sadylenko,,,,
+14744,Hr. Dubyns'kii,,,1,True,Q134413893,Wikidata MoMA artist ID,matched,1,1,Q134413893,Hr. Dubyns'kii,,,,
+24547,Lev Kaplan,,,1,True,Q12108372,Wikidata MoMA artist ID,matched,1,1,Q12108372,Lev Borisovich Kaplan,1899.0,Ukraine,place of birth,Ukrainian
+24332,Mykhailo Shcheglov,,,1,True,Q134413960,Wikidata MoMA artist ID,matched,1,1,Q134413960,Mykhailo Shcheglov,,,,
+24080,Gennadii Epifanov,,,1,True,Q4176059,Wikidata MoMA artist ID,matched,1,1,Q4176059,G. D. Epifanov,1900.0,Russia,place of birth,Russian
+24082,Valerian Dvorakovskii,,,1,True,Q134413930,Wikidata MoMA artist ID,matched,1,1,Q134413930,Valerian Dvorakovskii,,,,
+24100,A. Radishchev,,,1,True,Q134413934,Wikidata MoMA artist ID,matched,1,1,Q134413934,A. Radishchev,,,,
+24101,Sofiia Nalepins'ka,,,1,True,Q4312591,Wikidata MoMA artist ID,matched,1,1,Q4312591,Sofiia Nalepynska-Boichuk,1884.0,Poland,place of birth,Polish
+24286,I. Shlepianov,,,1,True,Q117121166,Wikidata MoMA artist ID,matched,1,1,Q117121166,I. Shlepianov,,,,
+24342,Zinovii Gorbovets,,,1,True,Q134413961,Wikidata MoMA artist ID,matched,1,1,Q134413961,Zinovii Gorbovets,,,,
+24456,E. Rozhdestvenskaia,,,1,True,Q134413976,Wikidata MoMA artist ID,matched,1,1,Q134413976,E. Rozhdestvenskaia,,,,
+24343,Evgenii Lansere,,,1,True,Q546558,Wikidata MoMA artist ID,matched,1,1,Q546558,Eugene Alexandrovitch Lanceray,1848.0,Russia,place of birth,Russian
+24389,R. Kh.,,,1,True,Q134413967,Wikidata MoMA artist ID,matched,1,1,Q134413967,R. Kh.,,,,
+24506,I. I. Brodskii,,,1,True,Q443199,Wikidata MoMA artist ID,matched,1,1,Q443199,Isaac Israiljewitsh Brodsky,1884.0,Ukraine,place of birth,Ukrainian
+24507,A. Fedorski,,,1,True,,,no match,1,0,,,,,,
+24453,Vladimir Roskin,,,1,True,Q60837802,Wikidata MoMA artist ID,matched,1,1,Q60837802,Vladimir Osipovich Roskin,1896.0,Russia,place of birth,Russian
+24441,E. S. Minin,,,1,True,Q134413973,Wikidata MoMA artist ID,matched,1,1,Q134413973,E. S. Minin,,,,
+24472,Pavel Sil'vanskii,,,1,True,Q134413977,Wikidata MoMA artist ID,matched,1,1,Q134413977,Pavel Sil'vanskii,,,,
+23810,"Vserossiiskii soiuz poetov, Moscow",,,1,True,,,no candidate,0,0,,,,,,
+24522,Meer (Mark) Aksel'rod,,,1,True,Q3918337,Wikidata MoMA artist ID,matched,1,1,Q3918337,M. M. Akselʹrod,1902.0,Belarus,place of birth,Belarusian
+24223,P. Kharybin,,,1,True,Q134413951,Wikidata MoMA artist ID,matched,1,1,Q134413951,P. Kharybin,,,,
+24130,Ir Shtemberg,,,1,True,Q134413941,Wikidata MoMA artist ID,matched,1,1,Q134413941,Ir Shtemberg,,,,
+24183,K. Zotov,,,1,True,Q134413947,Wikidata MoMA artist ID,matched,1,1,Q134413947,K. Zotov,,,,
+24216,G. Krastashevskii,,,1,True,Q134413950,Wikidata MoMA artist ID,matched,1,1,Q134413950,G. Krastashevskii,,,,
+24144,Boris Voronetskii,,,1,True,Q134413942,Wikidata MoMA artist ID,matched,1,1,Q134413942,Boris Voronetskii,,,,
+24107,B. Zhukov,,,1,True,Q134413936,Wikidata MoMA artist ID,matched,1,1,Q134413936,B. Zhukov,,,,
+24164,G. Roslov,,,1,True,Q134413944,Wikidata MoMA artist ID,matched,1,1,Q134413944,G. Roslov,,,,
+24180,Georgii Fisher,,,1,True,Q134413946,Wikidata MoMA artist ID,matched,1,1,Q134413946,Georgii Fisher,,,,
+24125,Grigorii Gidoni,,,1,True,Q134413940,Wikidata MoMA artist ID,matched,1,1,Q134413940,Grigorii Gidoni,,,,
+23608,Mykola Kalmykov,,,1,True,,,no candidate,0,0,,,,,,
+23609,Vasyl' Picheta,,,1,True,,,no candidate,0,0,,,,,,
+23461,Aleksei Den'shin,,,1,True,Q134413895,Wikidata MoMA artist ID,matched,1,1,Q134413895,Aleksei Den'shin,,,,
+24014,V. Gruental,,,1,True,,,no candidate,0,0,,,,,,
+23983,Grigorii Zimin,,,1,True,Q134414183,Wikidata MoMA artist ID,matched,1,1,Q134414183,Grigorii Zimin,,,,
+23616,T. Balaginaia,,,1,True,Q134413899,Wikidata MoMA artist ID,matched,1,1,Q134413899,T. Balaginaia,,,,
+23996,Vladimir Favorskii,,,1,True,Q898175,Wikidata MoMA artist ID,matched,1,1,Q898175,Vladimir Andreevich Favorsky,1886.0,Russia,place of birth,Russian
+23925,Serhii Borovyi,,,1,True,Q134413914,Wikidata MoMA artist ID,matched,1,1,Q134413914,Serhii Borovyi,,,,
+23836,Iukhym Mykhailiv,,,1,True,Q134413910,Wikidata MoMA artist ID,matched,1,1,Q134413910,Iukhym Mykhailiv,,,,
+24000,L. Horokh,,,1,True,Q134413917,Wikidata MoMA artist ID,matched,1,1,Q134413917,L. Horokh,,,,
+24426,K. Turganov,,,1,True,Q134413971,Wikidata MoMA artist ID,matched,1,1,Q134413971,K. Turganov,,,,
+24503,Oleksandr Dovgal',,,1,True,,,no candidate,0,0,,,,,,
+24504,Mariia Kotliarevs'ka,,,1,True,,,no candidate,0,0,,,,,,
+24478,Evgeniia Spas'ka,,,1,True,Q134413978,Wikidata MoMA artist ID,matched,1,1,Q134413978,Evgeniia Spas'ka,,,,
+24558,Mykola Pavliuk,,,1,True,Q134413982,Wikidata MoMA artist ID,matched,1,1,Q134413982,Mykola Pavliuk,,,,
+24350,Iu Kri'd'n,,,1,True,Q134413963,Wikidata MoMA artist ID,matched,1,1,Q134413963,Iu Kri'd'n,,,,
+15382,W. Mehl,,,1,True,,,no match,1,0,,,,,,
+24440,M. E.,,,1,True,Q134413972,Wikidata MoMA artist ID,matched,1,1,Q134413972,M. E.,,,,
+24369,P. Moskalenko,,,1,True,Q134413965,Wikidata MoMA artist ID,matched,1,1,Q134413965,P. Moskalenko,,,,
+24126,Moisei Fradkin,,,1,True,Q4492295,Wikidata MoMA artist ID,matched,1,1,Q4492295,Moisei Fradkin,1904.0,Ukraine,place of birth,Ukrainian
+24173,V. A. Horovyts,,,1,True,,,no candidate,0,0,,,,,,
+24344,A. Rozanova,,,1,True,Q79459612,Wikidata MoMA artist ID,matched,1,1,Q79459612,A. Rozanova,,,,
+24391,M. Kraian,,,1,True,Q134413968,Wikidata MoMA artist ID,matched,1,1,Q134413968,M. Kraian,,,,
+24388,Mykola Kriukov,,,1,True,Q134413966,Wikidata MoMA artist ID,matched,1,1,Q134413966,Mykola Kriukov,,,,
+24417,Vasyl' Atamaniuk,,,1,True,,,no match,1,0,,,,,,
+24163,Ia Rudens'kyi,,,1,True,Q134413943,Wikidata MoMA artist ID,matched,1,1,Q134413943,Ia Rudens'kyi,,,,
+23995,P.A.F.,,,1,True,Q134414184,Wikidata MoMA artist ID,matched,1,1,Q134414184,P.A.F.,,,,
+24231,E. Shol'te,,,1,True,Q134413953,Wikidata MoMA artist ID,matched,1,1,Q134413953,E. Shol'te,,,,
+24395,Andrei Gippius,,,1,True,Q134413970,Wikidata MoMA artist ID,matched,1,1,Q134413970,Andrei Gippius,,,,
+24214,Tat'iana Mavrina,,,1,True,Q458477,Wikidata MoMA artist ID,matched,1,1,Q458477,Tatyana Alekseevna Mavrina,1900.0,Principality of Gorodets|Russia,place of birth,Russian
+24098,A. Smolianskii,,,1,True,Q134413933,Wikidata MoMA artist ID,matched,1,1,Q134413933,A. Smolianskii,,,,
+24106,L. Epple,,,1,True,Q134413935,Wikidata MoMA artist ID,matched,1,1,Q134413935,L. Epple,,,,
+23451,Georgii Narbut,,,1,True,Q2443988,Wikidata MoMA artist ID,matched,1,1,Q2443988,Egor Narbut,1886.0,Ukraine,place of birth,Ukrainian
+24109,M. A. Zelikson,,,1,True,Q134413937,Wikidata MoMA artist ID,matched,1,1,Q134413937,M. A. Zelikson,,,,
+24513,Vs. Filippov,,,1,True,,,no candidate,0,0,,,,,,
+24514,N. Shebuev,,,1,True,,,matched,2,1,Q15061176,N. Shebuev,1874.0,Russia,place of birth,Russian
+23471,Aleksei Grishchenko,,,1,True,,,matched,3,1,Q3294595,Aleksei Vasilevich Grishchenko,1883.0,Ukraine,place of birth,Ukrainian
+24370,Otakar Mrkvicki,,,1,True,,,no candidate,0,0,,,,,,
+24085,E. A. Brylov,,,1,True,Q134413931,Wikidata MoMA artist ID,matched,1,1,Q134413931,E. A. Brylov,,,,
+24016,V. M. Elin,,,1,True,Q79462541,Wikidata MoMA artist ID,matched,1,1,Q79462541,V. M. Elin,,,,
+24260,Andronova,,,1,True,Q117117829,Wikidata MoMA artist ID,matched,1,1,Q117117829,Andronova,,,,
+24261,Raspopina,,,1,True,,,no candidate,0,0,,,,,,
+24262,Sigina,,,1,True,,,no candidate,0,0,,,,,,
+8484,P. Suvorov,,,1,True,Q134413889,Wikidata MoMA artist ID,matched,1,1,Q134413889,P. Suvorov,,,,
+12704,Natan Vengrov,,,1,True,Q4107086,Wikidata MoMA artist ID,matched,1,1,Q4107086,Natan Vengrov,1894.0,Russian Empire|Soviet Union|Ukraine,place of birth,Ukrainian
+23001,Pravosudovich,,,1,True,Q79462019,Wikidata MoMA artist ID,matched,1,1,Q79462019,Pravosudovich,,,,
+23994,Vladimir Egorov,,,1,True,Q4173732,Wikidata MoMA artist ID,matched,1,1,Q4173732,Vladimir Egorov,1927.0,Russia,place of birth,Russian
+24189,I. Roginskii,,,1,True,,,no candidate,0,0,,,,,,
+24295,G. I. Geronskii,,,1,True,,,no candidate,0,0,,,,,,
+24467,A. Gromov,,,1,True,Q4150188,Wikidata MoMA artist ID,matched,1,1,Q4150188,Alexey Alexeyevich Gromov,1960.0,Russia|Russian Empire|Soviet Union|Tsardom of Russia,place of birth,Russian
+24471,K. Kuznetsov,,,1,True,Q28358071,Wikidata MoMA artist ID,matched,1,1,Q28358071,K. Kuznetsov,1886.0,Russian Empire|Soviet Union,citizenship,Russian
+24486,Aleksei Radakov,,,1,True,Q2643907,Wikidata MoMA artist ID,matched,1,1,Q2643907,Aleksei Aleksandrovich Radakov,1877.0,Russia,place of birth,Russian
+24487,B. Popov,,,1,True,,,no match,7,0,,,,,,
+24488,Ilya Repin,,,1,True,Q172911,Wikidata MoMA artist ID,matched,1,1,Q172911,Elias Efimovich Repin,1844.0,Russian Empire|Ukraine,place of birth,Ukrainian
+24489,V. Zamiralio,,,1,True,,,no candidate,0,0,,,,,,
+24775,M. Brodskii,,,1,True,Q79461613,Wikidata MoMA artist ID,matched,1,1,Q79461613,M. Brodskii,,,,
+101,Album-miscellaneous,,,375,False,,,no candidate,0,0,,,,,,
+36946,Hi Red Center,1963.0,,95,False,Q11326192,Wikidata MoMA artist ID,no match,1,0,,,,,,
+45960,"Department of Publications and Urban Design, Organizing Committee of the XIX Olympiad",,,94,False,,,no candidate,0,0,,,,,,
+135951,Chow and Lin,,,50,False,,,no match,5,0,,,,,,
+41400,Ralph Thomas Ward (Corkie),,,26,False,,,no candidate,0,0,,,,,,
+46153,Carlos Libedinsky,,,17,False,Q1043016,Wikidata MoMA artist ID,matched,1,1,Q1043016,Carlos Libedinsky,1961.0,Argentina,place of birth,Argentine
+43193,Christof Kohlhöfer,,,15,False,Q1084292,Wikidata MoMA artist ID,matched,1,1,Q1084292,Chris Kohlhöfer,1942.0,Germany,place of birth,German
+30072,Moriceau + Mrzyk,,,13,False,Q28027653,Wikidata MoMA artist ID,no match,1,0,,,,,,
+34834,David Mallet,,,12,False,,,matched,6,1,Q137534,David Mallet,,Kingdom of Great Britain,citizenship,British
+40844,Herbert Spencer,,,12,False,Q5735635,Wikidata MoMA artist ID,matched,1,1,Q5735635,Herbert Spencer,1924.0,United Kingdom,place of birth,British
+67283,Polit-Sheer-Form Office (PSFO),,,12,False,,,no candidate,0,0,,,,,,
+8722,United Nations Headquarters Board of Design,,,11,False,Q117115926,Wikidata MoMA artist ID,no match,1,0,,,,,,
+10295,"Apple, Inc.",1976.0,,10,False,Q312,Wikidata MoMA artist ID,no match,1,0,,,,,,
+20811,Congo (a Chimpanzee),1954.0,,9,False,Q775697,Wikidata MoMA artist ID,no match,1,0,,,,,,
+37869,Sonia Švecová,1946.0,,9,False,Q95190740,Wikidata MoMA artist ID,matched,1,1,Q95190740,Sonia Švecová,1946.0,Czechoslovakia,place of birth,Czechoslovakian
+36990,Renatus Kuno,,,7,False,Q28744883,Wikidata MoMA artist ID,matched,1,1,Q28744883,Renatus Kuno,,,,
+28550,assume vivid astro focus,,,7,False,Q4810322,Wikidata MoMA artist ID,no match,1,0,,,,,,
+28871,Muntean/Rosenblum,,,7,False,Q18921083,Wikidata MoMA artist ID,no match,1,0,,,,,,
+37001,Jack Coke’s Farmer’s Co-op,,,7,False,Q79461291,Wikidata MoMA artist ID,no match,1,0,,,,,,
+45686,Rodney Graham Band,,,7,False,Q79462159,Wikidata MoMA artist ID,matched,1,1,Q79462159,Rodney Graham Band,,,,
+131786,Reklam-Konstruktor (Advertising Constructor) Agency,,,7,False,,,no candidate,0,0,,,,,,
+27724,fuseproject,1999.0,,6,False,Q5510004,Wikidata MoMA artist ID,no match,1,0,,,,,,
+38425,"Gardens Media Group, Cape Town",,,6,False,Q117113974,Wikidata MoMA artist ID,no match,1,0,,,,,,
+39639,Robert De Boeck,1944.0,,6,False,Q77348590,Wikidata MoMA artist ID,matched,1,1,Q77348590,Robert De Boeck,1944.0,,,
+37289,Barbara Moore,,,6,False,,,matched,7,1,Q108310831,Barbara Moore,1932.0,United Kingdom,place of birth,British
+37000,Jeff Berner,,,5,False,Q55218043,Wikidata MoMA artist ID,matched,1,1,Q55218043,Jeff Berner,1940.0,United States,citizenship,American
+39266,Auguste Cohn,,,5,False,Q134414027,Wikidata MoMA artist ID,matched,1,1,Q134414027,Auguste Cohn,,,,
+47089,Creative Commons,,,5,False,Q43449,Wikidata MoMA artist ID,no match,1,0,,,,,,
+48222,"Studio SLS, Zagreb, Croatia",,,5,False,,,no candidate,0,0,,,,,,
+49855,Edvard Ravnikar,1907.0,,5,False,Q1605703,Wikidata MoMA artist ID,matched,1,1,Q1605703,Edo J. Ravnikar,1907.0,Slovenia,place of birth,Slovenian
+31760,Vulcan,,,5,False,,,no candidate,0,0,,,,,,
+17943,Krissy Clegg,,,4,False,,,no candidate,0,0,,,,,,
+31699,Papo Colo,,,4,False,Q7133045,Wikidata MoMA artist ID,matched,1,1,Q7133045,Colo,1946.0,United States,place of birth,American
+39262,Lettie A. Allen,,,4,False,Q6533814,Wikidata MoMA artist ID,matched,1,1,Q6533814,Lettie A. Allen,1901.0,New Zealand,place of birth,New Zealander
+47905,Durvis,,,4,False,Q134414050,Wikidata MoMA artist ID,matched,1,1,Q134414050,Durvis,,,,
+19746,Sam Samore,,,3,False,Q7408114,Wikidata MoMA artist ID,matched,1,1,Q7408114,Sam Samore,1963.0,United States,place of birth,American
+21348,Dave Eggers,,,3,False,Q589497,Wikidata MoMA artist ID,matched,1,1,Q589497,Dave Eggers,1970.0,United States,place of birth,American
+28881,Anonymouse,,,3,False,,,no candidate,0,0,,,,,,
+40461,John Cavanaugh,,,3,False,Q15459475,Wikidata MoMA artist ID,matched,1,1,Q15459475,John Cavanaugh,1921.0,United States,citizenship,American
+40463,Pieter Vanderbeck,,,3,False,Q79462017,Wikidata MoMA artist ID,matched,1,1,Q79462017,Pieter Vanderbeck,,,,
+37011,Herman Seidl,,,3,False,Q134414020,Wikidata MoMA artist ID,matched,1,1,Q134414020,Herman Seidl,,,,
+9358,"Knoll Textiles, New York, NY",1947.0,,3,False,Q117114605,Wikidata MoMA artist ID,no match,1,0,,,,,,
+38298,Thomas Hamilton,,,3,False,Q79462385,Wikidata MoMA artist ID,matched,1,1,Q79462385,Thomas C. Hamilton,,United States,citizenship,American
+41285,X3 Studios,,,3,False,Q79493991,Wikidata MoMA artist ID,no match,1,0,,,,,,
+47039,Aktuální umĕni,1964.0,,3,False,,,no match,1,0,,,,,,
+47904,G. Darré,,,3,False,Q134414049,Wikidata MoMA artist ID,matched,1,1,Q134414049,G. Darré,,,,
+47936,Henri Fille,,,3,False,Q134414051,Wikidata MoMA artist ID,matched,1,1,Q134414051,Henri Fille,,,,
+47937,Heidbrinck,,,3,False,,,no candidate,0,0,,,,,,
+47980,V. Ber,,,3,False,Q79462506,Wikidata MoMA artist ID,matched,1,1,Q79462506,V. Ber,,,,
+48234,Igor Kordej,,,3,False,Q3148292,Wikidata MoMA artist ID,matched,1,1,Q3148292,Igor Kordej,1957.0,Croatia,place of birth,Croatian
+45040,Gerd Stahl,,,3,False,Q134414062,Wikidata MoMA artist ID,matched,1,1,Q134414062,Gerd Stahl,,,,
+67481,Boris Magaš,1930.0,,3,False,Q12628144,Wikidata MoMA artist ID,matched,1,1,Q12628144,Boris Magas,1930.0,Croatia,place of birth,Croatian
+49860,Stanko Kristl,1922.0,,3,False,Q12803416,Wikidata MoMA artist ID,matched,1,1,Q12803416,Stanko Kristl,1922.0,Slovenia,place of birth,Slovenian
+74970,PaJaMa,,,3,False,Q61818238,Wikidata MoMA artist ID,no match,1,0,,,,,,
+136536,Hans Bruggeman,,,3,False,,,no match,2,0,,,,,,
+7056,Bernard Tschumi,1944.0,Q123966,2,False,Q123966,MoMA Wiki QID,matched,1,1,Q123966,Bernard Tschumi,1944.0,Switzerland,place of birth,Swiss
+8823,Rogelio Jimenez,,,2,False,,,no match,4,0,,,,,,
+8822,Gregory Baird,,,2,False,,,no match,1,0,,,,,,
+22874,"Joel Sanders, Architect",,,2,False,,,no candidate,0,0,,,,,,
+9191,"C. Hugo Pott, Solingen, Germany",,,2,False,Q1040114,Wikidata MoMA artist ID,matched,1,1,Q1040114,"C. Hugo Pott, Solingen, Germany",1906.0,Germany,place of birth,German
+10065,"International Silver Co., Meriden, CT",1808.0,,2,False,Q117114398,Wikidata MoMA artist ID,no match,1,0,,,,,,
+10239,M. Katsuyoshi,,,2,False,,,no match,7,0,,,,,,
+11223,"Mourlot, Paris",,,2,False,,,no candidate,0,0,,,,,,
+3978,M. A. Miles,,,2,False,Q79461608,Wikidata MoMA artist ID,matched,1,1,Q79461608,M. A. Miles,,,,
+1223,Denis Constanduros,,,2,False,Q55772774,Wikidata MoMA artist ID,matched,1,1,Q55772774,Denis Constanduros,1910.0,United Kingdom,place of birth,British
+19053,Jean-Jacques Rullier,,,2,False,Q113400071,Wikidata MoMA artist ID,matched,1,1,Q113400071,Jean-Jacques Rullier,1962.0,France,citizenship,French
+4282,Newcombe,,,2,False,Q134413804,Wikidata MoMA artist ID,matched,1,1,Q134413804,Newcombe,,,,
+6994,Gaston Darbour,,,2,False,Q1495560,Wikidata MoMA artist ID,matched,1,1,Q1495560,Gaston Charles Guillaume Darbour,1869.0,France,place of birth,French
+6998,E. A. Wéry,,,2,False,Q3588314,Wikidata MoMA artist ID,matched,1,1,Q3588314,E. A. Wéry,1868.0,France,place of birth,French
+6666,Maurice Eliot,,,2,False,Q22022817,Wikidata MoMA artist ID,matched,1,1,Q22022817,Charles Louis Maurice Eliot,1862.0,France,place of birth,French
+6999,Armand Point,,,2,False,Q732208,Wikidata MoMA artist ID,matched,1,1,Q732208,A. Point,1861.0,Algeria,place of birth,Algerian
+6395,Princess Winifred,,,2,False,Q79462054,Wikidata MoMA artist ID,matched,1,1,Q79462054,Princess Winifred,,,,
+1901,Edward Fitzgerald,,,2,False,Q59091695,Wikidata MoMA artist ID,matched,1,1,Q59091695,Edward Fitzgerald,1927.0,United States,citizenship,American
+1862,Ronaldo Ferri,,,2,False,Q65640380,Wikidata MoMA artist ID,matched,1,1,Q65640380,Ron Ferri,1932.0,United States,place of birth,American
+4585,Mischa Petrow,,,2,False,Q79461804,Wikidata MoMA artist ID,matched,1,1,Q79461804,Mischa Petrow,,,,
+4834,Jean Reavey,,,2,False,Q79461330,Wikidata MoMA artist ID,matched,1,1,Q79461330,Jean Reavey,1917.0,,,
+5306,Mary L. Seaman,,,2,False,Q134413827,Wikidata MoMA artist ID,matched,1,1,Q134413827,Mary L. Seaman,,,,
+32537,Hans Georg Schiebel,,,2,False,,,no candidate,0,0,,,,,,
+34934,Stanley Dorfman,,,2,False,Q7599567,Wikidata MoMA artist ID,matched,1,1,Q7599567,Stanley Dorfman,,South Africa,place of birth,South African
+34939,Steve Barron,,,2,False,Q489199,Wikidata MoMA artist ID,matched,1,1,Q489199,Steve Barron,1956.0,Ireland,place of birth,Irish
+34952,Walter Stern,,,2,False,Q7966196,Wikidata MoMA artist ID,matched,1,1,Q7966196,Walter Adrian Stern,1965.0,United Kingdom,place of birth,British
+34671,The Beatles,1960.0,Q1299,2,False,Q1299,MoMA Wiki QID,no match,1,0,,,,,,
+35672,Bick Productions,,,2,False,,,no candidate,0,0,,,,,,
+37755,Jane Crawford,,,2,False,,,matched,7,1,Q16567071,A Lady,1814.0,United Kingdom,place of birth,British
+40910,Adam Colton,,,2,False,Q618310,Wikidata MoMA artist ID,matched,1,1,Q618310,Adam Colton,1957.0,United Kingdom,place of birth,British
+40913,Leo Vroegindeweij,,,2,False,Q2546475,Wikidata MoMA artist ID,matched,1,1,Q2546475,Leendert Jacob Vroegindeweij,1955.0,Netherlands,place of birth,Dutch
+36688,John Andrew,,,2,False,,,matched,7,1,Q53128960,John Andrew,1815.0,United Kingdom,place of birth,British
+37003,Jane Knížák,,,2,False,Q79461321,Wikidata MoMA artist ID,matched,1,1,Q79461321,Jane Knížák,,,,
+42011,Bernhard Höke,,,2,False,Q112822058,Wikidata MoMA artist ID,matched,1,1,Q112822058,Bernhard Höke,1939.0,Germany,place of birth,German
+38635,John E. Dumont,,,2,False,Q79461381,Wikidata MoMA artist ID,matched,1,1,Q79461381,John E. Dumont,1856.0,,,
+39263,Elizabeth Hallenbeck,,,2,False,Q134414024,Wikidata MoMA artist ID,matched,1,1,Q134414024,Elizabeth Hallenbeck,,,,
+39265,Mary Ethel Thompson,,,2,False,Q134414025,Wikidata MoMA artist ID,matched,1,1,Q134414025,Mary Ethel Thompson,,,,
+42837,Donald Goddard,,,2,False,Q111744526,Wikidata MoMA artist ID,matched,1,1,Q111744526,Donald Goddard,1934.0,United States,place of birth,American
+44066,Leonard Soned,,,2,False,,,no match,7,0,,,,,,
+44063,"Miguel Galas S.A., Mexico City",,,2,False,,,no candidate,0,0,,,,,,
+48107,Martel,,,2,False,Q21519997,Wikidata MoMA artist ID,matched,1,1,Q21519997,Eduardo Martel,1846.0,,,
+48315,Gordon Cheung,1975.0,,2,False,Q5584969,Wikidata MoMA artist ID,matched,1,1,Q5584969,Gordon Cheung,1975.0,United Kingdom,place of birth,British
+48316,Ian Davenport,1966.0,,2,False,Q3147251,Wikidata MoMA artist ID,matched,1,1,Q3147251,Ian Davenport,1966.0,United Kingdom,place of birth,British
+48317,Marie Harnett,1983.0,,2,False,Q55218884,Wikidata MoMA artist ID,matched,1,1,Q55218884,Marie Harnett,1983.0,United Kingdom,citizenship,British
+48320,Edmund de Waal,1964.0,,2,False,Q1287015,Wikidata MoMA artist ID,matched,1,1,Q1287015,Edmund Arthur Lowndes de Waal,1964.0,United Kingdom,place of birth,British
+48124,Robert Wittmann,,,2,False,Q95466938,Wikidata MoMA artist ID,matched,1,1,Q95466938,Robert Wittmann,1922.0,Czech Republic,place of birth,Czech
+38214,BIG-Bjarke Ingels Group,2005.0,,2,False,Q2481701,Wikidata MoMA artist ID,no match,1,0,,,,,,
+32840,Luc Derycke,,,2,False,,,matched,3,1,Q55235672,Luc Derycke,,,,
+49919,David Meltzer,,,2,False,Q3018441,Wikidata MoMA artist ID,matched,1,1,Q3018441,David Meltzer,1937.0,United States,place of birth,American
+49961,Štefan Kacin,1939.0,,2,False,Q59821070,Wikidata MoMA artist ID,matched,1,1,Q59821070,Štefan Kacin,1939.0,Slovenia,place of birth,Slovenian
+49962,Jurij Princes,1933.0,,2,False,Q122746977,Wikidata MoMA artist ID,matched,1,1,Q122746977,Jurij Princes,,Yugoslavia,citizenship,Yugoslavian
+49964,Marjan Uršič,1934.0,,2,False,Q122746969,Wikidata MoMA artist ID,matched,1,1,Q122746969,Marijan Uršič,1934.0,Yugoslavia,citizenship,Yugoslavian
+67843,Studio R+M,,,2,False,,,no candidate,0,0,,,,,,
+68054,Milutin Glavički,1930.0,,2,False,,,no candidate,0,0,,,,,,
+49864,Milan Mihelič,1925.0,,2,False,Q18644689,Wikidata MoMA artist ID,matched,1,1,Q18644689,Milan Mihelič,1925.0,Slovenia,place of birth,Slovenian
+131718,S. Sorbonskiy,,,2,False,,,no candidate,0,0,,,,,,
+68205,Mihajlo Mitrović,1922.0,,2,False,Q2945453,Wikidata MoMA artist ID,matched,1,1,Q2945453,Mihajlo Mitrović,1922.0,Serbia,place of birth,Serbian
+68207,Stojan Maksimović,1934.0,,2,False,Q3499616,Wikidata MoMA artist ID,matched,1,1,Q3499616,Stojan Maksimović,1934.0,,,
+67479,Drago Galić,1907.0,,2,False,Q17330643,Wikidata MoMA artist ID,matched,1,1,Q17330643,Drago Galić,1907.0,Croatia,place of birth,Croatian
+67966,Branko Žnidarec,1937.0,,2,False,,,no candidate,0,0,,,,,,
+133401,Zaiye Studio,,,2,False,,,no candidate,0,0,,,,,,
+133412,Xia Shi,,,2,False,,,no match,7,0,,,,,,
+132775,Rural Urban Framework,,,2,False,,,no candidate,0,0,,,,,,
+8134,Robert Cole,,,1,False,Q117118428,Wikidata MoMA artist ID,matched,1,1,Q117118428,Robert Cole,1942.0,United States,place of birth,American
+8885,G. Geist,,,1,False,,,no match,7,0,,,,,,
+8886,J. Sawade,,,1,False,Q1717632,Wikidata MoMA artist ID,matched,1,1,Q1717632,Jürgen Sawade,1937.0,Germany,place of birth,German
+22866,Mrs. Truus Schröder-Schräder,,,1,False,Q7848367,Wikidata MoMA artist ID,matched,1,1,Q7848367,Truus Schröder,1889.0,Netherlands,place of birth,Dutch
+22731,Timothy Wood,,,1,False,Q117121725,Wikidata MoMA artist ID,matched,1,1,Q117121725,Timothy Wood,1943.0,,,
+22732,Peter Waldman,,,1,False,Q124867239,Wikidata MoMA artist ID,matched,1,1,Q124867239,Peter David Waldman,1943.0,United States,citizenship,American
+22733,Peter Carl,,,1,False,,,no match,7,0,,,,,,
+22734,Robert White,,,1,False,,,ambiguous,7,3,,,,,,
+22735,Christopher Chimera,,,1,False,Q125212554,Wikidata MoMA artist ID,matched,1,1,Q125212554,Christopher Chimera,,United States,citizenship,American
+22875,Ernest Guenzburger,,,1,False,,,no candidate,0,0,,,,,,
+22876,Sean Keller,,,1,False,Q107044443,Wikidata MoMA artist ID,matched,1,1,Q107044443,Sean Keller,1992.0,Germany,citizenship,German
+22877,Dillon Kyle,,,1,False,Q107003619,Wikidata MoMA artist ID,matched,1,1,Q107003619,Dillon Kyle,,,,
+22878,Cary Siress,,,1,False,,,no match,1,0,,,,,,
+22816,Kahn & Jacobs,,,1,False,,,no match,6,0,,,,,,
+67012,Ka Markelius,,,1,False,Q135908184,Wikidata MoMA artist ID,matched,1,1,Q135908184,Ka Markelius,1913.0,Sweden,place of birth,Swedish
+525,Palme Berthold,,,1,False,Q79461947,Wikidata MoMA artist ID,matched,1,1,Q79461947,Palme Berthold,,,,
+8487,Jerome Olivet,,,1,False,,,no candidate,0,0,,,,,,
+10582,"J. & J. Kohn, Vienna",1867.0,,1,False,,,no candidate,0,0,,,,,,
+9889,"Viking Glass Co., New Martinsville, WV",,,1,False,Q7010054,Wikidata MoMA artist ID,no match,1,0,,,,,,
+26601,Gerhard Behrend,,,1,False,Q22712794,Wikidata MoMA artist ID,matched,1,1,Q22712794,Gerhard Behrend,,,,
+9058,"Bauhaus, Dessau",,,1,False,,,no candidate,0,0,,,,,,
+10045,"West Bend Aluminum Co., Wisconsin",1911.0,,1,False,Q7984427,Wikidata MoMA artist ID,no match,1,0,,,,,,
+10609,"Barcalo Manufacturing Co., New York, NY",,,1,False,Q117113239,Wikidata MoMA artist ID,no match,1,0,,,,,,
+10829,"Friedrich Herder A.G., Solingen, Germany",,,1,False,,,no candidate,0,0,,,,,,
+11019,"Pace Products, Chicago, IL",,,1,False,,,no candidate,0,0,,,,,,
+2589,"J.A. Henckels, Solingen, Germany",1731.0,,1,False,Q244736,Wikidata MoMA artist ID,no match,1,0,,,,,,
+11098,Guilford Art Company,,,1,False,Q79461165,Wikidata MoMA artist ID,no match,1,0,,,,,,
+1599,James H. Dougherty,,,1,False,Q79461316,Wikidata MoMA artist ID,matched,1,1,Q79461316,James H. Dougherty,,,,
+2683,Fred J. Hoertz,,,1,False,Q79461097,Wikidata MoMA artist ID,matched,1,1,Q79461097,Fred J. Hoertz,1888.0,United States,place of birth,American
+5915,Townsend,,,1,False,Q134414189,Wikidata MoMA artist ID,matched,1,1,Q134414189,Townsend,,,,
+6197,Jean Vylen,,,1,False,Q134413847,Wikidata MoMA artist ID,matched,1,1,Q134413847,Jean Vylen,,,,
+23208,Eugene Gise,,,1,False,,,no candidate,0,0,,,,,,
+3655,M. H,,,1,False,Q79461616,Wikidata MoMA artist ID,matched,1,1,Q79461616,M. H,,,,
+5264,Chicago School of Design,,,1,False,,,no candidate,0,0,,,,,,
+18,Artko,,,1,False,Q79493757,Wikidata MoMA artist ID,no match,1,0,,,,,,
+541,Art Bevacqua,,,1,False,Q79460825,Wikidata MoMA artist ID,matched,1,1,Q79460825,Art Bevacqua,,,,
+11341,C. Tereshkovitch,,,1,False,,,no candidate,0,0,,,,,,
+827,Brumhoff,,,1,False,Q134378920,Wikidata MoMA artist ID,matched,1,1,Q134378920,Brumhoff,,,,
+4846,Johannes Regn,1935.0,,1,False,Q21287781,Wikidata MoMA artist ID,matched,1,1,Q21287781,Johannes Regn,1935.0,,,
+978,Natacha Carlu,,,1,False,Q52156846,Wikidata MoMA artist ID,matched,1,1,Q52156846,Anne Carlu,1895.0,France,citizenship,French
+6947,Peter Moser,,,1,False,,,ambiguous,7,4,,,,,,
+65518,Pierre Roche,,,1,False,Q1766428,Wikidata MoMA artist ID,matched,1,1,Q1766428,Fernand Massignon,1855.0,France,place of birth,French
+3846,Claudio Mattioli,,,1,False,Q79460932,Wikidata MoMA artist ID,matched,1,1,Q79460932,Claudio Mattioli,,,,
+11381,Royal Society for the Prevention of Accidents,,,1,False,Q7374840,Wikidata MoMA artist ID,no match,1,0,,,,,,
+11419,Ward and Saks Co.,,,1,False,Q79493989,Wikidata MoMA artist ID,no match,1,0,,,,,,
+22660,Ugo Mulas,,Q2474027,1,False,Q2474027,MoMA Wiki QID,matched,1,1,Q2474027,Ugo Mulas,1928.0,Italy,place of birth,Italian
+23672,Weider,,,1,False,,,no candidate,0,0,,,,,,
+22663,Carel Blazer,,Q1905558,1,False,Q1905558,MoMA Wiki QID,matched,1,1,Q1905558,C. Blaser,1911.0,Netherlands,place of birth,Dutch
+8296,Judy Stern,,,1,False,Q117121323,Wikidata MoMA artist ID,matched,1,1,Q117121323,Judy Stern,,,,
+5035,Rossmann,,,1,False,Q134413816,Wikidata MoMA artist ID,matched,1,1,Q134413816,Rossmann,,,,
+3465,Lehner & Mader,,,1,False,Q79493898,Wikidata MoMA artist ID,no match,1,0,,,,,,
+7432,Walter Pfeiffer,,,1,False,Q279824,Wikidata MoMA artist ID,matched,1,1,Q279824,Walter Pfeiffer,1946.0,Switzerland,citizenship,Swiss
+1884,Lothar Fischer,1933.0,Q895865,1,False,Q895865,MoMA Wiki QID,matched,1,1,Q895865,Lothar Fischer,1933.0,Germany,place of birth,German
+22810,Fred Taylor,,,1,False,Q21460866,Wikidata MoMA artist ID,matched,1,1,Q21460866,Fred Taylor,1875.0,United Kingdom,place of birth,British
+7433,J. Van Der Wal,,,1,False,Q79459643,Wikidata MoMA artist ID,matched,1,1,Q79459643,J. Van Der Wal,,,,
+8104,Charles Zimmerman,1942.0,,1,False,,,no match,7,0,,,,,,
+2414,Jules Guran,,,1,False,Q79461438,Wikidata MoMA artist ID,matched,1,1,Q79461438,Jules Guran,,,,
+601,Blessum,,,1,False,Q134378918,Wikidata MoMA artist ID,matched,1,1,Q134378918,Blessum,,,,
+2962,Kafemann,,,1,False,Q134413751,Wikidata MoMA artist ID,matched,1,1,Q134413751,Kafemann,,,,
+4583,Petronio,,,1,False,Q79493927,Wikidata MoMA artist ID,no match,1,0,,,,,,
+41182,Willy Szesztokat,,,1,False,Q79462636,Wikidata MoMA artist ID,matched,1,1,Q79462636,Willy Szesztokat,,,,
+48235,Geschäftsstelle des Bürger-Rates von Groß-Berlin,,,1,False,Q79461145,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8229,Peter Wollbrandt,,,1,False,,,no candidate,0,0,,,,,,
+8230,Wilhelm Heuschen,,,1,False,,,no candidate,0,0,,,,,,
+8232,Toni Del Renzio,,Q7821361,1,False,Q7821361,MoMA Wiki QID,matched,1,1,Q7821361,Antonino Romanov del Renzio dei Rossi di Castellone e Venosa,1915.0,Russia|Soviet Union,place of birth,Russian
+2650,Hille,,,1,False,Q79461241,Wikidata MoMA artist ID,matched,1,1,Q79461241,Hille,,,,
+8234,Robert M. Jones,,,1,False,Q79459679,Wikidata MoMA artist ID,matched,1,1,Q79459679,Robert M. Jones,,,,
+23215,Kunsthandlung Würthle & Sohn,,,1,False,,,no candidate,0,0,,,,,,
+6326,Terence Westmacott,,,1,False,Q79462374,Wikidata MoMA artist ID,matched,1,1,Q79462374,Terence Westmacott,,,,
+8246,Z. Robaszek,,,1,False,Q23070470,Wikidata MoMA artist ID,matched,1,1,Q23070470,Z. Robaszek,,,,
+8235,R. Schwarzkopf,,,1,False,Q79462059,Wikidata MoMA artist ID,matched,1,1,Q79462059,R. Schwarzkopf,,,,
+22769,Guenther,,,1,False,Q2343304,Wikidata MoMA artist ID,matched,1,1,Q2343304,Stephan Guenther,1963.0,Germany,citizenship,German
+2513,L. Harris,,,1,False,Q79459649,Wikidata MoMA artist ID,matched,1,1,Q79459649,L. Harris,,,,
+2248,Harry Gordon,,,1,False,Q79461203,Wikidata MoMA artist ID,matched,1,1,Q79461203,Harry Gordon,,United States,citizenship,American
+11992,"Maeght Éditeur, Paris",,,1,False,,,no candidate,0,0,,,,,,
+13108,Josef Eberg,,,1,False,,,no candidate,0,0,,,,,,
+42880,Michael Harvey,,,1,False,,,ambiguous,7,3,,,,,,
+201,Aoki Toshio,1854.0,,1,False,,,no match,2,0,,,,,,
+4367,Obikawa Seijiro,,,1,False,Q117120627,Wikidata MoMA artist ID,matched,1,1,Q117120627,Obikawa Seijiro,,,,
+135492,Noss & Mitchell,,,1,False,,,no candidate,0,0,,,,,,
+7872,Kenneth Bushnell,1933.0,,1,False,Q6390816,Wikidata MoMA artist ID,matched,1,1,Q6390816,Ken Bushnell,1933.0,United States,place of birth,American
+6747,David Black,,,1,False,Q33123628,Wikidata MoMA artist ID,matched,1,1,Q33123628,David Black,1928.0,,,
+6748,Ned Griner,,,1,False,Q134413872,Wikidata MoMA artist ID,matched,1,1,Q134413872,Ned Griner,,,,
+6749,Charles Huffman,,,1,False,Q134413873,Wikidata MoMA artist ID,matched,1,1,Q134413873,Charles Huffman,,,,
+6750,Rachel Kemper,,,1,False,Q134413875,Wikidata MoMA artist ID,matched,1,1,Q134413875,Rachel Kemper,,,,
+6751,Jerrold Maddox,,,1,False,Q117120190,Wikidata MoMA artist ID,matched,1,1,Q117120190,Jerrold Maddox,,,,
+6752,Jean Margolin,,,1,False,Q134413876,Wikidata MoMA artist ID,matched,1,1,Q134413876,Jean Margolin,,,,
+19663,Nelson Savinon,,,1,False,Q55219735,Wikidata MoMA artist ID,matched,1,1,Q55219735,,1971.0,United States,citizenship,American
+5153,Rolf Sandquist,,,1,False,Q134413823,Wikidata MoMA artist ID,matched,1,1,Q134413823,Rolf Sandquist,,,,
+6669,P. Jouve,,,1,False,Q134413858,Wikidata MoMA artist ID,matched,1,1,Q134413858,P. Jouve,,,,
+6673,L. Simon,,,1,False,Q134413859,Wikidata MoMA artist ID,matched,1,1,Q134413859,L. Simon,,,,
+5659,Stevens,,,1,False,Q134378973,Wikidata MoMA artist ID,matched,1,1,Q134378973,Stevens,,,,
+6675,A. Laurens,,,1,False,Q117119991,Wikidata MoMA artist ID,matched,1,1,Q117119991,A. Laurens,,,,
+6678,E. A. Artigue,,,1,False,Q16027880,Wikidata MoMA artist ID,matched,1,1,Q16027880,Albert Emile Artigue,1850.0,Argentina,place of birth,Argentine
+6677,A. Lepère,,,1,False,Q2871286,Wikidata MoMA artist ID,matched,1,1,Q2871286,A. Lepere,1849.0,France,place of birth,French
+6681,Robert Engels,,,1,False,Q2157021,Wikidata MoMA artist ID,matched,1,1,Q2157021,Robert Engels,1866.0,Germany,place of birth,German
+6683,Ernest Laurent,,,1,False,Q134413860,Wikidata MoMA artist ID,matched,1,1,Q134413860,Ernest Laurent,,,,
+6680,Hans Christiansen,,,1,False,Q1579001,Wikidata MoMA artist ID,matched,1,1,Q1579001,Hans Christiansen,1866.0,Germany,place of birth,German
+6685,Gaston Bussière,,,1,False,Q1495565,Wikidata MoMA artist ID,matched,1,1,Q1495565,Gaston Bussiere,1862.0,France,place of birth,French
+6687,Roedel,,,1,False,Q134414176,Wikidata MoMA artist ID,matched,1,1,Q134414176,Roedel,,,,
+6689,A. Giraldon,,,1,False,Q2824825,Wikidata MoMA artist ID,matched,1,1,Q2824825,Adolphe Giraldon,1855.0,France,place of birth,French
+6690,Henri Le Sidaner,,,1,False,Q577050,Wikidata MoMA artist ID,matched,1,1,Q577050,H. Le Sidaner,1862.0,Mauritius,place of birth,Mauritian
+6691,Maximilienne Guyon,,,1,False,Q20751676,Wikidata MoMA artist ID,matched,1,1,Q20751676,Goepp Guyon,1868.0,France,place of birth,French
+6693,Fernand Piet,,,1,False,Q1406530,Wikidata MoMA artist ID,matched,1,1,Q1406530,Fernand Piet,1869.0,France,place of birth,French
+6695,A. Ibels,,,1,False,Q134413862,Wikidata MoMA artist ID,matched,1,1,Q134413862,A. Ibels,,,,
+6696,Paul Leroy,,,1,False,Q204465,Wikidata MoMA artist ID,matched,1,1,Q204465,Paul A. A. Leroy,1860.0,France,citizenship,French
+6700,Paul Renouard,,,1,False,Q674344,Wikidata MoMA artist ID,matched,1,1,Q674344,Charles Paul Renouard,1845.0,France,place of birth,French
+6698,Ch Huard,,,1,False,Q134413863,Wikidata MoMA artist ID,matched,1,1,Q134413863,Ch Huard,,,,
+6702,Maurice Desvallières,,,1,False,Q17350101,Wikidata MoMA artist ID,matched,1,1,Q17350101,Maurice Desvallières,1857.0,France,place of birth,French
+6704,A. Muller,,,1,False,Q134413867,Wikidata MoMA artist ID,matched,1,1,Q134413867,A. Muller,,,,
+6707,R. A. Vlmann,,,1,False,Q134413869,Wikidata MoMA artist ID,matched,1,1,Q134413869,R. A. Vlmann,,,,
+6708,A Yank,,,1,False,Q134413870,Wikidata MoMA artist ID,matched,1,1,Q134413870,A Yank,,,,
+6714,Henri Guinier,,,1,False,Q3131242,Wikidata MoMA artist ID,matched,1,1,Q3131242,Henri Guinier,1867.0,France,place of birth,French
+6716,Raphael Collin,,,1,False,Q375814,Wikidata MoMA artist ID,matched,1,1,Q375814,Louis Joseph Raphael,1850.0,France,place of birth,French
+6718,F. Luigini,,,1,False,Q19887259,Wikidata MoMA artist ID,matched,1,1,Q19887259,Ferdinand Jean Charles Alexandre Luigini,1870.0,France,place of birth,French
+6717,L. W. Hawkins,,,1,False,Q956854,Wikidata MoMA artist ID,matched,1,1,Q956854,Hawkins,1849.0,Germany,place of birth,German
+6721,L. H. Monod,,,1,False,Q1484095,Wikidata MoMA artist ID,matched,1,1,Q1484095,L. H. Monod,1867.0,France,place of birth,French
+8403,Marguerite Delorme,,,1,False,Q15970234,Wikidata MoMA artist ID,matched,1,1,Q15970234,Marguerite Delorme,1876.0,France,place of birth,French
+6724,L. O. Merson,,,1,False,Q390904,Wikidata MoMA artist ID,matched,1,1,Q390904,Luc-Olivier Merson,1846.0,France,place of birth,French
+20813,Adrian Nutbeam,,,1,False,,,matched,2,1,Q141189693,Adrian Nutbeam,1946.0,,,
+26901,"Ro RC, Belgium",,,1,False,,,no candidate,0,0,,,,,,
+2173,Girard,,,1,False,,,no candidate,0,0,,,,,,
+2771,Max Hunziker,,,1,False,Q1639949,Wikidata MoMA artist ID,matched,1,1,Q1639949,Max Hunziger,1901.0,Switzerland,place of birth,Swiss
+21088,"Salvatore Silkscreen Co., Inc.",,,1,False,,,no candidate,0,0,,,,,,
+5977,Turner,,,1,False,Q134414174,Wikidata MoMA artist ID,matched,1,1,Q134414174,Turner,,,,
+6517,Alfred Young,,,1,False,Q27838001,Wikidata MoMA artist ID,matched,1,1,Q27838001,Alfred Young,1936.0,United Kingdom,place of birth,British
+6760,Robert Markle,,,1,False,Q55219246,Wikidata MoMA artist ID,matched,1,1,Q55219246,Robert Markle,1936.0,Canada,place of birth,Canadian
+6761,Waltrud Markgraf,,,1,False,Q117120239,Wikidata MoMA artist ID,matched,1,1,Q117120239,Waltrud Markgraf,,,,
+6762,John Meredith,,,1,False,Q20851389,Wikidata MoMA artist ID,matched,1,1,Q20851389,John Meredith,1933.0,Canada,place of birth,Canadian
+6763,Gordon Rayner,,,1,False,Q55218171,Wikidata MoMA artist ID,matched,1,1,Q55218171,Gordon Rayner,1935.0,Canada,place of birth,Canadian
+6765,Maschel Teitelbaum,,,1,False,Q134413878,Wikidata MoMA artist ID,matched,1,1,Q134413878,Maschel Teitelbaum,,,,
+6757,Gerald Gladstone,,,1,False,Q5549180,Wikidata MoMA artist ID,matched,1,1,Q5549180,Gerald Gladstone,1929.0,Canada,place of birth,Canadian
+6758,Richard Gorman,,,1,False,,,ambiguous,7,2,,,,,,
+6759,Robert Hedrick,,,1,False,Q55219236,Wikidata MoMA artist ID,matched,1,1,Q55219236,Robert Hedrick,1930.0,Canada,place of birth,Canadian
+135111,After Sophie Taeuber-Arp,,,1,False,,,no candidate,0,0,,,,,,
+2377,Gruppo N,1959.0,,1,False,,,no match,2,0,,,,,,
+22782,Kolatan / Mac Donald Studio,1988.0,,1,False,,,no candidate,0,0,,,,,,
+22785,Minsuk Cho,,,1,False,Q17708867,Wikidata MoMA artist ID,matched,1,1,Q17708867,Minsuk Cho,1966.0,South Korea,place of birth,Korean
+22786,Ferda Kolatan,,,1,False,,,no match,1,0,,,,,,
+22787,Chiakai Yang,,,1,False,,,no candidate,0,0,,,,,,
+22788,Anke Scheren,,,1,False,,,no candidate,0,0,,,,,,
+22789,Michael Kennedy,,,1,False,,,matched,7,1,Q3308292,George Michael Sinclair Kennedy,1926.0,United Kingdom,place of birth,British
+22790,George Grenier III,,,1,False,,,no candidate,0,0,,,,,,
+22791,Joseph Bula,,,1,False,,,no match,1,0,,,,,,
+22792,Baine Gaiser,,,1,False,,,no candidate,0,0,,,,,,
+22793,Patrick Kane,,,1,False,,,matched,7,1,Q7143604,Pat Kane,1964.0,United Kingdom,citizenship,British
+22794,Antonio Palladino,,,1,False,,,no match,4,0,,,,,,
+22795,Teresa Chang,,,1,False,Q114164699,Wikidata MoMA artist ID,matched,1,1,Q114164699,Teresa Chang,,,,
+22796,Gayle Tsern,,,1,False,,,no candidate,0,0,,,,,,
+22797,Long Hair George Krausas,,,1,False,,,no candidate,0,0,,,,,,
+72893,Lou Reed,,,1,False,Q189080,Wikidata MoMA artist ID,matched,1,1,Q189080,Lewis A. Reed,1942.0,United States,place of birth,American
+18838,Karl Nierendorf,,,1,False,Q55845255,Wikidata MoMA artist ID,matched,1,1,Q55845255,Carl Nierendorf,1889.0,Germany,place of birth,German
+9663,"Karhula Glassworks, Finland",,,1,False,Q117114536,Wikidata MoMA artist ID,no match,1,0,,,,,,
+49083,"MTA New York City Transit, Bergen Street Sign Shop",,,1,False,,,no candidate,0,0,,,,,,
+26933,Clear Blue Hawaii,2001.0,,1,False,Q117113425,Wikidata MoMA artist ID,no match,1,0,,,,,,
+32064,Martin Boykan,,,1,False,Q6775041,Wikidata MoMA artist ID,matched,1,1,Q6775041,Martin Boykan,1931.0,United States,place of birth,American
+28944,"SQUINT/OPERA, London, England",2002.0,,1,False,,,no candidate,0,0,,,,,,
+27807,Médecins Sans Frontières (Doctors Without Borders),1971.0,,1,False,Q49330,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8692,IDEO,1991.0,,1,False,Q682435,Wikidata MoMA artist ID,no match,1,0,,,,,,
+28093,UNICEF United Nations Children's Fund,1946.0,,1,False,Q740308,Wikidata MoMA artist ID,no match,1,0,,,,,,
+26860,"James Corner, Field Operations, New York",1999.0,,1,False,Q117113825,Wikidata MoMA artist ID,no match,1,0,,,,,,
+35143,Diller Scofidio + Renfro,1981.0,Q3027988,1,False,Q3027988,MoMA Wiki QID,no match,1,0,,,,,,
+29875,Anon,,,1,False,,,no candidate,0,0,,,,,,
+29590,Emily Feather,,,1,False,Q991589,Wikidata MoMA artist ID,matched,1,1,Q991589,Bruce Conner,1933.0,United States,place of birth,American
+29945,Ellen van Loon,,,1,False,Q5483055,Wikidata MoMA artist ID,matched,1,1,Q5483055,Ellen van Loon,1963.0,Netherlands,place of birth,Dutch
+31430,Demakersvan,2004.0,,1,False,Q29428495,Wikidata MoMA artist ID,no match,1,0,,,,,,
+32944,Nice Style The World's First Pose Band,1971.0,,1,False,,,no candidate,0,0,,,,,,
+34623,Robin Fletcher,,,1,False,,,no match,2,0,,,,,,
+34624,Gary Chitty,,,1,False,,,no candidate,0,0,,,,,,
+34625,Paul Richards,,,1,False,Q7153215,Wikidata MoMA artist ID,matched,1,1,Q7153215,Paul Richards,1949.0,United Kingdom,citizenship,British
+29442,"Art & Project, Amsterdam",1968.0,,1,False,,,no candidate,0,0,,,,,,
+34413,Katarzyna Kobro,,Q290168,1,False,Q290168,MoMA Wiki QID,matched,1,1,Q290168,Katarzyna Kobro,1898.0,Russia,place of birth,Russian
+34415,BBPR,1932.0,,1,False,Q320788,Wikidata MoMA artist ID,no match,1,0,,,,,,
+34935,Jim Yukich,,,1,False,Q3161502,Wikidata MoMA artist ID,matched,1,1,Q3161502,"James ""Jim"" Yukich",1963.0,United States,citizenship,American
+34951,Dom + Nic,,,1,False,Q3712787,Wikidata MoMA artist ID,no match,1,0,,,,,,
+34953,Marcus Viner,,,1,False,Q117859317,Wikidata MoMA artist ID,matched,1,1,Q117859317,Marcus Viner,,,,
+34891,Philippe Gautier,,,1,False,Q7184820,Wikidata MoMA artist ID,matched,1,1,Q7184820,Philippe Gautier,1928.0,France,citizenship,French
+34840,Don Munroe,,,1,False,,,no match,2,0,,,,,,
+34790,Cabaret Voltaire,,,1,False,Q1024747,Wikidata MoMA artist ID,no match,1,0,,,,,,
+34826,Charlie Levi,,,1,False,,,no match,1,0,,,,,,
+34855,Jeff Stein,,,1,False,Q114797371,Wikidata MoMA artist ID,matched,1,1,Q114797371,Jeff Stein,,,,
+34792,Fishbone,,,1,False,Q902881,Wikidata MoMA artist ID,no match,1,0,,,,,,
+34833,David Hogan,,,1,False,,,ambiguous,7,3,,,,,,
+34828,Chuck Statler,,,1,False,Q117121311,Wikidata MoMA artist ID,matched,1,1,Q117121311,Chuck Statler,,,,
+34810,Adam Friedman,,,1,False,Q2823944,Wikidata MoMA artist ID,matched,1,1,Q2823944,Adam Friedman,1953.0,United States,citizenship,American
+34836,Dean Winkler,,,1,False,,,no candidate,0,0,,,,,,
+34807,Pierre Binggeli,,,1,False,Q11331364,Wikidata MoMA artist ID,matched,1,1,Q11331364,Pierre Binggeli,,,,
+34854,Jean-Bernard Menoud,,,1,False,Q11310270,Wikidata MoMA artist ID,matched,1,1,Q11310270,Jean-Bernard Menoud,1954.0,Switzerland,place of birth,Swiss
+35660,Vega Films,,,1,False,Q11352124,Wikidata MoMA artist ID,no match,1,0,,,,,,
+135361,Souheil Bachar,,,1,False,,,no candidate,0,0,,,,,,
+35615,Sachiko Hamada,,,1,False,Q117119301,Wikidata MoMA artist ID,matched,1,1,Q117119301,Sachiko Hamada,,,,
+35616,Scott Sinkler,,,1,False,,,no candidate,0,0,,,,,,
+35476,David Blair,,,1,False,Q55235743,Wikidata MoMA artist ID,matched,1,1,Q55235743,David Blair,,,,
+35990,The Collective Actions Group,,,1,False,Q4227972,Wikidata MoMA artist ID,no match,1,0,,,,,,
+38557,Paul Garrin,,,1,False,Q1328705,Wikidata MoMA artist ID,matched,1,1,Q1328705,Paul Garrin,1957.0,United States,place of birth,American
+39283,Betsy Connors,,,1,False,Q107002732,Wikidata MoMA artist ID,matched,1,1,Q107002732,Betsy Connors,1950.0,United States,citizenship,American
+40873,Gruppe X,1966.0,,1,False,,,no match,7,0,,,,,,
+65082,Wolf Knoebel,1940.0,,1,False,,,matched,1,1,Q241977,Imi Knobel,1940.0,Germany,place of birth,German
+46727,Private Collector,,,1,False,,,no match,7,0,,,,,,
+40884,Naomi Spector,,,1,False,,,no candidate,0,0,,,,,,
+40905,Nicholas Pope,,,1,False,Q2554312,Wikidata MoMA artist ID,matched,1,1,Q2554312,N. Pope,1949.0,Australia,place of birth,Australian
+40908,Emo Verkerk,,,1,False,,,matched,1,1,Q5831571,E.H.B. Verkerk,1955.0,Netherlands,place of birth,Dutch
+40911,Jan Commandeur,,,1,False,,,matched,7,1,Q22091192,Jan Commandeur,1954.0,Netherlands,place of birth,Dutch
+40914,Han Schuil,,,1,False,Q13653414,Wikidata MoMA artist ID,matched,1,1,Q13653414,Han Schuil,1958.0,Netherlands,place of birth,Dutch
+36687,Peter Lyle,,,1,False,,,no match,5,0,,,,,,
+42888,George L. Thomson,,,1,False,,,no match,1,0,,,,,,
+36690,Carl Heideken,,,1,False,,,ambiguous,4,2,,,,,,
+30654,Gary Hincks,1949.0,,1,False,Q120897472,Wikidata MoMA artist ID,matched,1,1,Q120897472,Gary Hincks,1949.0,,,
+69475,John Borg Manduca,,,1,False,,,no candidate,0,0,,,,,,
+45301,Olga Adorno,,,1,False,,,no match,1,0,,,,,,
+38258,David Thompson,,,1,False,Q22696566,Wikidata MoMA artist ID,matched,1,1,Q22696566,Dave Thompson,1939.0,United States,place of birth,American
+41292,Fluxus,,,1,False,Q108908,Wikidata MoMA artist ID,no match,1,0,,,,,,
+37092,Blondie,1975.0,,1,False,Q202741,Wikidata MoMA artist ID,no match,1,0,,,,,,
+47150,Ruth Krauss,,,1,False,Q2177671,Wikidata MoMA artist ID,matched,1,1,Q2177671,Ruth Ida Krauss,1901.0,United States,place of birth,American
+38046,Nancy McElroy,,,1,False,Q134414021,Wikidata MoMA artist ID,matched,1,1,Q134414021,Nancy McElroy,,,,
+68790,Chris W. Sublette,,,1,False,,,no candidate,0,0,,,,,,
+73972,Bill Hine,,,1,False,,,matched,4,1,Q104904713,Bill Hines,1895.0,United States,place of birth,American
+67236,Mastropaul Design,,,1,False,,,no candidate,0,0,,,,,,
+45259,Sara Seagull,,,1,False,Q79462239,Wikidata MoMA artist ID,matched,1,1,Q79462239,Sara Seagull,,,,
+36649,Fluxus Collective,,,1,False,,,no candidate,0,0,,,,,,
+69692,Ida Griffin,,,1,False,,,no match,1,0,,,,,,
+68311,ZAJ,,,1,False,Q9097429,Wikidata MoMA artist ID,no match,1,0,,,,,,
+68309,Pera,,,1,False,,,no candidate,0,0,,,,,,
+68312,G. Altorjay,,,1,False,,,no match,1,0,,,,,,
+68313,Peter O. Chotjewitz,,,1,False,Q1557335,Wikidata MoMA artist ID,matched,1,1,Q1557335,Peter O. Chotjewitz,1934.0,Germany,citizenship,German
+68314,Marshall McLuhan,,,1,False,Q193871,Wikidata MoMA artist ID,matched,1,1,Q193871,Herbert Marshall McLuhan,1911.0,Canada,place of birth,Canadian
+68315,Helmut Rywelski,,,1,False,Q112687585,Wikidata MoMA artist ID,matched,1,1,Q112687585,Helmut Rywelski,1928.0,,,
+38410,Moorhead & Moorhead,2000.0,,1,False,Q117114987,Wikidata MoMA artist ID,no match,1,0,,,,,,
+38563,American Type Founders,1892.0,,1,False,Q2843050,Wikidata MoMA artist ID,no match,1,0,,,,,,
+38639,William D. Murphy,,,1,False,Q79459687,Wikidata MoMA artist ID,matched,1,1,Q79459687,William D. Murphy,1834.0,United States,citizenship,American
+38636,William B. Dyer,,,1,False,Q52155667,Wikidata MoMA artist ID,matched,1,1,Q52155667,W. B. Dyer,1860.0,United States,citizenship,American
+39034,J.L. Hammett Co.,,,1,False,Q79493882,Wikidata MoMA artist ID,no match,1,0,,,,,,
+39264,Abbie Herrick,,,1,False,,,no candidate,0,0,,,,,,
+39270,Rose A. Craigan,,,1,False,Q134414029,Wikidata MoMA artist ID,matched,1,1,Q134414029,Rose A. Craigan,,,,
+39271,Stella C. Salisbury,,,1,False,Q134414030,Wikidata MoMA artist ID,matched,1,1,Q134414030,Stella C. Salisbury,,,,
+39272,Dorothy Sullivan,,,1,False,Q134414031,Wikidata MoMA artist ID,matched,1,1,Q134414031,Dorothy Sullivan,,,,
+39273,Whitney Nolte,,,1,False,Q117120607,Wikidata MoMA artist ID,matched,1,1,Q117120607,Whitney Nolte,,,,
+39274,Elva L. Brownson,,,1,False,Q134414032,Wikidata MoMA artist ID,matched,1,1,Q134414032,Elva L. Brownson,,,,
+39275,Grace A. Snyder,,,1,False,Q134414033,Wikidata MoMA artist ID,matched,1,1,Q134414033,Grace A. Snyder,,,,
+39276,M. A. Dillon,,,1,False,Q134414034,Wikidata MoMA artist ID,matched,1,1,Q134414034,M. A. Dillon,,,,
+39277,Edith M. Barber,,,1,False,Q134414035,Wikidata MoMA artist ID,matched,1,1,Q134414035,Edith M. Barber,,,,
+39279,Margaret Heeps,,,1,False,Q134414036,Wikidata MoMA artist ID,matched,1,1,Q134414036,Margaret Heeps,,,,
+39280,B. Ferrari,,,1,False,Q134414037,Wikidata MoMA artist ID,matched,1,1,Q134414037,B. Ferrari,,,,
+39281,Florence E. Piper,,,1,False,Q134414038,Wikidata MoMA artist ID,matched,1,1,Q134414038,Florence E. Piper,,,,
+39282,Mahthilde Evans,,,1,False,Q134414039,Wikidata MoMA artist ID,matched,1,1,Q134414039,Mahthilde Evans,,,,
+39187,"PIKO, Sonneberg, Germany",,,1,False,Q697052,Wikidata MoMA artist ID,no match,1,0,,,,,,
+35858,Patrick Blackwell,,,1,False,,,matched,6,1,Q141286024,Patrick Blackwell,,,,
+41569,Jan Sanders,,,1,False,Q2144695,Wikidata MoMA artist ID,matched,1,1,Q2144695,Jan Sanders,1919.0,Kingdom of the Netherlands,citizenship,Dutch
+41483,Maria Gilssen,,,1,False,,,no candidate,0,0,,,,,,
+42365,Paul Nocka,,,1,False,,,no candidate,0,0,,,,,,
+44283,ATBAT,,,1,False,Q98075677,Wikidata MoMA artist ID,no match,1,0,,,,,,
+42242,Ernst Thormahlen,,,1,False,Q79461054,Wikidata MoMA artist ID,matched,1,1,Q79461054,Ernst Thormahlen,,,,
+42476,Fallout Productions,,,1,False,Q79461077,Wikidata MoMA artist ID,matched,1,1,Q79461077,Fallout Productions,,,,
+42460,Richard Seireeni,,,1,False,,,no candidate,0,0,,,,,,
+42477,Top O'Graphic,,,1,False,,,no candidate,0,0,,,,,,
+42478,Anna Persiani,,,1,False,,,no match,2,0,,,,,,
+42483,Winston Smith,,,1,False,Q3569392,Wikidata MoMA artist ID,matched,1,1,Q3569392,Winston Smith,1952.0,United States,place of birth,American
+46794,D.B. Glen,,,1,False,,,no match,6,0,,,,,,
+50186,Mickey Ortiz,,,1,False,Q79461754,Wikidata MoMA artist ID,matched,1,1,Q79461754,Mickey Ortiz,,,,
+41298,Brian Davis,,,1,False,Q24705118,Wikidata MoMA artist ID,matched,1,1,Q24705118,Brian Davis,,,,
+41299,Philip Cushway,,,1,False,Q79462014,Wikidata MoMA artist ID,matched,1,1,Q79462014,Philip Cushway,,,,
+41303,Danny Fields,,,1,False,Q1164585,Wikidata MoMA artist ID,matched,1,1,Q1164585,Daniel Feinberg,1939.0,United States,place of birth,American
+42279,Shane McGowan,,,1,False,Q356369,Wikidata MoMA artist ID,matched,1,1,Q356369,Shane MacGowan,1957.0,United Kingdom,place of birth,British
+42433,Kate Simon,,,1,False,Q6375785,Wikidata MoMA artist ID,matched,1,1,Q6375785,Kate Simon,1912.0,United States,citizenship,American
+41305,Sophie Richmond,,,1,False,,,no candidate,0,0,,,,,,
+48119,Ray Stevenson,,,1,False,Q130233160,Wikidata MoMA artist ID,matched,1,1,Q130233160,Ray Stevenson,,,,
+42462,M. Hirsch,,,1,False,Q87994148,Wikidata MoMA artist ID,matched,1,1,Q87994148,M. Hirsch,,,,
+41306,John Varnom,,,1,False,,,no candidate,0,0,,,,,,
+42282,Mark Perry,,,1,False,Q3294203,Wikidata MoMA artist ID,matched,1,1,Q3294203,Mark Perry,1953.0,United Kingdom,citizenship,British
+44495,Bloomfield/Travis,,,1,False,Q117113309,Wikidata MoMA artist ID,no match,1,0,,,,,,
+38552,Olivier Debroise,,,1,False,Q60967424,Wikidata MoMA artist ID,matched,1,1,Q60967424,Olivier Debroise,1952.0,Israel|Palestine,place of birth,Israeli
+79460,United States. Navy,,,1,False,,,no match,7,0,,,,,,
+42188,CCP Games,1997.0,,1,False,Q1023055,Wikidata MoMA artist ID,no match,1,0,,,,,,
+133623,Raoul Doucet,,,1,False,,,no candidate,0,0,,,,,,
+43278,Adam Broomberg and Oliver Chanarin Studio,,,1,False,Q16727918,Wikidata MoMA artist ID,no match,1,0,,,,,,
+43510,JoAnn Carney,,,1,False,Q79461358,Wikidata MoMA artist ID,matched,1,1,Q79461358,JoAnn Carney,,,,
+43559,Thornton Dial,1928.0,,1,False,Q7796523,Wikidata MoMA artist ID,matched,1,1,Q7796523,"Thornton ""Buck"" Dial",1928.0,United States,place of birth,American
+133870,Arthur Babakhanian,,,1,False,,,no candidate,0,0,,,,,,
+133871,M. Carsiodes,,,1,False,,,no candidate,0,0,,,,,,
+133872,Tom Clancy,,,1,False,,,ambiguous,7,2,,,,,,
+133873,William Kolakoski,,,1,False,,,matched,1,1,Q33100555,William George Kolakoski,1944.0,United States,place of birth,American
+133875,Tom Russell,,,1,False,,,matched,7,1,Q21461614,Tom Russell,1963.0,,,
+133876,Scientific American,,,1,False,,,matched,7,1,Q7433741,Andrew Rohrmann,,United States,citizenship,American
+133877,Tippetts-Abbett-McCarthy-Stratton (Engineers and Architects),,,1,False,,,no candidate,0,0,,,,,,
+44069,Francisco Uribe,,,1,False,Q16569276,Wikidata MoMA artist ID,matched,1,1,Q16569276,Francisco Uribe,1966.0,Mexico,place of birth,Mexican
+44248,David Degener,,,1,False,Q112821919,Wikidata MoMA artist ID,matched,1,1,Q112821919,David Degener,,,,
+44250,Ding Dong,,,1,False,,,no match,7,0,,,,,,
+75133,"Zeiss-Werk, Jena, East Germany (DDR)",,,1,False,,,no candidate,0,0,,,,,,
+45672,U-J3RK5,,,1,False,Q7862900,Wikidata MoMA artist ID,no match,1,0,,,,,,
+45673,Kitty Byrne,,,1,False,Q134474384,Wikidata MoMA artist ID,matched,1,1,Q134474384,Kitty Byrne,,,,
+45674,Colin Griffiths,,,1,False,Q134473850,Wikidata MoMA artist ID,matched,1,1,Q134473850,Colin Griffiths,,,,
+45675,Danice McLeod,,,1,False,Q134474970,Wikidata MoMA artist ID,matched,1,1,Q134474970,Danice Macleod,,,,
+45676,Frank Ramirez,,,1,False,Q134474694,Wikidata MoMA artist ID,matched,1,1,Q134474694,Frank Johnson,,,,
+45677,David Wisdom,,,1,False,Q5241237,Wikidata MoMA artist ID,matched,1,1,Q5241237,David Wisdom,1901.0,,,
+45442,Ann Demeulemeester,,,1,False,Q466241,Wikidata MoMA artist ID,matched,1,1,Q466241,Ann Demeulemeester,1959.0,Belgium,place of birth,Belgian
+45444,Charlie Foos,,,1,False,,,no match,1,0,,,,,,
+45521,M/M (Paris),1992.0,,1,False,Q3272465,Wikidata MoMA artist ID,no match,1,0,,,,,,
+45998,Relative Wave,2009.0,,1,False,,,no candidate,0,0,,,,,,
+45999,Kodama Studios,2011.0,,1,False,,,no candidate,0,0,,,,,,
+46000,"Touch Press, London",2010.0,,1,False,,,no candidate,0,0,,,,,,
+47903,Bob,,,1,False,Q134414048,Wikidata MoMA artist ID,matched,1,1,Q134414048,Bob,,,,
+48104,Alfred Le Petit,,,1,False,Q2645384,Wikidata MoMA artist ID,matched,1,1,Q2645384,Alfred Le Petit,1841.0,France,place of birth,French
+48106,Gravelle,,,1,False,Q79493862,Wikidata MoMA artist ID,no match,1,0,,,,,,
+46314,"QUAD Electroacoustics, Huntingdon, England",,,1,False,,,no candidate,0,0,,,,,,
+47069,Wyss Institute for Biologically Inspired Engineering at Harvard University,,,1,False,Q8040597,Wikidata MoMA artist ID,no match,1,0,,,,,,
+47114,Boston Children's Hospital,,,1,False,Q1000479,Wikidata MoMA artist ID,no match,1,0,,,,,,
+47289,Free Art and Technology Lab,2007.0,,1,False,Q5499746,Wikidata MoMA artist ID,no match,1,0,,,,,,
+47291,Sy-Lab,2007.0,,1,False,Q133876901,Wikidata MoMA artist ID,no match,1,0,,,,,,
+48209,Slobodan Tadić,,,1,False,,,no candidate,0,0,,,,,,
+48227,Marko Čolić,,,1,False,,,no match,1,0,,,,,,
+48229,V. Serafimov,,,1,False,,,no match,3,0,,,,,,
+48603,F. V. Holi,,,1,False,,,no candidate,0,0,,,,,,
+48102,Kiichi Kobayashi,,,1,False,Q134414057,Wikidata MoMA artist ID,matched,1,1,Q134414057,Kiichi Kobayashi,,,,
+48101,Hiroshi Kawatu,,,1,False,Q134414056,Wikidata MoMA artist ID,matched,1,1,Q134414056,Hiroshi Kawatu,,,,
+48231,Dražen Kalenić,,,1,False,,,no candidate,0,0,,,,,,
+19747,Adrian Schiess,,,1,False,Q27332262,Wikidata MoMA artist ID,matched,1,1,Q27332262,Adrian Schiess,1959.0,Switzerland,place of birth,Swiss
+27863,"MAK, Vienna",,,1,False,,,no candidate,0,0,,,,,,
+49271,"Deberny et Peignot, Paris",,,1,False,,,no candidate,0,0,,,,,,
+13880,"Éditions Surréalistes, Paris",,,1,False,,,no candidate,0,0,,,,,,
+16943,Valentine Dudensing,,,1,False,Q20751651,Wikidata MoMA artist ID,matched,1,1,Q20751651,F. Valentine Dudensing,1892.0,United States,place of birth,American
+17332,Bernhard Leitner,,,1,False,Q825523,Wikidata MoMA artist ID,matched,1,1,Q825523,Bernhard Leitner,1938.0,Austria,place of birth,Austrian
+48917,Tamar Cohen,,,1,False,Q79462323,Wikidata MoMA artist ID,matched,1,1,Q79462323,Tamar Cohen,,,,
+42439,Gilles Gheerbrant,,,1,False,Q56599215,Wikidata MoMA artist ID,matched,1,1,Q56599215,Gilles Gheerbrant,1946.0,France,place of birth,French
+49257,Thinking Machines Corporation,1983.0,,1,False,,,no candidate,0,0,,,,,,
+68331,Ted Bilodeau,,,1,False,,,no candidate,0,0,,,,,,
+49259,Donald Wall,,,1,False,,,no match,7,0,,,,,,
+49260,W. Borek,,,1,False,,,no match,2,0,,,,,,
+49261,Robert Massin,,,1,False,Q134414059,Wikidata MoMA artist ID,matched,1,1,Q134414059,Robert Massin,,,,
+49372,Kamoinge Workshop,1963.0,,1,False,Q27676776,Wikidata MoMA artist ID,no match,1,0,,,,,,
+49913,Robert Alexander,,,1,False,,,matched,7,1,Q67165103,Baza,1923.0,United States,place of birth,American
+49915,Charles Brittin,,,1,False,Q84562796,Wikidata MoMA artist ID,matched,1,1,Q84562796,Charles Brittin,1928.0,United States,place of birth,American
+49916,Cameron,,,1,False,Q6766231,Wikidata MoMA artist ID,matched,1,1,Q6766231,Cameron,1922.0,United States,place of birth,American
+49917,Marion Grogan,,,1,False,,,no match,1,0,,,,,,
+25817,Walter Hopps,,,1,False,,,no match,4,0,,,,,,
+49954,Biro 71,1971.0,,1,False,,,no candidate,0,0,,,,,,
+49963,Bogdan Splinder,1940.0,,1,False,Q122746971,Wikidata MoMA artist ID,matched,1,1,Q122746971,Bogdan Splinder,,Yugoslavia,citizenship,Yugoslavian
+68838,DVF Studio LLC,1998.0,,1,False,,,no candidate,0,0,,,,,,
+133027,Studio of Dr. Paul Wolff & Tritschler,,,1,False,,,no candidate,0,0,,,,,,
+67456,Paul Leong,,,1,False,,,no match,5,0,,,,,,
+70038,Jacky Mallett,,,1,False,,,no candidate,0,0,,,,,,
+68328,Refugee Nation,,,1,False,,,no match,6,0,,,,,,
+17500,William Edmondson,1874.0,,1,False,Q3568587,Wikidata MoMA artist ID,matched,1,1,Q3568587,William Edmondson,1874.0,United States,place of birth,American
+67442,Miodrag Živković,1928.0,,1,False,Q2422928,Wikidata MoMA artist ID,matched,1,1,Q2422928,Miodrag Živković,1928.0,Serbia,place of birth,Serbian
+69841,Mihajlo Zorić,1939.0,,1,False,,,no candidate,0,0,,,,,,
+68343,Svetlana Kana Radević,1937.0,,1,False,Q19602731,Wikidata MoMA artist ID,matched,1,1,Q19602731,Svetlana Kana Radević,1937.0,Montenegro,place of birth,Montenegrin
+74159,Bogdan Spindler,1940.0,,1,False,Q12786052,Wikidata MoMA artist ID,matched,1,1,Q12786052,Bogdan Spindler,1940.0,Croatia,place of birth,Croatian
+67489,Ivan Vitić,1917.0,,1,False,Q12633363,Wikidata MoMA artist ID,matched,1,1,Q12633363,Ivan Vitić,1917.0,Croatia,place of birth,Croatian
+74117,Krunoslav Tonković,1917.0,,1,False,,,no match,1,0,,,,,,
+67441,Vojin Bakić,1915.0,,1,False,Q566790,Wikidata MoMA artist ID,matched,1,1,Q566790,Vojin Bakic,1915.0,Croatia,place of birth,Croatian
+74118,Berislav Šerbetić,1935.0,,1,False,Q138848118,Wikidata MoMA artist ID,matched,1,1,Q138848118,,1935.0,Croatia,citizenship,Croatian
+74726,Zoran Bakić,1942.0,,1,False,,,no candidate,0,0,,,,,,
+68045,Milan Krstić,1914.0,,1,False,,,no match,2,0,,,,,,
+68043,Uglješa Bogunović,1922.0,,1,False,Q3547787,Wikidata MoMA artist ID,matched,1,1,Q3547787,Uglješa Bogunović,1922.0,Bosnia and Herzegovina,place of birth,Bosnian
+68044,Slobodan Janjić,1928.0,,1,False,Q7541151,Wikidata MoMA artist ID,matched,1,1,Q7541151,Slobodan Janjić,1987.0,Socialist Federal Republic of Yugoslavia,place of birth,Yugoslavian
+74397,Živa Baraga,1931.0,,1,False,,,no candidate,0,0,,,,,,
+74398,Janez Lenassi,1927.0,,1,False,,,matched,1,1,Q1682688,Janez Lenassi,1927.0,Croatia,place of birth,Croatian
+74969,Fred Sionis,,,1,False,,,no candidate,0,0,,,,,,
+69471,Jeffrey Lew,,,1,False,,,matched,4,1,Q135985812,Jeffrey Lew,,,,
+9325,"Japan Victor Corporation (JVC), Japan",1927.0,,1,False,Q215901,Wikidata MoMA artist ID,no match,1,0,,,,,,
+75061,Tey Manufacturing Corp.,,,1,False,,,no candidate,0,0,,,,,,
+10735,"Stilnovo, Italy",,,1,False,Q108512978,Wikidata MoMA artist ID,no match,1,0,,,,,,
+10316,"The Steubenville Pottery Company, Steubenville, OH",,,1,False,Q117115718,Wikidata MoMA artist ID,no match,1,0,,,,,,
+68046,Ivan Antić,1923.0,,1,False,Q3156060,Wikidata MoMA artist ID,matched,1,1,Q3156060,Ivan Antic,1923.0,Serbia,place of birth,Serbian
+67443,Ranko Radović,1935.0,,1,False,Q7293323,Wikidata MoMA artist ID,matched,1,1,Q7293323,Ranko Radović,1935.0,Montenegro,place of birth,Montenegrin
+132170,The Event Horizon Telescope Collaboration,,,1,False,Q117254518,Wikidata MoMA artist ID,matched,1,1,Q117254518,Event Horizon Telescope Collaboration,,,,
+133402,Tian Fangfang,,,1,False,,,no candidate,0,0,,,,,,
+133403,Ni Nan,,,1,False,,,no match,7,0,,,,,,
+133005,Chesnutt Brothers Studio,,,1,False,,,no candidate,0,0,,,,,,
+133146,T.C. Cannon,1946.0,,1,False,,,matched,2,1,Q7668165,He-Who-Stands-in-the-Sun,1946.0,United States,place of birth,American
+133434,Klondike Photo Co.,,,1,False,,,no candidate,0,0,,,,,,
+40916,Ab van Hanegem,,,1,False,Q2727511,Wikidata MoMA artist ID,matched,1,1,Q2727511,Ab van Hanegem,1960.0,Netherlands,place of birth,Dutch
+139468,Colette and Jean-Paul Miguet,,,1,False,,,no candidate,0,0,,,,,,
+41349,Kisho Kurokawa Architect & Associates,1962.0,,1,False,,,no candidate,0,0,,,,,,
+138382,Nobuo Abe,,,1,False,,,ambiguous,3,2,,,,,,
+138440,Aiko Mogi,,,1,False,,,no candidate,0,0,,,,,,
+138441,Koji Shimosawa,,,1,False,,,no candidate,0,0,,,,,,
+138442,Gengo Matsui,,,1,False,,,no match,1,0,,,,,,
+134911,"PPP Editions, New York",,,1,False,,,no candidate,0,0,,,,,,
+135424,Chisato Tamabayashi,,,1,False,,,no candidate,0,0,,,,,,
+38716,Kraftwerk,1970.0,,1,False,Q44892,Wikidata MoMA artist ID,no match,1,0,,,,,,
+37594,Estate of Sol LeWitt,,,1,False,,,no candidate,0,0,,,,,,

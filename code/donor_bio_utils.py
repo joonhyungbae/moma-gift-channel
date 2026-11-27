@@ -249,6 +249,8 @@ def load_moma_donor_gifts():
         "Medium",
         "ObjectID",
         "Nationality",
+        "Nationality_MoMA",
+        "NationalityFilled",
         "Gender",
         "GeoDetail",
         "Region",

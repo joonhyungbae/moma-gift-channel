@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from coding import GIFT_PHRASE_RE, REGIONS
+from coding import GIFT_PHRASE_RE, REGIONS, origin_token
 from config import MAIN_DEPARTMENTS, PROJECT_ROOT, get_processed_path
 from rev_utils import artist_names, constituents, load_gifts, out, pct, record_shares
 
@@ -188,6 +188,15 @@ def main():
     big = sizes[sizes >= 100]
     put("NUnitsBig", fint(len(big)))
     put("ShareBigUnits", fdec(pct(big.sum(), n)))
+    # Record- against artist-level contribution across the large units (absolute values; Section 5.2, abstract)
+    _bc = units.loc[units.index.isin(big.index), ["contrib_f", "contrib_nw"]].join(loo[["art_contrib_f", "art_contrib_nw"]])
+    for _k in ("f", "nw"):
+        _r, _a = _bc["contrib_" + _k].abs(), _bc["art_contrib_" + _k].fillna(0).abs()
+        K = _k.upper() if _k == "f" else "NW"
+        put("MedRecCon" + K, fdec(_r.median(), 3)); put("MedArtCon" + K, fdec(_a.median(), 3))
+        put("NArtSmaller" + K, fint((_a < _r).sum()))
+        assert _a.median() < 0.5 * _r.median()  # 'less than half as much'
+        assert (_a < _r).sum() > len(_bc) / 2
 
     # ---------------------------------------------------------------- gender
     g0 = gden.loc["All donor-identified gifts"]
@@ -254,6 +263,9 @@ def main():
 
     # case-specific details
     k = gifts[gifts["Unit"] == "Kleiner, Bell & Co."]
+    _kr = six.loc["Kleiner, Bell & Co."]
+    if True:  # Section 4.1: non-Western expectation above the resampling range, female inside it
+        assert _kr["exp_nw"] > _kr["nw_hi"] and _kr["f_lo"] <= _kr["exp_f"] <= _kr["f_hi"]
     put("KAccessionYears", fint(k["YearAcquired"].nunique()))
     ref = gifts[(gifts["Department"] == "Drawings & Prints") & gifts["YearAcquired"].between(1967, 1974)
                 & (gifts["Unit"] != "Kleiner, Bell & Co.")]
@@ -343,7 +355,9 @@ def main():
     put("SixArtLost", fint(a6["artists_lost"])); put("SixArtLostPct", fdec(pct(a6["artists_lost"], museum["n_artists"])))
     put("SixShareNWRec", fdec(schemes.loc["Baseline", "six_share_of_nw_records"]))
     rnd = cf[cf.index.str.startswith("Random")].iloc[0]
-    put("TailArtLost", fint(rnd["artists_lost"]))
+    put("TailArtLost", fint(round(rnd["artists_lost"])))
+    put("TailArtConF", fsigned(-rnd["art_delta_f"])); put("TailArtConNW", fsigned(-rnd["art_delta_nw"]))
+    assert rnd["artists_lost"] > a6["artists_lost"]  # Section 5.2: the random records hold more artists
     for key, m in (("NWRec", "non-Western records"), ("FRec", "female records"),
                    ("NWArt", "non-Western artists"), ("FArt", "female artists")):
         r = conc.loc[m]
@@ -479,6 +493,22 @@ def main():
     keep = ~A_["units"].map(lambda x: x <= six_units)
     sh = lambda o: 100 * (o == "Non-Western").sum() / o.notna().sum()
     put("SixArtConNWBound", fsigned(sh(o2) - sh(o2[keep])))
+    # Artist-level contributions when Eastern Europe and the former USSR count as Western.
+    _nat = cc.groupby("cid")["nationality"].first()
+    o_ee = _nat.map(lambda t: origin_token(t, "east_europe_western")).reindex(A_.index)
+    keep_j = ~A_["units"].map(lambda x: x <= {"Judith Rothschild Foundation"})
+    put("SixArtConNWEE", fsigned(sh(o_ee) - sh(o_ee[keep])))
+    put("JArtConNWEE", fsigned(sh(o_ee) - sh(o_ee[keep_j])))
+    # Nationality filled from Wikidata (01_data_preprocessing.py, 59_rev_wikidata_origin.py)
+    _wd = pd.read_csv(os.path.join(PROJECT_ROOT, "data", "wikidata_origin_cache.csv"), dtype={"cid": str})
+    _filled = _wd[(_wd["status"] == "matched") & _wd["nationality_term"].notna()]
+    put("WdOrigUncoded", fint(len(_wd))); put("WdOrigFilled", fint(len(_filled)))
+    put("WdOrigFilledPct", fdec(pct(len(_filled), len(_wd)), 0))
+    _wj = _wd["rothschild"].astype(bool)
+    put("JWdUncoded", fint(_wj.sum())); put("JWdFilled", fint(_filled["rothschild"].astype(bool).sum()))
+    put("WdOrigLinked", fint(_wd["link_source"].notna().sum()))
+    put("WdOrigBirthRule", fint((_filled["rule"] == "place of birth").sum()))
+    put("WdOrigFilledRec", fint((gifts["NationalityFilled"].fillna(0) > 0).sum()))
     # Worked example for the accessions questions: Drawings & Prints gifts accessioned in 2019.
     dp = gifts[(gifts["Department"] == "Drawings & Prints") & (gifts["YearAcquired"] == 2019)]
     s_all, s_wo = record_shares(dp), record_shares(dp[dp["Unit"] != "Jean Pigozzi"])
@@ -515,6 +545,7 @@ def main():
     ten = pd.read_csv(out("rev_ten_largest_decade_matched.csv"), index_col=0)
     put("TenFArtObs", fint(ten.loc["f", "observed"])); put("TenFArtExp", fint(ten.loc["f", "expected"]))
     put("TenNWArtObs", fint(ten.loc["nw", "observed"])); put("TenNWArtExp", fint(ten.loc["nw", "expected"]))
+    put("TenNWArtCmp", "more" if ten.loc["nw", "observed"] > ten.loc["nw", "expected"] else "fewer")
     fe = pd.read_csv(out("rev_first_entry_overview.csv")).iloc[0]
     put("NArtCollection", fint(fe["artists_in_collection"])); put("NFirstEntryGift", fint(fe["first_entry_by_identified_gift"]))
     put("PctFirstEntryGift", fdec(fe["pct"], 0))
@@ -563,6 +594,8 @@ def main():
     put("SchEESixOne", fdec(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"], 1))
     put("NIndig", fint(regrec.loc["All donor-identified gifts", "Indigenous peoples of North America and Australia"]))
     put("JFirstNewNW", fint(first.loc["Judith Rothschild Foundation", "new_nw"]))
+    _lead = first["new_nw"].sort_values(ascending=False).index[:3].tolist()  # order of the Section 5.2 sentence
+    assert _lead == ["Judith Rothschild Foundation", nk, "Patricia Phelps de Cisneros"], _lead
     put("JFirstNewF", fint(first.loc["Judith Rothschild Foundation", "new_f"]))
     put("SmallArtShare", fdec(classes.loc["1-9 records", "pct_new_artists"]))
     put("TenArtShare", fdec(classes.loc["ten largest units", "pct_new_artists"]))

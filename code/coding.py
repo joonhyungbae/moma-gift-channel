@@ -167,7 +167,7 @@ _REGION_MEMBERS = {
         "South African", "Nigerian", "Zimbabwean", "Congolese", "Senegalese",
         "Kenyan", "Malian", "Ghanaian", "Tanzanian", "Ethiopian", "Namibian",
         "Cameroonian", "Mozambican", "Ivorian", "Ugandan", "Burkinabé",
-        "Beninese", "Sierra Leonean",
+        "Beninese", "Sierra Leonean", "Mauritian",
     ],
 }
 
