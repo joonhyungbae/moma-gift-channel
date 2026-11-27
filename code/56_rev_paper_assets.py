@@ -78,7 +78,7 @@ def write_table(name, caption, header, rows, align, label, note=None, size=r"\sm
     inner += [r"\bottomrule", r"\end{tabular}"]
     block = "\n".join(inner)
     if resize:
-        block = r"\resizebox{\textwidth}{!}{" + block + "}"
+        block = r"\begin{adjustbox}{max width=\textwidth}" + block + r"\end{adjustbox}"
     body.append("{" + size + block + "}")
     if note:
         body.append(r"\begin{tabnote}" + note + r"\end{tabnote}")
@@ -669,18 +669,30 @@ def main():
                      "The public Tate file ends in 2013. Tate credit lines that name an acquisition channel (for example the Turner Bequest) are excluded.")
 
     # ------------------------------------------------------------ supplement
-    # S: top 20 donor units.
-    top = units.sort_values("n", ascending=False).head(20)
+    # S: every donor unit with 100 or more records (replaces the earlier top-20 and pattern tables).
+    PAT_CODE = {"Volume gift": "V", "Founding-lineage gift": "L", "Single-artist gift": "S", "Anonymous-archive gift": "A",
+                "Institutional block gift": "I", "Cross-departmental gift": "C"}
     rows = []
-    for u, r in top.iterrows():
-        rows.append([tex_escape(u), fint(r["n"]), fint(r["n_artists"]), f"{int(r['era_start'])}--{int(r['era_end'])}",
-                     fdec(r["top_dept_share"], 0), cell(r["pct_f"], dash_if=r["g_valid"] < 30), fint(r["g_valid"]),
-                     cell(r["pct_nw"], dash_if=r["o_valid"] < 30), fint(r["o_valid"])])
-    write_table("rev_supp_top20.tex", "The twenty largest donor units in the donor-identified gift sample.",
-                ["Donor unit", "Records", "Artists", "Active era", r"Top dept.\ (\%)", r"\% female", "coded", r"\% non-W.", "coded"],
-                rows, r"p{0.36\textwidth}rrlrrrrr", "tab:s_top20", resize=True,
-                note="Shares are computed on the coded records in the adjacent column. A dash marks units with fewer than 30 coded records, "
-                     "typically gifts of works by unidentified makers, for which no share is reported.")
+    for u, r in typ.sort_values("n", ascending=False).iterrows():
+        uu = units.loc[u]
+        codes = "".join(PAT_CODE[t_.strip()] for t_ in r["types"].split(";")) if isinstance(r["types"], str) and r["types"] else ""
+        rows.append([tex_escape(u) + (r"$^{\ast}$" if r["is_case"] else ""), fint(r["n"]), fint(r["n_artists"]),
+                     f"{int(uu['era_start'])}--{str(int(uu['era_end']))[2:]}" if uu["era_start"] != uu["era_end"] else str(int(uu["era_start"])),
+                     fdec(r["peak_year_share"], 0), fdec(r["top_dept_share"], 0), fdec(r["top_artist_share"], 0),
+                     cell(uu["pct_f"], dash_if=uu["g_valid"] < 30), cell(uu["pct_nw"], dash_if=uu["o_valid"] < 30), codes or "--"])
+    head = ("Donor unit & Rec. & Art. & Years & Peak & Dept. & Artist & Fem. & Non-W. & Pat. \\\\\n"
+            " & & & & yr (\\%) & (\\%) & (\\%) & (\\%) & (\\%) & \\\\\n\\midrule\n")
+    with open(out("rev_supp_units.tex"), "w", encoding="utf-8") as f:
+        f.write("{\\scriptsize\\setlength{\\tabcolsep}{3pt}\n\\begin{longtable}{@{}p{0.40\\textwidth}rrlrrrrrl@{}}\n"
+                "\\caption{Every donor unit with 100 or more records, by number of records. $^{\\ast}$Anchor case. "
+                "`Peak yr' is the share of records accessioned in the busiest year, `Dept.' the share in the largest department, and `Artist' the share by the largest artist. "
+                "Female and non-Western shares are of coded records, and a dash marks fewer than 30 coded records (typically gifts by unidentified makers). "
+                "`Pat.' gives the patterns of Table~2 in the article that the unit matches: V volume gift, L founding-lineage gift, S single-artist gift, "
+                "A anonymous-archive gift, I institutional block gift, C cross-departmental gift.}\\label{tab:s_units}\\\\\n\\toprule\n"
+                + head + "\\endfirsthead\n\\toprule\n" + head + "\\endhead\n\\bottomrule\n\\endlastfoot\n")
+        for r in rows:
+            f.write(" & ".join(r) + r" \\" + "\n")
+        f.write("\\end{longtable}}\n")
 
     # S: gender denominators.
     rows = []
@@ -758,7 +770,7 @@ def main():
              fint(r["n_fund_led"])] for _, r in sube.iterrows()]
     write_table("rev_supp_suberas.tex", "Sub-eras of the six cases.",
                 ["Donor", "Years", "Records", "Artists", r"\% female", "coded", r"\% non-W.", "coded", "Fund-led"], rows,
-                "llrrrrrrr", "tab:s_suberas",
+                "llrrrrrrr", "tab:s_suberas", resize=True,
                 note="A year opens a new sub-era when the year-on-year change in the donor's record count is at least 1.5 standard deviations "
                      "from the donor's mean change and at least the larger of 10 records and 10\\% of the donor's peak year. At most three breaks are kept.")
 
@@ -767,28 +779,12 @@ def main():
              cell(r["pct_f"]), cell(r["pct_nw"]), csigned(r["contrib_f"]), csigned(r["contrib_nw"])] for pn, r in rock.iterrows()]
     write_table("rev_supp_rockefeller.tex", "The Rockefeller family-line aggregate taken apart.",
                 ["Part", "Records", "Artists", "Years", r"\% female", r"\% non-W.", "Contrib. F", "Contrib. NW"], rows,
-                "lrrlrrrr", "tab:s_rockefeller",
+                "lrrlrrrr", "tab:s_rockefeller", resize=True,
                 note="Contributions are to the gift-channel record shares (percentage points).")
     rows = [[tex_escape(u), fint(r["n"]), f"{int(r['start'])}--{int(r['end'])}"] for u, r in rock_strings.sort_values("n", ascending=False).iterrows()]
     write_table("rev_supp_rockefeller_strings.tex", "Credit-line donor strings aggregated as the Rockefeller lineage.",
                 ["Donor string", "Records", "Years"], rows, r"p{0.6\textwidth}rl", "tab:s_rockefeller_strings")
 
-    # S: typology.
-    rows = []
-    for u, r in typ.sort_values("n", ascending=False).iterrows():
-        rows.append([tex_escape(u) + (r"$^{\ast}$" if r["is_case"] else ""), fint(r["n"]), fint(r["n_artists"]), fint(r["era_years"]),
-                     fdec(r["peak_year_share"], 0), fdec(r["top_dept_share"], 0), fdec(r["top_artist_share"], 0),
-                     tex_escape(r["types"]) if isinstance(r["types"], str) and r["types"] else "(none)"])
-    with open(out("rev_supp_typology.tex"), "w", encoding="utf-8") as f:
-        f.write("{\\footnotesize\\setlength{\\tabcolsep}{3pt}\n\\begin{longtable}{@{}p{0.29\\textwidth}rrrrrrp{0.24\\textwidth}@{}}\n"
-                "\\caption{Pattern classification of all donor units with 100 or more records. $^{\\ast}$Anchor case.}\\label{tab:s_typology}\\\\\n\\hline\n"
-                "Donor unit & Rec. & Art. & Era & Peak yr & Top dept & Top artist & Pattern matched \\\\\n"
-                " & & & (yr) & (\\%) & (\\%) & (\\%) & \\\\\n\\hline\n\\endfirsthead\n\\hline\n"
-                "Donor unit & Rec. & Art. & Era & Peak yr & Top dept & Top artist & Pattern matched \\\\\n"
-                " & & & (yr) & (\\%) & (\\%) & (\\%) & \\\\\n\\hline\n\\endhead\n")
-        for r in rows:
-            f.write(" & ".join(r) + r" \\" + "\n")
-        f.write("\\hline\n\\end{longtable}}\n")
     thr_label = {"min_volume": "Minimum records, volume rule", "dept_single": "Top-department share, single-department rules (\\%)", "near_gap": "Allowed excess over gift-channel share (points)",
                  "era_years": "Active era, founding-lineage rule (years)", "top_artist": "Top-artist share, single-artist rule (\\%)",
                  "placeholder": "Unidentified-maker share, anonymous archive (\\%)", "peak_year": "Peak-year share, institutional block gift (\\%)",
@@ -798,7 +794,7 @@ def main():
              fint(r["anchors_own_pattern"]), fint(r["clean"]), fint(r["ambiguous"]), fint(r["unclassified"]), fint(r["types_populated"])] for _, r in typsens.iterrows()]
     write_table("rev_supp_typology_sensitivity.tex", "Classification of the non-anchor units when one threshold is moved at a time.",
                 ["Threshold", "Value", "Default", "Anchors on own pattern", "One pattern", "Several", "None", "Patterns populated"], rows, r"p{0.42\textwidth}rlrrrrr",
-                "tab:s_typsens", size=r"\footnotesize")
+                "tab:s_typsens", resize=True, size=r"\footnotesize")
     rows = [[fint(r["k"]), fdec(r["kmeans_silhouette"], 3), fdec(r["ward_silhouette"], 3), fdec(r["shuffled_mean"], 3),
              fdec(r["shuffled_p95"], 3), fint(r["kmeans_smallest_cluster"])] for _, r in clus.iterrows()]
     write_table("rev_supp_clustering.tex", "Cluster structure of the donor feature space.",
@@ -875,29 +871,36 @@ def main():
         out_ = []
         for d_ in NULL_DESIGNS:
             out_.append("$\\cdot$" if r[f"{d_}_q"] >= 0.05 else ("$+$" if r[f"{d_}_dir"] == "up" else "$-$"))
-        return "\\,".join(out_)
+        return "".join(out_)
     def detectable(r):
         up, dn = r["rec_matched_min_p_up"] < 0.05, r["rec_matched_min_p_down"] < 0.05
-        return "both" if up and dn else ("above" if up else ("below" if dn else "neither"))
+        return ("a" if up else "") + ("b" if dn else "") or "--"
+    nm = nun[nun["museum"] == "MoMA"]
+    fem = nm[nm["share"] == "female"].set_index("unit"); nwt = nm[nm["share"] == "non-Western"].set_index("unit")
+    allu = sorted(set(fem.index) | set(nwt.index), key=lambda u_: -max(fem["records"].get(u_, 0), nwt["records"].get(u_, 0)))
+    def part(t_, u_):
+        if u_ not in t_.index:
+            return ["--", "--", "", ""]
+        r = t_.loc[u_]
+        return [fdec(r["obs_share"]), fdec(r["rec_matched_expected"]), flag_symbols(r), detectable(r)]
     rows = []
-    for sh_ in ("female", "non-Western"):
-        t_ = nun[(nun["museum"] == "MoMA") & (nun["share"] == sh_)].sort_values("records", ascending=False)
-        rows.append(("\\hline\n" if rows else "") + rf"\multicolumn{{9}}{{@{{}}l}}{{\emph{{{share_label[sh_]}}}}} \\")
-        for _, r in t_.iterrows():
-            rows.append([tex_escape(r["unit"]), fint(r["records"]), fint(r["makers"]), fdec(r["effective_makers"]), fdec(r["obs_share"]),
-                         fdec(r["rec_matched_expected"]), fdec(r["art_matched_expected"]), flag_symbols(r), detectable(r)])
-    head = "Donor unit & Rec. & Makers & Eff. & Obs. & Exp.\\ rec. & Exp.\\ art. & Flags & Detectable \\\\\n\\hline\n"
+    for u_ in allu:
+        n_ = fem["records"].get(u_, nwt["records"].get(u_))
+        rows.append([tex_escape(u_), fint(n_)] + part(fem, u_) + part(nwt, u_))
+    head = (" & & \\multicolumn{4}{c}{Female share} & \\multicolumn{4}{c}{Non-Western share} \\\\\n"
+            "\\cmidrule(lr){3-6}\\cmidrule(l){7-10}\n"
+            "Donor unit & Rec. & Obs. & Exp. & Flags & Det. & Obs. & Exp. & Flags & Det. \\\\\n\\midrule\n")
     with open(out("rev_supp_null_units.tex"), "w", encoding="utf-8") as f:
-        f.write("\\clearpage\n{\\footnotesize\\setlength{\\tabcolsep}{3.5pt}\n\\begin{longtable}{@{}p{0.31\\textwidth}rrrrrrll@{}}\n"
-                "\\caption{Every donor unit in the comparison with random gifts, MoMA, baseline regional rule. `Makers' are the first-named makers of the unit's coded records "
-                "and `Eff.' their effective number (the inverse of the sum of squared record shares). `Obs.' is the unit's record share (\\%), "
-                "`Exp.\\ rec.' and `Exp.\\ art.' the mean share of random gifts under the matched record draw and the matched artist draw. "
+        f.write("{\\scriptsize\\setlength{\\tabcolsep}{3pt}\n\\begin{longtable}{@{}p{0.40\\textwidth}rrrlcrrlc@{}}\n"
+                "\\caption{Every donor unit in the comparison with random gifts, MoMA, baseline regional rule. "
+                "`Obs.' is the unit's record share (\\%) and `Exp.' the mean share of random gifts under the matched record draw. "
                 "`Flags' gives the adjusted result under the four designs in the order record matched, record pooled, artist matched, artist pooled "
-                "($+$ above, $-$ below, $\\cdot$ not flagged). `Detectable' gives the directions in which the matched record draw could flag the unit at all.}"
-                "\\label{tab:s_null_units}\\\\\n\\hline\n" + head + "\\endfirsthead\n\\hline\n" + head + "\\endhead\n")
+                "($+$ above, $-$ below, $\\cdot$ not flagged). `Det.' gives the directions in which the matched record draw could flag the unit at all "
+                "(a above, b below). A dash marks a unit with too few coded records for that share.}\\label{tab:s_null_units}\\\\\n\\toprule\n"
+                + head + "\\endfirsthead\n\\toprule\n" + head + "\\endhead\n\\bottomrule\n\\endlastfoot\n")
         for r in rows:
-            f.write((r if isinstance(r, str) else " & ".join(r) + r" \\") + "\n")
-        f.write("\\hline\n\\end{longtable}}\n")
+            f.write(" & ".join(r) + r" \\" + "\n")
+        f.write("\\end{longtable}}\n")
 
     # S: associations, selection audit, Tate units.
     rows = [[tex_escape(re.sub(r"\|([^|]+)\|", r"absolute \1", m)), fint(r["n_units"]), csigned(r["spearman_rho"]), fdec(r["perm_p"], 3) if r["perm_p"] >= 0.001 else "$<$0.001"] for m, r in assoc.iterrows()]
