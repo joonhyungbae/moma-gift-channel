@@ -25,7 +25,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
-from rev_utils import RNG_SEED, artist_names, constituents, load_collection, load_gifts, out, pct
+from rev_utils import (RNG_SEED, artist_names, artist_table, constituents, frac_artist_contribution, load_collection,
+                       load_gifts, out, pct)
 
 N_SHUFFLE_ARTISTS = 2000
 N_SHUFFLE_RECORDS = 500
@@ -35,6 +36,14 @@ ROTHSCHILD = ["Judith Rothschild Foundation", "Judith Rothschild Foundation (Bor
 def half_cover(units, flag):
     c = pd.Series(units[flag]).value_counts()
     return int(((c.cumsum() / c.sum()) < 0.5).sum() + 1)
+
+
+def strat_perm(x, groups, rng):
+    """Permute x within strata (groups: list of index arrays)."""
+    y = x.copy()
+    for idx in groups:
+        y[idx] = x[rng.permutation(idx)]
+    return y
 
 
 def top_share(units, flag, k=10):
@@ -80,11 +89,15 @@ def main():
 
     # 2. Concentration against a label-shuffle reference.
     rows = []
+    # The label is shuffled within the decade of first entry (artists) or within
+    # department and decade (records), since the shares change over time.
+    fs["decade"] = (fs["year"] // 10) * 10
     for label, flag, valid in (("female artists", "F", "GV"), ("non-Western artists", "NW", "OV")):
         d = fs[fs[valid]]
         u, x = d["unit"].to_numpy(), d[flag].to_numpy()
-        nh = [half_cover(u, rng.permutation(x)) for _ in range(N_SHUFFLE_ARTISTS)]
-        nt = [top_share(u, rng.permutation(x)) for _ in range(N_SHUFFLE_ARTISTS)]
+        grp = list(pd.Series(np.arange(len(d))).groupby(d["decade"].to_numpy()).indices.values())
+        nh = [half_cover(u, strat_perm(x, grp, rng)) for _ in range(N_SHUFFLE_ARTISTS)]
+        nt = [top_share(u, strat_perm(x, grp, rng)) for _ in range(N_SHUFFLE_ARTISTS)]
         rows.append({"measure": label, "n_flagged": int(x.sum()), "n_coded": len(d),
                      "units_supplying_any": int(pd.Series(u[x]).nunique()),
                      "units_for_half": half_cover(u, x), "shuffled_mean": np.mean(nh),
@@ -93,13 +106,14 @@ def main():
                      "top10_shuffled_lo": np.percentile(nt, 2.5), "top10_shuffled_hi": np.percentile(nt, 97.5)})
     for label, flag, valid in (("female records", "is_F", "g_valid"), ("non-Western records", "is_NW", "o_valid")):
         d = g[g[valid] == 1]
-        cl = d.groupby("Cluster")[flag].first()
+        cl = d.groupby("Cluster").agg(lab=(flag, "first"), dept=("Department", "first"), dec=("Decade", "first"))
         codes = d["Cluster"].map({c: i for i, c in enumerate(cl.index)}).to_numpy()
-        lab, u = cl.to_numpy(), d["Unit"].to_numpy()
+        lab, u = cl["lab"].to_numpy(), d["Unit"].to_numpy()
+        grp = list(pd.Series(np.arange(len(cl))).groupby((cl["dept"] + cl["dec"].astype(str)).to_numpy()).indices.values())
         x = lab[codes] == 1
         nh, nt = [], []
         for _ in range(N_SHUFFLE_RECORDS):
-            xp = rng.permutation(lab)[codes] == 1
+            xp = strat_perm(lab, grp, rng)[codes] == 1
             nh.append(half_cover(u, xp)); nt.append(top_share(u, xp))
         rows.append({"measure": label, "n_flagged": int(x.sum()), "n_coded": len(d),
                      "units_supplying_any": int(pd.Series(u[x]).nunique()),
@@ -148,15 +162,26 @@ def main():
     NW, OV = A["origin"] == "Non-Western", A["origin"].notna()
     sole = A[A["units"].map(len) == 1].copy()
     sole["unit"] = sole["units"].map(lambda s: next(iter(s)))
-    lrows = []
-    for u, s in sole.groupby("unit"):
-        f, gv = (s["gender"] == "F").sum(), s["gender"].isin(["F", "M"]).sum()
-        nw, ov = (s["origin"] == "Non-Western").sum(), s["origin"].notna().sum()
-        lrows.append({"unit": u, "n_records": int(sizes[u]), "sole_artists": len(s), "sole_f": int(f),
-                      "sole_nw": int(nw), "sole_origin_uncoded": int(len(s) - ov),
-                      "art_contrib_f": pct(F.sum(), GV.sum()) - pct(F.sum() - f, GV.sum() - gv),
-                      "art_contrib_nw": pct(NW.sum(), OV.sum()) - pct(NW.sum() - nw, OV.sum() - ov)})
-    loo = pd.DataFrame(lrows).set_index("unit")
+    # Every artist counts once, divided among the units in proportion to the
+    # gift records each gave; removing a unit removes its fraction of each artist.
+    AT = artist_table(cons)
+    ru = cons.groupby(["cid", "unit"])["rec"].nunique().rename("r").reset_index()
+    ru["w"] = ru["r"] / ru["cid"].map(AT["n_rec"])
+    for col in ("F", "GV", "NW", "OV"):
+        ru[col] = ru["w"] * ru["cid"].map(AT[col])
+    su = ru.groupby("unit")[["F", "GV", "NW", "OV"]].sum()
+    tot = AT[["F", "GV", "NW", "OV"]].sum()
+    loo = pd.DataFrame({"n_records": sizes.reindex(su.index).astype(int),
+                        "artist_weight": ru.groupby("unit")["w"].sum(),
+                        "art_contrib_f": pct(tot["F"], tot["GV"]) - 100 * (tot["F"] - su["F"]) / (tot["GV"] - su["GV"]),
+                        "art_contrib_nw": pct(tot["NW"], tot["OV"]) - 100 * (tot["NW"] - su["NW"]) / (tot["OV"] - su["OV"])})
+    srows_ = []
+    for u, s_ in sole.groupby("unit"):
+        srows_.append({"unit": u, "sole_artists": len(s_), "sole_f": int((s_["gender"] == "F").sum()),
+                       "sole_nw": int((s_["origin"] == "Non-Western").sum()),
+                       "sole_origin_uncoded": int(len(s_) - s_["origin"].notna().sum())})
+    loo = loo.join(pd.DataFrame(srows_).set_index("unit"), how="left")
+    loo.index.name = "unit"
     loo.sort_values("n_records", ascending=False).to_csv(out("rev_artist_unit_contributions.csv"))
 
     # 5. Rothschild bound: artists without a nationality treated as non-Western.
@@ -169,18 +194,22 @@ def main():
         nw_all, ov_all = NW.sum() + unc.sum(), OV.sum() + unc.sum()
         keep = ~only
         nw_wo, ov_wo = (NW & keep).sum() + (unc & keep).sum(), (OV & keep).sum() + (unc & keep).sum()
+        fr = ru[ru["unit"].isin(sel)].groupby("cid")["w"].sum().reindex(AT.index).fillna(0.0)
+        u_ = unc.reindex(AT.index).astype(float)
+        frac_coded = frac_artist_contribution(AT, fr)[1]
+        frac_nw = frac_artist_contribution(AT, fr, nw=AT["NW"] + u_, ov=AT["OV"] + u_)[1]
+        frac_w = frac_artist_contribution(AT, fr, nw=AT["NW"], ov=AT["OV"] + u_)[1]
         brows.append({"units": label, "artists": int(in_unit.sum()), "artists_without_nationality": int(unc.sum()),
                       "sole_source_without_nationality": int((unc & only).sum()),
-                      "contribution_coded_only_pp": pct(NW.sum(), OV.sum()) - pct((NW & keep).sum(), (OV & keep).sum()),
+                      "contribution_coded_only_pp": frac_coded,
+                      "contribution_if_non_western_pp": frac_nw, "contribution_if_western_pp": frac_w,
+                      "sole_source_contribution_coded_pp": pct(NW.sum(), OV.sum()) - pct((NW & keep).sum(), (OV & keep).sum()),
                       "museum_share_if_non_western": pct(nw_all, ov_all), "share_without_units": pct(nw_wo, ov_wo),
-                      "contribution_if_non_western_pp": pct(nw_all, ov_all) - pct(nw_wo, ov_wo),
-                      "contribution_if_western_pp": pct(NW.sum(), OV.sum() + unc.sum())
-                      - pct((NW & keep).sum(), (OV & keep).sum() + (unc & keep).sum())})
+                      "sole_source_if_non_western_pp": pct(nw_all, ov_all) - pct(nw_wo, ov_wo)})
     bound = pd.DataFrame(brows)
     bound.to_csv(out("rev_rothschild_origin_bound.csv"), index=False)
 
     # 6. New artists by decade and the breadth of their sources.
-    fs["decade"] = (fs["year"] // 10) * 10
     # Decade-matched expectation for the ten largest units: what share of their
     # first-entry artists would be women / non-Western at each decade's rate
     # among other units' first-entry artists.
@@ -192,6 +221,10 @@ def main():
         m = mine[mine[valid]]
         exp[key] = {"observed": int(m[flag].sum()), "coded": int(len(m)),
                     "expected": float(m["decade"].map(rate).fillna(rest.loc[rest[valid], flag].mean()).sum())}
+    m = mine[mine["OV"] & ~mine["unit"].isin(ROTHSCHILD)]
+    rate = rest[rest["OV"]].groupby("decade")["NW"].mean()
+    exp["nw_excl_rothschild"] = {"observed": int(m["NW"].sum()), "coded": int(len(m)),
+                                 "expected": float(m["decade"].map(rate).fillna(rest.loc[rest["OV"], "NW"].mean()).sum())}
     pd.DataFrame(exp).T.to_csv(out("rev_ten_largest_decade_matched.csv"))
     drows = []
     for dec, s in fs.groupby("decade"):

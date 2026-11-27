@@ -230,7 +230,17 @@ def donor_artist_set(df):
     return artists
 
 
-def load_moma_donor_gifts():
+def load_moma_donor_gifts(include_collections=True, include_exchange=False):
+    """Named-donor gift records, 1929-2024, five main departments.
+
+    include_collections  credit lines that are a named collection alone ('The
+                         Louis E. Stern Collection') count as gifts of that
+                         collection (main analysis: True).
+    include_exchange     records acquired by exchange of an earlier gift ('Gift
+                         of X (by exchange)') stay under the original donor
+                         (main analysis: False; they are museum acquisitions).
+    """
+    from coding import collection_only_donor
     path = get_processed_path()
     available = pd.read_csv(path, nrows=0).columns.tolist()
     wanted = [
@@ -269,10 +279,11 @@ def load_moma_donor_gifts():
             chunk.loc[missing_birth, "ArtistBirthYear"] = chunk.loc[missing_birth, "BeginDate"].apply(
                 extract_birth_year
             )
+        is_coll = chunk["CreditLine"].map(collection_only_donor).notna() if include_collections else False
         chunk = chunk[
             chunk["YearAcquired"].between(1929, 2024)
             & chunk["Department"].isin(MAIN_DEPARTMENTS)
-            & chunk["AcquisitionType"].isin(GIFT_TYPES)
+            & (chunk["AcquisitionType"].isin(GIFT_TYPES) | is_coll)
         ].copy()
         if chunk.empty:
             continue
@@ -289,6 +300,9 @@ def load_moma_donor_gifts():
     flags = df["CreditLine"].apply(lambda cl: parse_credit_line(cl, GENERIC_DONOR_ROLE_TERMS))
     for flag in ("co_donor", "fund_led", "by_exchange"):
         df[flag] = flags.map(lambda d: d[flag]).astype(bool)
+    df["collection_only"] = df["CreditLine"].map(collection_only_donor).notna()
+    if not include_exchange:
+        df = df[~df["by_exchange"]].copy()
     return df.reset_index(drop=True)
 
 

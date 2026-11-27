@@ -335,6 +335,25 @@ DONOR_ALIASES = {
     "Judith Rothschild Contemporary Drawings Collection": "Judith Rothschild Foundation Contemporary Drawings Collection",
 }
 BY_EXCHANGE_RE = re.compile(r"\bby exchange\b", re.IGNORECASE)
+# Third form: the credit line is a named collection and nothing else ('The Louis
+# E. Stern Collection', 'The Sidney and Harriet Janis Collection'). The donor
+# unit is the collection's name. Museum-internal transfers and purchase or
+# exchange wording are not matched.
+COLLECTION_ONLY_RE = re.compile(r"^(?:The\s+)?(?P<name>[A-Z][^,;:()]*?\bCollection)\.?$")
+COLLECTION_ONLY_EXCLUDE_RE = re.compile(
+    r"\b(?:gift|bequest|transferred|transfer|exchange|acquired|purchase|purchased|fund|funds|promised|fractional|"
+    r"museum of modern art|library|archives?)\b", re.IGNORECASE)
+
+
+def collection_only_donor(creditline):
+    """Name of the collection when the credit line is a named collection alone, else None."""
+    if pd.isna(creditline):
+        return None
+    cl = str(creditline).strip()
+    m = COLLECTION_ONLY_RE.match(cl)
+    if not m or COLLECTION_ONLY_EXCLUDE_RE.search(cl):
+        return None
+    return m.group("name").strip()
 
 # ", Jr." / ", Inc." style suffixes that belong to the name before the comma.
 SUFFIX_RE = re.compile(
@@ -382,6 +401,9 @@ def parse_credit_line(creditline, generic_terms=()):
         # 'Acquired through the Lillie P. Bliss Bequest (by exchange)').
         t = NAME_FIRST_RE.match(cl)
         if not t:
+            coll = collection_only_donor(cl)
+            if coll:
+                return {**empty, "donor": coll}
             return empty
         donor = DONOR_ALIASES.get(t.group("name").strip(), t.group("name").strip())
         if donor.lower() in generic_terms or donor.lower() in NAME_FIRST_GENERIC:

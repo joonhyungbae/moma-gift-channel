@@ -48,9 +48,13 @@ def pct(num, den):
 # --------------------------------------------------------------------------
 
 
-def load_gifts():
-    """Donor-identified gift records with analytic unit and cluster columns."""
-    df = assign_case(load_moma_donor_gifts())
+def load_gifts(**sample):
+    """Donor-identified gift records with analytic unit and cluster columns.
+
+    Keyword arguments go to load_moma_donor_gifts (include_collections,
+    include_exchange) for the sample-definition check; the default is the main
+    analysis."""
+    df = assign_case(load_moma_donor_gifts(**sample))
     # Analytic unit: the Rockefeller family strings form one unit, every other
     # donor string is its own unit.
     df["Unit"] = df["CaseDonor"].where(df["CaseDonor"] == "Rockefeller lineage", df["Donor"])
@@ -112,6 +116,38 @@ def artist_frame(cons):
         gender=("gender", "first"), origin=("origin", "first"), region=("region", "first"),
         name=("name", "first"), n_records=("rec", "nunique"))
     return a
+
+
+def artist_table(cons):
+    """One row per non-placeholder artist: gender/origin flags and number of gift records."""
+    c = cons[~cons["placeholder"]]
+    a = c.groupby("cid").agg(gender=("gender", "first"), origin=("origin", "first"), n_rec=("rec", "nunique"))
+    a["F"] = (a["gender"] == "F").astype(float); a["GV"] = a["gender"].isin(["F", "M"]).astype(float)
+    a["NW"] = (a["origin"] == "Non-Western").astype(float); a["OV"] = a["origin"].notna().astype(float)
+    return a
+
+
+def removed_fraction(cons, rec_index, artists):
+    """Share of each artist's gift records that lie in rec_index (0 to 1), aligned to artists."""
+    c = cons[~cons["placeholder"]]
+    hit = c[c["rec"].isin(rec_index)].groupby("cid")["rec"].nunique()
+    return (hit / artists["n_rec"]).reindex(artists.index).fillna(0.0)
+
+
+def frac_artist_contribution(artists, frac, nw=None, ov=None):
+    """Artist-level contribution of the removed records, artists divided among donors.
+
+    Every artist counts once in the artist-level share, divided among the
+    donors in proportion to the gift records each gave. Removing records
+    removes the matching fraction of each artist. Returns (female, non-Western)
+    contributions in points: share with the records minus share without them.
+    nw / ov override the origin flags (for bounds on uncoded artists)."""
+    nw = artists["NW"] if nw is None else nw
+    ov = artists["OV"] if ov is None else ov
+    w = 1.0 - frac
+    f_all = pct(artists["F"].sum(), artists["GV"].sum()); f_wo = pct((w * artists["F"]).sum(), (w * artists["GV"]).sum())
+    n_all = pct(nw.sum(), ov.sum()); n_wo = pct((w * nw).sum(), (w * ov).sum())
+    return f_all - f_wo, n_all - n_wo
 
 
 def artist_shares(artists):

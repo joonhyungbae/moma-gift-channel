@@ -27,8 +27,8 @@ from scipy.stats import spearmanr
 from donor_bio_utils import CASE_ORDER, detect_suberas
 from rev_utils import (
     CASE_LABEL, N_BOOT, RNG_SEED, artist_frame, artist_names, artist_shares, cluster_bootstrap,
-    constituents, drop_top_cluster, load_collection, load_gifts, matched_expectation, out, pct,
-    record_shares,
+    artist_table, constituents, drop_top_cluster, frac_artist_contribution, load_collection, load_gifts,
+    matched_expectation, out, pct, record_shares, removed_fraction,
 )
 
 MIN_N = 100
@@ -174,9 +174,14 @@ def main():
 
     # Artist-level counterfactual: gift-channel artist shares without each case / all six.
     cf_rows = []
+    AT = artist_table(cons)
+
     def art_cf(label, mask_rec):
+        # artists_lost: artists with no gift record left; shares: artists divided among donors
         keep = cons[~cons["rec"].isin(gifts.index[mask_rec])]
         a = artist_shares(artist_frame(keep))
+        cf, cn = frac_artist_contribution(AT, removed_fraction(cons, gifts.index[mask_rec], AT))
+        a["art_pct_f"], a["art_pct_nw"] = museum_art["art_pct_f"] - cf, museum_art["art_pct_nw"] - cn
         r = record_shares(gifts[~mask_rec])
         cf_rows.append({"removed": label, "n_removed": int(mask_rec.sum()),
                         "rec_pct_f": r["pct_f"], "rec_delta_f": r["pct_f"] - museum["pct_f"],
@@ -202,7 +207,8 @@ def main():
         m[rng.choice(tail_idx, size=min(n_six, len(tail_idx)), replace=False)] = True
         keep = cons[~cons["rec"].isin(gifts.index[m])]
         a = artist_shares(artist_frame(keep))
-        draws.append((museum_art["n_artists"] - a["n_artists"], a["art_pct_f"], a["art_pct_nw"]))
+        cf, cn = frac_artist_contribution(AT, removed_fraction(cons, gifts.index[m], AT))
+        draws.append((museum_art["n_artists"] - a["n_artists"], museum_art["art_pct_f"] - cf, museum_art["art_pct_nw"] - cn))
     draws = np.array(draws)
     cf_rows.append({"removed": f"Random {n_six} long-tail records (mean of 200 draws)", "n_removed": n_six,
                     "artists_lost": draws[:, 0].mean(), "art_pct_f": draws[:, 1].mean(),

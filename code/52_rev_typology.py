@@ -58,7 +58,8 @@ def apply_rules(r, t):
             and (pd.isna(r["gap_nw"]) or r["gap_nw"] <= t["near_gap"])
             and r["peak_year_share"] <= t["peak_year"]):
         m.append(TYPES[0])
-    if r["era_years"] >= t["era_years"] and r["gap_f"] < 0 and r["gap_nw"] < 0:
+    if (r["era_years"] >= t["era_years"] and (pd.isna(r["gap_f"]) or r["gap_f"] <= t["near_gap"])
+            and (pd.isna(r["gap_nw"]) or r["gap_nw"] <= t["near_gap"])):
         m.append(TYPES[1])
     if r["top_artist_share"] > t["top_artist"]:
         m.append(TYPES[2])

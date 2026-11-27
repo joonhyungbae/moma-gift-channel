@@ -44,8 +44,13 @@ constituent, gender and nationality lists; record-level and artist-level gender
 coding; the nationality-to-region lookup with the baseline and alternative
 Western / non-Western rules; and the credit-line parser (first-named donor
 after `Gift of` / `Bequest of`, the name-first forms `X Gift` / `X Bequest`,
+credit lines that are a named collection alone (`The Louis E. Stern Collection`),
 suffix retention, dedication and exchange clauses, co-donor / fund-led /
-by-exchange flags). The supplement's Sections S1-S3 describe the same rules.
+by-exchange flags). Records acquired by exchange of an earlier gift are
+excluded from the gift channel (`donor_bio_utils.load_moma_donor_gifts`,
+`include_exchange=False`). Artist-level contributions divide every artist among
+donors in proportion to gift records (`rev_utils.frac_artist_contribution`).
+The supplement's Sections S1-S3 describe the same rules.
 
 | Script | Produces | Paper element |
 | --- | --- | --- |
@@ -57,6 +62,7 @@ by-exchange flags). The supplement's Sections S1-S3 describe the same rules.
 | `54_rev_gender_validation.py` | `rev_gender_validation*.csv` | Wikidata check of the gender field (Section 3.2). Reads `data/wikidata_gender_cache.csv`; pass `--offline` to forbid network access |
 | `55_rev_artist_concentration.py` | `rev_artist_*.csv`, `rev_first_entry_overview.csv`, `rev_ten_largest_decade_matched.csv`, `rev_rothschild_origin_bound.csv`, `rev_new_artists_by_decade.csv` | records versus artists, artists new to the collection by first accession in any channel, concentration, Rothschild bound (Section 5.2) |
 | `57_rev_size_null.py` | `rev_null_units.csv`, `rev_null_summary.csv` | supplementary check: each large donor against random gifts of the same structure, four designs (record or artist draw, matched or pooled), with the number of makers and the smallest attainable p-value per unit (supplement Section S4) |
+| `60_rev_sample_definitions.py` | `rev_sample_definitions.csv` | main results under four definitions of the gift channel: the main analysis (named-collection credit lines included, by-exchange records excluded), with the by-exchange records, without the named collections, and the first revision's definition (supplement Section S1) |
 | `56_rev_paper_assets.py` | `rev_numbers.tex`, `rev_tab_*.tex`, `rev_supp_*.tex`, `fig_volume_vs_gap.*`, `fig_record_vs_artist.*` | every number, table and figure in the article and supplement |
 | `59_rev_wikidata_origin.py` (not in `run_all.py`) | `data/wikidata_origin_cache.csv`, `data/wikidata_origin_search.jsonl` | builds the cache read by step 01: for gift-channel artists without a nationality in MoMA's metadata, the present-day country of birth (or citizenship) from Wikidata when the artist is identified through MoMA's Wiki QID, the MoMA artist ID (P2174), or a strict name match (Section 3.2; supplement Section S3). Network access through the Wikidata Query Service; `--offline` reads the cache only |
 | `58_rev_parser_audit_sample.py` (not in `run_all.py`) | `parser_audit_sample.csv` | fixed random sample of 300 records (200 inside the gift sample, 100 outside) with blank columns for checking the credit-line parser by hand |

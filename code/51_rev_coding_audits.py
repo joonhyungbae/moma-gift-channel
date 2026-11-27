@@ -194,8 +194,6 @@ def rockefeller_table(gifts, cons):
     museum = record_shares(gifts)
     parts = {
         "Rockefeller lineage (all strings)": lin.index,
-        "Abby Aldrich Rockefeller, gifts": lin.index[(lin["Donor"] == "Abby Aldrich Rockefeller") & ~lin["by_exchange"]],
-        "Abby Aldrich Rockefeller, by exchange": lin.index[(lin["Donor"] == "Abby Aldrich Rockefeller") & lin["by_exchange"]],
         "Abby Aldrich Rockefeller, all": lin.index[lin["Donor"] == "Abby Aldrich Rockefeller"],
         "Other family members": lin.index[lin["Donor"] != "Abby Aldrich Rockefeller"],
     }
