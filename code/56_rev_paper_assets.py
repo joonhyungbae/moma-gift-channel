@@ -426,6 +426,8 @@ def main():
         r = conc.loc[m]
         put("Half" + key, fint(r["units_for_half"])); put("Half" + key + "Shuf", fint(r["shuffled_mean"]))
         put("Half" + key + "Lo", fint(r["shuffled_lo"])); put("Half" + key + "Hi", fint(r["shuffled_hi"]))
+        if key in ("FArt", "NWArt"):  # Section 5.2: new women and non-Western artists more concentrated than the shuffle
+            assert r["units_for_half"] < r["shuffled_lo"], key
         put("TopTen" + key, fdec(r["top10_share"])); put("TopTen" + key + "Shuf", fdec(r["top10_shuffled_mean"]))
         put("Sources" + key, fint(r["units_supplying_any"]))
     put("HalfAllRec", fint(conc.loc["all records", "units_for_half"]))
@@ -484,6 +486,8 @@ def main():
         r = assoc.loc[m]
         put("Rho" + key, fsigned(r["spearman_rho"])); put("Pval" + key, fdec(r["perm_p"], 2) if r["perm_p"] >= 0.005 else "<0.01")
         put("RhoN" + key, fint(r["n_units"]))
+        if key in ("GapF", "GapNW"):  # Section 5.1: 'at most weakly related'
+            assert abs(r["spearman_rho"]) < 0.3, key
 
     # typology
     put("TypOthers", fint(typsum["non-anchor units"]))
@@ -634,6 +638,7 @@ def main():
     put("DecFMidLo", fdec(_mid.min(), 0)); put("DecFMidHi", fdec(_mid.max(), 0))
     assert _mid.max() - _mid.min() <= 2, "text says 'between Lo and Hi% in each decade from the 1990s to the 2010s'"
     put("DecUnitsFStart", fint(dd.loc[1930, "units_with_new_f"])); put("DecUnitsFTens", fint(dd.loc[2010, "units_with_new_f"]))
+    assert dd.loc[2010, "units_with_new_f"] > dd.loc[1930, "units_with_new_f"] and _mid.min() > dd.loc[1930, "pct_f"]
     # ---- related units
     for p_, u_ in (("CDC", cdc), ("Silv", "Gilbert and Lila Silverman Fluxus Collection")):
         r_ = units.loc[u_]
@@ -680,6 +685,8 @@ def main():
     assert _lead == ["Judith Rothschild Foundation", nk, "Patricia Phelps de Cisneros"], _lead
     put("JFirstNewF", fint(first.loc["Judith Rothschild Foundation", "new_f"]))
     put("SmallArtShare", fdec(classes.loc["1-9 records", "pct_new_artists"]))
+    _sm = classes.loc["1-9 records"]  # Section 5.2: 'about the same share of the women and of the non-Western artists'
+    assert abs(_sm["pct_new_f_artists"] - _sm["pct_new_artists"]) <= 3 and abs(_sm["pct_new_nw_artists"] - _sm["pct_new_artists"]) <= 3
     put("TenArtShare", fdec(classes.loc["ten largest units", "pct_new_artists"]))
     put("BigArtShare", fdec(classes.loc["100+ records", "pct_new_artists"], 0))
 
