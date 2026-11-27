@@ -649,15 +649,15 @@ def main():
     trows = [
         trow("Gift records naming a donor", "gift_records", integer=True),
         trow("Donor units", "donor_units", integer=True),
-        trow("Units with 100 or more records", "units_100plus", integer=True),
+        trow("Units with at least 100 records", "units_100plus", integer=True),
         trow(r"Share of records held by the top 1\% of units (\%)", "top_1pct_share_of_records"),
         r"\midrule",
-        r"\multicolumn{3}{l}{\emph{Among units with 100 or more records}} \\",
+        r"\multicolumn{3}{l}{\emph{Among units with at least 100 records}} \\",
         trow(r"Units with more than 90\% of records in one year (\%)", "units_peak_year_over_90", 0),
         trow(r"Units with more than 90\% of records by one artist (\%)", "units_top_artist_over_90", 0),
     ]
     trows.append(r"\midrule")
-    trows.append(r"\multicolumn{3}{l}{\emph{Pattern rules of Table~\ref{tab:donor_type_taxonomy}, units with 100 or more records (at MoMA other than the six anchors)}} \\")
+    trows.append(r"\multicolumn{3}{l}{\emph{Pattern rules of Table~\ref{tab:donor_type_taxonomy}, units with at least 100 records (at MoMA other than the six anchors)}} \\")
     trows.append(["Units", fint(typsum["non-anchor units"]), fint(tate_rules.loc["Tate", "units"])])
     trows.append(["Matching exactly one pattern", fint(typsum["non-anchor clean"]), fint(tate_rules.loc["Tate", "one pattern"])])
     trows.append(["Matching more than one pattern", fint(typsum["non-anchor ambiguous"]), fint(tate_rules.loc["Tate", "several"])])
@@ -693,7 +693,7 @@ def main():
             " & & & (yr) & yr (\\%) & (\\%) & (\\%) & (\\%) & (\\%) & F & NW & \\\\\n\\midrule\n")
     with open(out("rev_supp_units.tex"), "w", encoding="utf-8") as f:
         f.write("{\\footnotesize\\setlength{\\tabcolsep}{3.5pt}\n\\begin{longtable}{@{}p{0.30\\textwidth}rrrrrrrrrrl@{}}\n"
-                "\\caption{Every donor unit with 100 or more records at MoMA (a) and at the Tate (b), by number of records. $^{\\ast}$Anchor case. "
+                "\\caption{Every donor unit with at least 100 records at MoMA (a) and at the Tate (b), by number of records. $^{\\ast}$Anchor case. "
                 "`Era' is the span from first to last accession, `Peak yr' the share of records accessioned in the busiest year, `Dept.' the share in the largest department, "
                 "and `Artist' the share by the largest artist. Female and non-Western shares are of coded records, and a dash marks fewer than 30 coded records (typically gifts by unidentified makers). "
                 "`Con.' is the unit's contribution to the museum's gift-record share (percentage points). "
@@ -707,7 +707,7 @@ def main():
     # S: gender denominators.
     rows = []
     for label, r in gden.iterrows():
-        rows.append([tex_escape(label.replace("Acquired 1920s", "Acquired 1929")), fint(r["n"]), fint(r["female"]), fint(r["male"]), fint(r["mixed"]), fint(r["uncoded"]),
+        rows.append([tex_escape(label.replace("Acquired 1920s", "Acquired 1929").replace("All donor-identified gifts", "Gift channel")), fint(r["n"]), fint(r["female"]), fint(r["male"]), fint(r["mixed"]), fint(r["uncoded"]),
                      fdec(r["pct_uncoded"]), cell(r["pct_f_coded"]), fdec(r["pct_f_lower"]), fdec(r["pct_f_upper"])])
     write_table("rev_supp_gender.tex", "Gender coding of records by department, acquisition decade and case.",
                 ["", "Records", "Women", "Men", "Mixed", "Uncoded", r"\% unc.", r"\% female", "Lower", "Upper"],
@@ -860,7 +860,7 @@ def main():
                 note="`New' counts the unit's artists who are new to the collection, and the last column of each half how many of them are non-Western or female.")
     rows = [["1929" if r["decade"] == 1920 else str(int(r["decade"])) + "s", fint(r["new_artists"]), fint(r["new_f"]), cell(r["pct_f"]), fint(r["units_with_new_f"]),
              fint(r["new_nw"]), cell(r["pct_nw"]), fint(r["units_with_new_nw"])] for _, r in decades.iterrows()]
-    write_table("rev_supp_decades.tex", "Artists first entering the collection through a donor-identified gift, by decade.",
+    write_table("rev_supp_decades.tex", "Artists first entering the collection through a named-donor gift, by decade.",
                 ["Decade", "New artists", "Female", r"\%", "Units with women", "Non-Western", r"\%", "Units with non-W."], rows,
                 "lrrrrrrr", "tab:s_decades",
                 note="Percentages are of the new artists with a gender code or with a recorded nationality, which are fewer than the new artists in the first column. The last row covers 2020 to 2024.")
@@ -929,11 +929,11 @@ def main():
 
     # S: associations, selection audit, Tate units.
     rows = [[tex_escape(re.sub(r"\|([^|]+)\|", r"absolute \1", m)), fint(r["n_units"]), csigned(r["spearman_rho"]), fdec(r["perm_p"], 3) if r["perm_p"] >= 0.001 else "$<$0.001"] for m, r in assoc.iterrows()]
-    write_table("rev_supp_association.tex", "Association between a donor unit's record count and its gap or contribution (units with 100 or more records).",
+    write_table("rev_supp_association.tex", "Association between a donor unit's record count and its gap or contribution (units with at least 100 records).",
                 ["Measure", "Units", r"Spearman $\rho$", "Permutation $p$"], rows, "lrrr", "tab:s_assoc")
     rows = [[tex_escape(r["axis"]) if r["rank"] == 1 else "", fint(r["rank"]), tex_escape(r["unit"]) + (r"$^{\ast}$" if r["is_case"] else ""),
              fint(r["value"]) if float(r["value"]).is_integer() else fdec(r["value"]), fint(r["n"])] for _, r in sel.iterrows()]
-    write_table("rev_supp_selection.tex", "The five most extreme donor units on each selection axis (units with 100 or more records). $^{\\ast}$Selected case.",
+    write_table("rev_supp_selection.tex", "The five most extreme donor units on each selection axis (units with at least 100 records). $^{\\ast}$Selected case.",
                 ["Axis", "Rank", "Donor unit", "Value", "Records"], rows, r"p{0.3\textwidth}rp{0.42\textwidth}rr", "tab:s_selection",
                 size=r"\footnotesize")
 
@@ -952,7 +952,7 @@ def main():
         small, large = d[d["n"] < 100], d[d["n"] >= 100]
         ax.scatter(small["n"], small["gap"], s=12, c=GRAY[4], edgecolors="none", label="Fewer than 100 records", zorder=2)
         ax.scatter(large["n"], large["gap"], s=24, facecolors="white", edgecolors=GRAY[0], linewidths=0.7,
-                   label="100 or more records", zorder=3)
+                   label="At least 100 records", zorder=3)
         ax.axhline(0, color=GRAY[2], linewidth=0.8, zorder=1)
         offsets = FIG1_OFFSETS[num]
         for u, lab in labels.items():
