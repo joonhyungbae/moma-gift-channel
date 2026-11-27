@@ -397,6 +397,8 @@ def main():
     put("TypOthers", fint(typsum["non-anchor units"]))
     put("TypClean", fint(typsum["non-anchor clean"])); put("TypAmbig", fint(typsum["non-anchor ambiguous"]))
     put("TypNone", fint(typsum["non-anchor unclassified"]))
+    put("TypAny", fint(int(float(typsum["non-anchor clean"])) + int(float(typsum["non-anchor ambiguous"]))))
+    assert int(float(typsum["non-anchor clean"])) + int(float(typsum["non-anchor ambiguous"])) + int(float(typsum["non-anchor unclassified"])) == int(float(typsum["non-anchor units"]))
     for key, ty in (("Vol", "Volume gift"), ("Found", "Founding-lineage gift"), ("Single", "Single-artist gift"),
                     ("Anon", "Anonymous-archive gift"), ("Inst", "Institutional block gift"),
                     ("Cross", "Cross-departmental gift")):
