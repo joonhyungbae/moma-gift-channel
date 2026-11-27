@@ -769,6 +769,37 @@ def main():
     _sc, _jc = _coll_con("Louis E. Stern Collection"), _coll_con("Judith Rothschild Foundation")
     put("CollBaseF", fdec(pct(_all5["F"].sum(), _all5["GV"].sum()))); put("CollBaseNW", fdec(pct(_all5["NW"].sum(), _all5["OV"].sum())))
     put("SternCollConF", fsigned(_sc[0])); put("SternCollConNW", fsigned(_sc[1])); put("JCollConNW", fsigned(_jc[1]))
+    # Supplement: the gift channel beside the other acquisition channels of the five departments.
+    # Classes by credit line, first match: the gift channel; museum acquisitions (a purchase, a fund,
+    # an endowment, 'acquired through/from', an exchange); gifts that name no donor; other records.
+    from rev_utils import load_collection
+    _col = load_collection().merge(_all5[["ObjectID", "F", "GV", "NW", "OV"]].drop_duplicates("ObjectID"), on="ObjectID", how="left")
+    _ccl = _col["CreditLine"].fillna("")
+    _chan = pd.Series("Other records", index=_col.index)
+    _chan[_ccl.str.contains(r"gift|bequest|given|anonymous", case=False)] = "Gifts naming no donor"
+    _chan[_ccl.str.contains(r"purchase|\bfunds?\b|endowment|acquired (?:through|from)|exchange", case=False)] = "Purchases, funds, and exchanges"
+    _chan[_col["ObjectID"].isin(set(gifts["ObjectID"]))] = "Named-donor gifts (the gift channel)"
+    _ccons = constituents(_col, artist_names())
+    _ccons = _ccons[~_ccons["placeholder"]].copy()
+    _ccons["chan"] = _chan.reindex(_ccons["rec"]).to_numpy()
+    chan_rows, _chan_stats = [], {}
+    for _c in ["Named-donor gifts (the gift channel)", "Gifts naming no donor", "Purchases, funds, and exchanges", "Other records", "All records"]:
+        _d = _col if _c == "All records" else _col[_chan == _c]
+        _a = (_ccons if _c == "All records" else _ccons[_ccons["chan"] == _c]).drop_duplicates("cid")
+        _st = {"n": len(_d), "f": pct(_d["F"].sum(), _d["GV"].sum()), "nw": pct(_d["NW"].sum(), _d["OV"].sum()), "na": len(_a),
+               "af": pct((_a["gender"] == "F").sum(), _a["gender"].isin(["F", "M"]).sum()),
+               "anw": pct((_a["origin"] == "Non-Western").sum(), _a["origin"].notna().sum())}
+        _chan_stats[_c] = _st
+        chan_rows.append([_c, fint(_st["n"]), fdec(_st["f"]), fdec(_st["nw"]), fint(_st["na"]), fdec(_st["af"]), fdec(_st["anw"])])
+    assert _chan_stats["All records"]["n"] == len(main_all) and _chan_stats["Named-donor gifts (the gift channel)"]["n"] == len(gifts)
+    _pur = _chan_stats["Purchases, funds, and exchanges"]
+    put("PurN", fint(_pur["n"])); put("PurF", fdec(_pur["f"])); put("PurNW", fdec(_pur["nw"]))
+    put("PurArtF", fdec(_pur["af"])); put("PurArtNW", fdec(_pur["anw"]))
+    put("NoDonorN", fint(_chan_stats["Gifts naming no donor"]["n"]))
+    put("MiesN", fint(_ccl.str.startswith("Mies van der Rohe Archive, gift of the architect").sum()))
+    # Section 4.3: the single-artist label describes the records; by work Bouabre holds few of the unit's works.
+    _pw = gifts[gifts["Unit"] == "Jean Pigozzi"].groupby("Work")["Artist"].first()
+    put("PBouabreWorks", fint(_pw.fillna("").str.contains("Bouabr").sum()))
     _cl = main_all["CreditLine"].fillna("")
     _gen = _cl.str.contains("generosity", case=False) & ~_cl.str.contains(r"\b(?:gift|bequest)\b", case=False)
     put("NGenerosity", fint(_gen.sum()))
@@ -1101,6 +1132,9 @@ def main():
     write_table("rev_supp_size_classes.tex", "What donor units of different sizes supply, as percent of gift-channel records and of artists new to the collection through a named donor.",
                 ["Units with", "Units", "Records", "Female rec.", "Non-W. rec.", "New artists", "New female", "New non-W."],
                 rows, "lrrrrrrr", "tab:s_sizes")
+    write_table("rev_supp_channels.tex", "The gift channel beside the other acquisition channels of the five departments, 1929--2024, with the female and non-Western shares (\\%) of records and of artists.",
+                ["Channel", "Records", "Female", "Non-W.", "Artists", "Female", "Non-W."], chan_rows, "lrrrrrr", "tab:s_channels",
+                note="Channels are read from the credit line, in this order. The gift channel is the sample of this section. `Purchases, funds, and exchanges' are the remaining credit lines that mention a purchase, a fund, an endowment, an exchange, or `acquired through' or `acquired from'. `Gifts naming no donor' are the remaining lines with a gift or bequest formula or the word anonymous. Artists are distinct constituents with at least one record in the channel, so an artist can appear in several rows. Shares are over coded records and coded artists. The Wikidata step of Section~\\ref{sec:s_origin} codes artists of the gift channel only.")
     lead = first.sort_values("new_nw", ascending=False).head(8)
     rows = [[tex_escape(u), fint(r["n_records"]), fint(r["new_artists"]), fint(r["new_nw"])] for u, r in lead.iterrows()]
     lead = first.sort_values("new_f", ascending=False).head(8)

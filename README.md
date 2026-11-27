@@ -1,6 +1,6 @@
-# MoMA named-donor gifts by record and by artist, 1929-2024
+# MoMA named-donor gifts by record, work, and artist, 1929-2024
 
-Replication code and data for *Counting women and non-Western artists in MoMA's named-donor gifts by record and by artist, 1929-2024* (Museum Management and Curatorship).
+Replication code and data for *Counting women and non-Western artists in MoMA's named-donor gifts by record, work, and artist, 1929-2024* (Museum Management and Curatorship).
 
 The paper reads MoMA's donor-identified gift records donor by donor and counts
 each gift in two ways, as catalogue records and as distinct artists. Shares of
