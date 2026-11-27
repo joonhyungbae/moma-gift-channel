@@ -117,7 +117,6 @@ def gender_tables(gifts, cons):
     s = record_shares(gifts)
     add("Main rule: single-gender records, women-only / (women-only + men-only)", s["f"], s["g_valid"])
     add("Fractional: mean share of coded constituents who are women", (n_f[coded] / (n_f + n_m)[coded]).sum(), coded.sum())
-    add("Any woman among constituents / coded records", (n_f > 0).sum(), coded.sum())
     add("Submitted rule (mixed records counted as women-only)", (n_f > 0).sum(), coded.sum())
     add("Lower bound: women-only / all records", s["f"], len(gifts))
     add("Upper bound: (women-only + mixed + uncoded) / all records",
