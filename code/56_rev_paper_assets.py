@@ -262,6 +262,8 @@ def main():
     p_ = gifts[gifts["Unit"] == "Jean Pigozzi"]
     p19 = p_[p_["YearAcquired"] == 2019]
     put("PNPeak", fint(len(p19)))
+    _p19c = cons[cons["rec"].isin(p19.index) & ~cons["placeholder"]]
+    put("PPeakNArt", fint(_p19c["cid"].nunique()))
     put("PAlphabet", fint(p19["Title"].fillna("").str.contains("Alphabet B", case=False).sum()))
     put("PAlphabetCards", fint(p19["Title"].fillna("").str.contains("from Alphabet B", case=False).sum()))
     put("PBouabre", fint(p_["Artist"].fillna("").str.contains("Bouabr").sum()))
@@ -327,6 +329,8 @@ def main():
     put("SixAbbyConF", fsigned(_all["pct_f"] - _rest["pct_f"])); put("SixAbbyConNW", fsigned(_all["pct_nw"] - _rest["pct_nw"]))
     put("SixArtConF", fsigned(-a6["art_delta_f"])); put("SixArtConNW", fsigned(-a6["art_delta_nw"]))
     put("SixArtConNWOne", fdec(-a6["art_delta_nw"], 1))
+    assert -a6["rec_delta_nw"] > 0 and -a6["art_delta_nw"] > 0
+    put("SixConNWAbs", fdec(-a6["rec_delta_nw"], 2)); put("SixArtConNWAbs", fdec(-a6["art_delta_nw"], 2))
     put("SixArtLost", fint(a6["artists_lost"])); put("SixArtLostPct", fdec(pct(a6["artists_lost"], museum["n_artists"])))
     put("SixShareNWRec", fdec(schemes.loc["Baseline", "six_share_of_nw_records"]))
     rnd = cf[cf.index.str.startswith("Random")].iloc[0]
