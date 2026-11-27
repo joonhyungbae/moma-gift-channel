@@ -265,7 +265,7 @@ def main():
     write_table("rev_tab_counts.tex", "Donor units that contribute at least 0.5 point to the female or the non-Western share at any count, with their contributions counted by record, by work, and by artist.",
                 ["Donor unit", "Records", "Works", "Artists", "F rec.", "F work", "F art.", "NW rec.", "NW work", "NW art."], trows_c,
                 "lrrrrrrrrr", "tab:counts", resize=True,
-                note="Contributions are in percentage points. The rule selects units by their contribution at any of the three counts, among units with at least 100 records.")
+                note="Contributions are in percentage points.")
     put("NBigMovers", fint(len(_sel)))
     # Section 5.2: gifts of many artists move the shares more as works or artists than as records.
     _cis, _cdc = _six.loc["Patricia Phelps de Cisneros"], _six.loc["Judith Rothschild Foundation Contemporary Drawings Collection"]
@@ -278,6 +278,13 @@ def main():
     put("GundNoFundArtGap", fsigned(_gf["gund_art_gap_f"], 1)); put("GundNoFundTopDept", fdec(_gf["gund_top_dept_share"], 0))
     # Abstract, Section 5.2, conclusion: claims checked under every definition of the gift channel (Table S1).
     put("MaxWorkF", fdec(_m["max_wf"], 2)); put("MaxArtF", fdec(_m["max_af"], 2))
+    _st_u = units.loc["Louis E. Stern Collection"]
+    put("SternRecShare", fdec(pct(_st_u["n"], len(gifts)), 1))
+    put("SternWorkShare", fdec(pct(_wu.loc["Louis E. Stern Collection", "n_works"], _wc["works"]), 1))
+    put("SternGapNW", fsigned(_st_u["gap_nw"], 1)); put("SternWorkGapNW", fsigned(_wu.loc["Louis E. Stern Collection", "work_pct_nw"] - _wc["work_pct_nw"], 1))
+    put("SternGapF", fsigned(_st_u["gap_f"], 1)); put("SternWorkGapF", fsigned(_wu.loc["Louis E. Stern Collection", "work_pct_f"] - _wc["work_pct_f"], 1))
+    # Section 5.2: the Stern gift is about as unusual at the work count as at the record count; its weight falls.
+    assert abs(_wu.loc["Louis E. Stern Collection", "work_pct_f"] - _wc["work_pct_f"]) >= 0.8 * abs(_st_u["gap_f"])
     put("MaxWorkFArtAll", fdec(_sd[["max_wf", "max_af"]].abs().max().max(), 2))
     put("RothMinAll", fdec(_sd[["roth_rn", "roth_wn", "roth_an"]].min().min(), 2))
     put("SternWorkArtMaxAll", fdec(_sd[["stern_wf", "stern_af", "stern_wn", "stern_an"]].abs().max().max(), 2))
@@ -291,7 +298,8 @@ def main():
     _kv = [units.loc["Kleiner, Bell & Co.", "contrib_f"], units.loc["Kleiner, Bell & Co.", "contrib_nw"],
            loo.loc["Kleiner, Bell & Co.", "art_contrib_f"], loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"]]
     assert min(_kv) == loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"] and max(_kv) == units.loc["Kleiner, Bell & Co.", "contrib_f"]
-    assert _k["gap_f_matched"] > 0 and _k["gap_nw_matched"] < 0  # Section 4.1: matched gaps, female above and non-Western below
+    assert _k["gap_f_matched"] > 0 and _k["gap_nw_matched"] < 0
+    assert _k["f_lo"] <= _k["exp_f"] <= _k["f_hi"] and not (_k["nw_lo"] <= _k["exp_nw"] <= _k["nw_hi"])  # 4.1: female inside, non-Western outside  # Section 4.1: matched gaps, female above and non-Western below
     assert _gf["gund_art_gap_f"] >= 10 and _gf["gund_art_coded"] >= 30 and _gf["gund_top_dept_share"] <= 60  # still cross-departmental
     _st = "Louis E. Stern Collection"
     _sg = gifts[gifts["Unit"] == _st]
@@ -422,7 +430,7 @@ def main():
     put("JArtNoOrigin", fint(bound["artists_without_nationality"]))
     # Record-level range for the Rothschild gift: its records without a nationality counted as Western or as non-Western.
     _jr = gifts[gifts["Unit"] == "Judith Rothschild Foundation"]
-    _unc = int(((_jr["o_valid"] == 0) & (_jr["GeographicOrigin"].isna())).sum())
+    _unc = int(((_jr["o_valid"] == 0) & (_jr["GeoDetail"].fillna("") != "Mixed")).sum())
     _NW, _OV = gifts["is_NW"].sum(), gifts["o_valid"].sum()
     _jNW, _jOV = _jr["is_NW"].sum(), _jr["o_valid"].sum()
     _wo = pct(_NW - _jNW, _OV - _jOV)
@@ -614,6 +622,9 @@ def main():
     # clustering: range of k at which the observed silhouette exceeds the shuffled 95th percentile
     above = clus[clus["kmeans_silhouette"] > clus["shuffled_p95"]]["k"]
     put("SilAboveFrom", fint(above.min()) if len(above) else "--"); put("SilAboveTo", fint(above.max()) if len(above) else "--")
+    put("SilMaxExcess", fdec((clus["kmeans_silhouette"] - clus["shuffled_p95"]).max(), 2))
+    _k6 = clus.set_index("k").loc[6]
+    assert _k6["kmeans_silhouette"] < _k6["shuffled_p95"] and (clus["kmeans_silhouette"] - clus["shuffled_p95"]).max() < 0.05
     put("NClusterFeatures", "eight")
     put("TypAnchorsStableMin", fint(typsens["anchors_own_pattern"].min()))
     # Tate rules
@@ -656,7 +667,7 @@ def main():
     dp = gifts[(gifts["Department"] == "Drawings & Prints") & (gifts["YearAcquired"] == 2019)]
     s_all, s_wo = record_shares(dp), record_shares(dp[dp["Unit"] != "Jean Pigozzi"])
     put("DPNineteenN", fint(s_all["n"])); put("DPNineteenNW", fdec(s_all["pct_nw"]))
-    put("DPNineteenNWwoP", fdec(s_wo["pct_nw"])); put("DPNineteenPShare", fdec(pct((dp["Unit"] == "Jean Pigozzi").sum(), len(dp))))
+    put("DPNineteenNWwoP", fdec(s_wo["pct_nw"])); put("DPNineteenNwoP", fint(s_wo["o_valid"])); put("DPNineteenPShare", fdec(pct((dp["Unit"] == "Jean Pigozzi").sum(), len(dp))))
     # ---- random gifts of the same structure (script 57): a supplementary check, four designs.
     nun = pd.read_csv(out("rev_null_units.csv"))
     nsum = pd.read_csv(out("rev_null_summary.csv"))
@@ -853,6 +864,9 @@ def main():
 
     # Table: MoMA and Tate patterns (MoMA also over the years the Tate file covers).
     COLS = ("MoMA", "MoMA 1929-2013", "Tate")
+    # Section 5.4: the Tate channel is concentrated, and block gifts are at least as common among its large units.
+    assert float(tate.loc["top_1pct_share_of_records", "Tate"]) > 40
+    assert float(tate.loc["units_peak_year_over_90", "Tate"]) >= float(tate.loc["units_peak_year_over_90", "MoMA"])
     # Section 5.4: MoMA's 1929-2013 figures are close to its full-period figures.
     for _key, _tol in (("top_1pct_share_of_records", 3), ("units_peak_year_over_90", 8), ("units_top_artist_over_90", 6)):
         assert abs(float(tate.loc[_key, "MoMA"]) - float(tate.loc[_key, "MoMA 1929-2013"])) < _tol, _key
@@ -881,8 +895,7 @@ def main():
     trows.append(["Matching no pattern", fint(typsum["non-anchor unclassified"]), fint(r13["none"]), fint(tate_rules.loc["Tate", "none"])])
     write_table("rev_tab_tate.tex", "Gift patterns at MoMA and at the Tate, with credit lines parsed by the same rules.",
                 ["", "MoMA", "MoMA, 1929--2013", "Tate"], trows, "lrrr", "tab:tate",
-                note="Both museums' credit lines are parsed with the same rules for donor names and dedication clauses. "
-                     "The public Tate file ends in 2013, and the middle column restricts MoMA to the same years. "
+                note="The public Tate file ends in 2013, and the middle column restricts MoMA to the same years. "
                      "Tate origin is coded from place of birth and MoMA origin from nationality, and the Tate's departments are coarser. "
                      "Tate credit lines that name an acquisition channel (for example the Turner Bequest) are excluded.")
 
@@ -913,7 +926,7 @@ def main():
                 "`Era' is the span from first to last accession, `Peak yr' the share of records accessioned in the busiest year, `Dept.' the share in the largest department, "
                 "and `Artist' the share by the largest artist. Female and non-Western shares are of coded records, and a dash marks fewer than 30 coded records (typically gifts by unidentified makers). "
                 "`Con.' is the unit's contribution to the museum's gift-record share (percentage points). "
-                "`Pat.' gives the patterns of Table~2 in the article that the unit matches: V volume gift, L founding-lineage gift, S single-artist gift, "
+                "`Pat.' gives the patterns of Table~3 in the article that the unit matches: V volume gift, L founding-lineage gift, S single-artist gift, "
                 "A unidentified-maker gift, I institutional block gift, C cross-departmental gift. Donor names are given as written in the credit lines, and Tate departments and origin are coded as described in Section~\\ref{sec:s_tate}.}\\label{tab:s_units}\\\\\n\\toprule\n"
                 + head + "\\endfirsthead\n\\toprule\n" + head + "\\endhead\n\\bottomrule\n\\endlastfoot\n")
         for r in rows:

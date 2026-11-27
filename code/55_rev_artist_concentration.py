@@ -238,9 +238,9 @@ def main():
                     "expected": float(m["decade"].map(rate).fillna(rest.loc[rest[valid], flag].mean()).sum())}
     for key, flag, valid, excl in (("f", "F", "GV", set()), ("nw", "NW", "OV", set()), ("nw_excl_rothschild", "NW", "OV", set(ROTHSCHILD)),
                                    ("nw_ee", "NW_EE", "OV_EE", set())):
-        d = fs[fs[valid]]
+        d = fs[fs[valid] & ~fs["unit"].isin(excl)]  # an excluded gift leaves the pool as well as the selection
         x = d[flag].to_numpy()
-        sel = (d["unit"].isin(top10) & ~d["unit"].isin(excl)).to_numpy()
+        sel = d["unit"].isin(top10).to_numpy()
         grp = list(pd.Series(np.arange(len(d))).groupby((d["dept"].astype(str) + d["decade"].astype(str)).to_numpy()).indices.values())
         sims = [strat_perm(x, grp, rng)[sel].sum() for _ in range(N_SHUFFLE_ARTISTS)]
         exp[key]["shuffled_lo"], exp[key]["shuffled_hi"] = np.percentile(sims, 2.5), np.percentile(sims, 97.5)
