@@ -494,6 +494,7 @@ def main():
             assert abs(nrow(u_, share)["rec_matched_expected"] - six.loc[u_, "exp_f" if key == "F" else "exp_nw"]) < 0.05, (u_, key)
     shear_ = nrow("Jack Shear", "non-Western")
     put("ShearNullMakers", fint(shear_["makers"])); put("ShearExpNW", fdec(shear_["rec_matched_expected"]))
+    put("ShearPctNW", fdec(shear_["obs_share"]))
     assert all(shear_[f"{d_}_q"] >= 0.05 for d_ in NULL_DESIGNS), "supplement cites Jack Shear as a unit no design flags"
     cdc = "Judith Rothschild Foundation Contemporary Drawings Collection"
     # ---- first-entry attribution (script 55)
