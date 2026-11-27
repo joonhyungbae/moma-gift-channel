@@ -25,7 +25,10 @@ Output: output/rev_sample_definitions.csv
 
 import pandas as pd
 
-from rev_utils import (CASE_LABEL, artist_frame, artist_names, artist_shares, artist_table, constituents,
+import importlib.util
+import os
+
+from rev_utils import (CASE_LABEL, pct, artist_frame, artist_names, artist_shares, artist_table, constituents,
                        frac_artist_contribution, load_gifts, out, record_shares, removed_fraction)
 
 DEFS = [("main", {}), ("with exchange", {"include_exchange": True}),
@@ -35,6 +38,9 @@ DEFS = [("main", {}), ("with exchange", {"include_exchange": True}),
         ("MoMA nationality only", {"moma_nationality": True}),
         ("Rothschild units merged", {"merge_rothschild": True})]
 SIX = set(CASE_LABEL.values())
+_spec = importlib.util.spec_from_file_location("works", os.path.join(os.path.dirname(os.path.abspath(__file__)), "61_rev_works.py"))
+WORKS = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(WORKS)
+STERN, ROTH = "Louis E. Stern Collection", "Judith Rothschild Foundation"
 
 
 def summary(g, names):
@@ -46,16 +52,29 @@ def summary(g, names):
     sizes = g["Unit"].value_counts()
     big = sizes[sizes >= 100].index
     rows = []
+    wt = WORKS.work_table(g)
+    wtot = wt[["F", "GV", "NW", "OV"]].sum()
+    wsu = wt.groupby("unit")[["F", "GV", "NW", "OV"]].sum()
     for u in big:
         r = record_shares(g[g["Unit"] != u])
         af, an = frac_artist_contribution(AT, removed_fraction(cons, g.index[g["Unit"] == u], AT))
-        rows.append((u, museum["pct_f"] - r["pct_f"], museum["pct_nw"] - r["pct_nw"], af, an))
-    c = pd.DataFrame(rows, columns=["unit", "rf", "rn", "af", "an"]).set_index("unit")
+        ws = wsu.loc[u]
+        wf = pct(wtot["F"], wtot["GV"]) - pct(wtot["F"] - ws["F"], wtot["GV"] - ws["GV"])
+        wn = pct(wtot["NW"], wtot["OV"]) - pct(wtot["NW"] - ws["NW"], wtot["OV"] - ws["OV"])
+        rows.append((u, museum["pct_f"] - r["pct_f"], museum["pct_nw"] - r["pct_nw"], af, an, wf, wn))
+    c = pd.DataFrame(rows, columns=["unit", "rf", "rn", "af", "an", "wf", "wn"]).set_index("unit")
     out_ = {"records": len(g), "units": g["Unit"].nunique(), "units_100": len(big),
             "largest_unit": sizes.index[0], "largest_unit_records": int(sizes.iloc[0]),
             "pct_f": museum["pct_f"], "pct_nw": museum["pct_nw"],
             "art_pct_f": art["art_pct_f"], "art_pct_nw": art["art_pct_nw"],
             "six_contrib_f": museum["pct_f"] - rest["pct_f"], "six_contrib_nw": museum["pct_nw"] - rest["pct_nw"]}
+    # Largest single-unit contribution at each count, and the Stern and Rothschild units at each count.
+    for col in ("rf", "wf", "af", "rn", "wn", "an"):
+        i = c[col].abs().idxmax()
+        out_[f"max_{col}"], out_[f"max_{col}_unit"] = c.loc[i, col], i
+    for tag, u in (("stern", STERN), ("roth", ROTH)):
+        for col in ("rf", "wf", "af", "rn", "wn", "an"):
+            out_[f"{tag}_{col}"] = c.loc[u, col] if u in c.index else float("nan")
     # Units grouped by records per artist, against the channel's own ratio.
     n_art = cons[~cons["placeholder"]].groupby("unit")["cid"].nunique()
     rpa = (sizes / n_art.reindex(sizes.index)).reindex(c.index)

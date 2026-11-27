@@ -80,6 +80,9 @@ def main():
     fs["GV"] = fs["gender"].isin(["F", "M"])
     fs["NW"] = fs["origin"] == "Non-Western"
     fs["OV"] = fs["origin"].notna()
+    from coding import origin_token
+    _ee = fs["nationality"].map(lambda t: origin_token(t, "east_europe_western"))
+    fs["NW_EE"], fs["OV_EE"] = _ee == "Non-Western", _ee.notna()
     per_unit = fs.groupby("unit").agg(new_artists=("F", "size"), new_f=("F", "sum"), new_gv=("GV", "sum"),
                                       new_nw=("NW", "sum"), new_ov=("OV", "sum"))
     per_unit["n_records"] = sizes.reindex(per_unit.index)
@@ -93,7 +96,8 @@ def main():
     # department and decade (records), since the shares change over time.
     fs["decade"] = (fs["year"] // 10) * 10
     fs["dept"] = collection["Department"].reindex(fs["rec"]).to_numpy()
-    for label, flag, valid in (("female artists", "F", "GV"), ("non-Western artists", "NW", "OV")):
+    for label, flag, valid in (("female artists", "F", "GV"), ("non-Western artists", "NW", "OV"),
+                               ("non-Western artists (Eastern Europe as Western)", "NW_EE", "OV_EE")):
         d = fs[fs[valid]]
         u, x = d["unit"].to_numpy(), d[flag].to_numpy()
         grp = list(pd.Series(np.arange(len(d))).groupby((d["dept"].astype(str) + d["decade"].astype(str)).to_numpy()).indices.values())
@@ -227,7 +231,13 @@ def main():
     exp["nw_excl_rothschild"] = {"observed": int(m["NW"].sum()), "coded": int(len(m)),
                                  "expected": float(m["decade"].map(rate).fillna(rest.loc[rest["OV"], "NW"].mean()).sum())}
     # Reference range: the female / non-Western label shuffled among first-entry artists of the same decade.
-    for key, flag, valid, excl in (("f", "F", "GV", set()), ("nw", "NW", "OV", set()), ("nw_excl_rothschild", "NW", "OV", set(ROTHSCHILD))):
+    for key, flag, valid in (("nw_ee", "NW_EE", "OV_EE"),):
+        rate = rest[rest[valid]].groupby("decade")[flag].mean()
+        m = mine[mine[valid]]
+        exp[key] = {"observed": int(m[flag].sum()), "coded": int(len(m)),
+                    "expected": float(m["decade"].map(rate).fillna(rest.loc[rest[valid], flag].mean()).sum())}
+    for key, flag, valid, excl in (("f", "F", "GV", set()), ("nw", "NW", "OV", set()), ("nw_excl_rothschild", "NW", "OV", set(ROTHSCHILD)),
+                                   ("nw_ee", "NW_EE", "OV_EE", set())):
         d = fs[fs[valid]]
         x = d[flag].to_numpy()
         sel = (d["unit"].isin(top10) & ~d["unit"].isin(excl)).to_numpy()

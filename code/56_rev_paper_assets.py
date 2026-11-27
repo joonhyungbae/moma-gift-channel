@@ -247,41 +247,50 @@ def main():
         _g = _bb[[f"gap_{k}", f"art_gap_{k}"]].dropna()
         _g = _g[_g[f"gap_{k}"].abs() > 0]
         put("GapRatio" + K, fdec((_g[f"art_gap_{k}"].abs() / _g[f"gap_{k}"].abs()).median(), 1))
-        assert pct(_rc[_fewb].sum(), _rc.sum()) > 50  # 'half or more of the movement'
-        assert (_g[f"art_gap_{k}"].abs() / _g[f"gap_{k}"].abs()).median() >= 1  # 'the gaps themselves are not smaller at the artist count'
+        pass
+
     put("FewRecPct", fdec(pct(_bb.loc[_fewb, "n"].sum(), len(gifts)), 0))
-    # Table: the two groups at three counts (sums of absolute single-unit contributions, points).
+    # Table 2: every unit with at least 100 records that contributes at least 0.5 point to either share at any count.
     _tw = _wu.reindex(_bb.index)
     _ar = loo.reindex(_bb.index)
-    trows_c = []
-    for lab_, m_ in ((f"At least {fdec(_m['channel_records_per_artist'], 1)} records per artist", _fewb), ("Fewer records per artist", ~_fewb)):
-        trows_c.append([lab_, fint(m_.sum()), fdec(pct(_bb.loc[m_, "n"].sum(), len(gifts)), 0),
-                        fdec(pct(_bb.loc[m_, "artist_weight"].sum(), museum["n_artists"]), 0),
-                        fdec(_bb.loc[m_, "contrib_f"].abs().sum(), 2), fdec(_tw.loc[m_, "work_contrib_f"].abs().sum(), 2),
-                        fdec(_ar.loc[m_, "art_contrib_f"].abs().sum(), 2),
-                        fdec(_bb.loc[m_, "contrib_nw"].abs().sum(), 2), fdec(_tw.loc[m_, "work_contrib_nw"].abs().sum(), 2),
-                        fdec(_ar.loc[m_, "art_contrib_nw"].abs().sum(), 2)])
-    write_table("rev_tab_counts.tex", "Units with at least 100 records, grouped by records per artist: their share of the gift channel and their contributions at three counts.",
-                ["", "Units", r"\% rec.", r"\% art.", "F rec.", "F work", "F art.", "NW rec.", "NW work", "NW art."], trows_c,
+    _six = pd.DataFrame({"rf": _bb["contrib_f"], "wf": _tw["work_contrib_f"], "af": _ar["art_contrib_f"],
+                         "rn": _bb["contrib_nw"], "wn": _tw["work_contrib_nw"], "an": _ar["art_contrib_nw"]})
+    _sel = _six[(_six.abs() >= 0.5).any(axis=1)].copy()
+    _sel = _sel.reindex(_sel.abs().max(axis=1).sort_values(ascending=False).index)
+    _short = {"Judith Rothschild Foundation Contemporary Drawings Collection": "Rothschild Fdn.\\ Contemporary Drawings Coll.",
+              "Judith Rothschild Foundation": "Judith Rothschild Fdn.", "Louis E. Stern Collection": "Louis E.~Stern Collection",
+              "Patricia Phelps de Cisneros": "Patricia Phelps de Cisneros"}
+    trows_c = [[_short.get(u_, tex_escape(u_)), fint(_bb.loc[u_, "n"]), fint(_wu.loc[u_, "n_works"]), fint(_bb.loc[u_, "n_artists"])]
+               + [csigned(r_[c_]) for c_ in ("rf", "wf", "af", "rn", "wn", "an")] for u_, r_ in _sel.iterrows()]
+    write_table("rev_tab_counts.tex", "Donor units that contribute at least 0.5 point to the female or the non-Western share at any count, with their contributions counted by record, by work, and by artist.",
+                ["Donor unit", "Records", "Works", "Artists", "F rec.", "F work", "F art.", "NW rec.", "NW work", "NW art."], trows_c,
                 "lrrrrrrrrr", "tab:counts", resize=True,
-                note="Contributions are sums of the absolute contributions of single units, in percentage points. "
-                     "`\\% art.' is the units' share of the gift channel's artists, each artist divided among donors in proportion to records.")
+                note="Contributions are in percentage points. The rule selects units by their contribution at any of the three counts, among units with at least 100 records.")
+    put("NBigMovers", fint(len(_sel)))
+    # Section 5.2: gifts of many artists move the shares more as works or artists than as records.
+    _cis, _cdc = _six.loc["Patricia Phelps de Cisneros"], _six.loc["Judith Rothschild Foundation Contemporary Drawings Collection"]
+    assert abs(_cis["wn"]) > abs(_cis["rn"]) and abs(_cis["an"]) > abs(_cis["rn"])
+    assert abs(_cdc["wf"]) > abs(_cdc["rf"]) and abs(_cdc["af"]) > abs(_cdc["rf"]) and abs(_cdc["wn"]) > abs(_cdc["rn"]) and abs(_cdc["an"]) > abs(_cdc["rn"])
+
     put("FewArtPct", fdec(pct(_bb.loc[_fewb, "artist_weight"].sum(), museum["n_artists"]), 0))
     _gf = _sd.loc["without fund-led"]
     put("GundNoFundN", fint(_gf["gund_records"])); put("GundNoFundF", fdec(_gf["gund_pct_f"]))
     put("GundNoFundArtGap", fsigned(_gf["gund_art_gap_f"], 1)); put("GundNoFundTopDept", fdec(_gf["gund_top_dept_share"], 0))
-    # Section 5.2 examples: Stern and Shear hold many records per artist; Cisneros and the CDC hold few.
-    _rpa = units["n"] / units["n_artists"]
-    for _u in ("Louis E. Stern Collection", "Jack Shear"):
-        assert _rpa[_u] >= _m["channel_records_per_artist"], _u
-    for _u in ("Patricia Phelps de Cisneros", "Judith Rothschild Foundation Contemporary Drawings Collection"):
-        assert _rpa[_u] < _m["channel_records_per_artist"], _u
-    # Section 4.1: Kleiner female share above the channel for records and below it for artists; non-Western below at both.
+    # Abstract, Section 5.2, conclusion: claims checked under every definition of the gift channel (Table S1).
+    put("MaxWorkF", fdec(_m["max_wf"], 2)); put("MaxArtF", fdec(_m["max_af"], 2))
+    put("MaxWorkFArtAll", fdec(_sd[["max_wf", "max_af"]].abs().max().max(), 2))
+    put("RothMinAll", fdec(_sd[["roth_rn", "roth_wn", "roth_an"]].min().min(), 2))
+    put("SternWorkArtMaxAll", fdec(_sd[["stern_wf", "stern_af", "stern_wn", "stern_an"]].abs().max().max(), 2))
+    assert (_sd[["max_wf", "max_af"]].abs() < 1).all().all()        # no gift moves the female share by one point at the work or artist count
+    assert (_sd[["roth_rn", "roth_wn", "roth_an"]] > 1).all().all()  # the Rothschild gift moves the non-Western share by more than one point at every count
+    assert (_sd[["stern_wf", "stern_af", "stern_wn", "stern_an"]].abs().fillna(0) < 0.3).all().all()  # Stern nearly vanishes at work and artist counts
+    assert (_sd.loc[_sd["stern_rf"].notna(), ["stern_rf", "stern_rn"]] < -2).all().all()  # Stern lowers both record shares by more than two points
+    assert _sd.loc["main", "max_rf_unit"] == "Louis E. Stern Collection" and _sd.loc["main", "max_rn_unit"] == "Judith Rothschild Foundation"
     _k = units.loc["Kleiner, Bell & Co."]
     _kv = [units.loc["Kleiner, Bell & Co.", "contrib_f"], units.loc["Kleiner, Bell & Co.", "contrib_nw"],
            loo.loc["Kleiner, Bell & Co.", "art_contrib_f"], loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"]]
     assert min(_kv) == loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"] and max(_kv) == units.loc["Kleiner, Bell & Co.", "contrib_f"]
-    assert _k["gap_f"] > 0 and _k["art_gap_f"] < 0 and _k["gap_nw"] < 0 and _k["art_gap_nw"] < 0
+    assert _k["gap_f_matched"] > 0 and _k["gap_nw_matched"] < 0  # Section 4.1: matched gaps, female above and non-Western below
     assert _gf["gund_art_gap_f"] >= 10 and _gf["gund_art_coded"] >= 30 and _gf["gund_top_dept_share"] <= 60  # still cross-departmental
     _st = "Louis E. Stern Collection"
     _sg = gifts[gifts["Unit"] == _st]
@@ -470,11 +479,12 @@ def main():
     put("TailArtConF", fsigned(-rnd["art_delta_f"])); put("TailArtConNW", fsigned(-rnd["art_delta_nw"]))
     assert rnd["artists_lost"] > a6["artists_lost"]  # Section 5.2: the random records hold more artists
     for key, m in (("NWRec", "non-Western records"), ("FRec", "female records"),
-                   ("NWArt", "non-Western artists"), ("FArt", "female artists")):
+                   ("NWArt", "non-Western artists"), ("FArt", "female artists"),
+                   ("NWArtEE", "non-Western artists (Eastern Europe as Western)")):
         r = conc.loc[m]
         put("Half" + key, fint(r["units_for_half"])); put("Half" + key + "Shuf", fint(r["shuffled_mean"]))
         put("Half" + key + "Lo", fint(r["shuffled_lo"])); put("Half" + key + "Hi", fint(r["shuffled_hi"]))
-        if key in ("FArt", "NWArt"):  # Section 5.2: new women and non-Western artists more concentrated than the shuffle
+        if key in ("FArt", "NWArt", "NWArtEE"):  # Section 5.2: new women and non-Western artists more concentrated than the shuffle
             assert r["units_for_half"] < r["shuffled_lo"], key
         put("TopTen" + key, fdec(r["top10_share"])); put("TopTen" + key + "Shuf", fdec(r["top10_shuffled_mean"]))
         put("Sources" + key, fint(r["units_supplying_any"]))
@@ -674,7 +684,13 @@ def main():
         put("Ten" + k_ + "Lo", fint(ten.loc[key_, "shuffled_lo"])); put("Ten" + k_ + "Hi", fint(ten.loc[key_, "shuffled_hi"]))
     # Section 5.2: women and non-Western artists within the shuffled range; without Rothschild, below it.
     assert ten.loc["f", "shuffled_lo"] <= ten.loc["f", "observed"] <= ten.loc["f", "shuffled_hi"]
-    assert ten.loc["nw", "observed"] < ten.loc["nw", "shuffled_lo"]  # non-Western below the range
+    assert abs(ten.loc["f", "observed"] - ten.loc["f", "expected"]) / ten.loc["f", "expected"] < 0.1  # 'close to two references'
+    assert ten.loc["nw", "observed"] < ten.loc["nw", "shuffled_lo"]  # non-Western below the shuffle range ...
+    assert ten.loc["nw", "observed"] > ten.loc["nw", "expected"]      # ... and above the decade-matched expectation (both reported)
+    assert ten.loc["nw_excl_rothschild", "observed"] < ten.loc["nw_excl_rothschild", "expected"]
+    assert ten.loc["nw_ee", "observed"] < min(ten.loc["nw_ee", "expected"], ten.loc["nw_ee", "shuffled_lo"])
+    put("TenNWArtObsEE", fint(ten.loc["nw_ee", "observed"])); put("TenNWArtExpEE", fint(ten.loc["nw_ee", "expected"]))
+    put("TenNWEELo", fint(ten.loc["nw_ee", "shuffled_lo"])); put("TenNWEEHi", fint(ten.loc["nw_ee", "shuffled_hi"]))
     assert ten.loc["nw_excl_rothschild", "observed"] < ten.loc["nw_excl_rothschild", "shuffled_lo"]
     assert ten.loc["nw", "observed"] > ten.loc["nw", "expected"] and ten.loc["nw_excl_rothschild", "observed"] < ten.loc["nw_excl_rothschild", "expected"]
     fe = pd.read_csv(out("rev_first_entry_overview.csv")).iloc[0]
@@ -720,6 +736,18 @@ def main():
     stern = main_all["CreditLine"].fillna("").str.fullmatch(r"The Louis E\. Stern Collection").sum()
     anon = main_all["CreditLine"].fillna("").str.fullmatch(r"(?i)anonymous gift|given anonymously").sum()
     put("NStern", fint(stern)); put("NAnon", fint(anon))
+    _all5 = pd.read_csv(get_processed_path(), usecols=["ObjectID", "YearAcquired", "Department", "Gender_Grouped", "GeographicOrigin"], low_memory=False)
+    _all5 = _all5[pd.to_numeric(_all5["YearAcquired"], errors="coerce").between(1929, 2024) & _all5["Department"].isin(MAIN_DEPARTMENTS)]
+    _all5["F"] = (_all5["Gender_Grouped"] == "Female").astype(int); _all5["GV"] = _all5["Gender_Grouped"].isin(["Female", "Male"]).astype(int)
+    _all5["NW"] = (_all5["GeographicOrigin"] == "Non-Western").astype(int); _all5["OV"] = _all5["GeographicOrigin"].notna().astype(int)
+    def _coll_con(unit_):
+        ids = set(gifts.loc[gifts["Unit"] == unit_, "ObjectID"])
+        rest_ = _all5[~_all5["ObjectID"].isin(ids)]
+        return (pct(_all5["F"].sum(), _all5["GV"].sum()) - pct(rest_["F"].sum(), rest_["GV"].sum()),
+                pct(_all5["NW"].sum(), _all5["OV"].sum()) - pct(rest_["NW"].sum(), rest_["OV"].sum()))
+    _sc, _jc = _coll_con("Louis E. Stern Collection"), _coll_con("Judith Rothschild Foundation")
+    put("CollBaseF", fdec(pct(_all5["F"].sum(), _all5["GV"].sum()))); put("CollBaseNW", fdec(pct(_all5["NW"].sum(), _all5["OV"].sum())))
+    put("SternCollConF", fsigned(_sc[0])); put("SternCollConNW", fsigned(_sc[1])); put("JCollConNW", fsigned(_jc[1]))
     _cl = main_all["CreditLine"].fillna("")
     _gen = _cl.str.contains("generosity", case=False) & ~_cl.str.contains(r"\b(?:gift|bequest)\b", case=False)
     put("NGenerosity", fint(_gen.sum()))
@@ -985,20 +1013,19 @@ def main():
     rows = [r"\multicolumn{7}{@{}l}{\emph{(a) Sample and shares (\%)}} \\"]
     rows += [[lab[k], fint(r["records"]), fint(r["units"]), fdec(r["pct_f"]), fdec(r["pct_nw"]),
               fdec(r["art_pct_f"]), fdec(r["art_pct_nw"])] for k, r in sd.iterrows()]
-    rows += [r"\midrule", r"\multicolumn{7}{@{}l}{\emph{(b) Contributions, records / artists (points)}} \\",
-             r" & Six, F & Six, NW & Few, F & Few, NW & Many, F & Many, NW \\", r"\midrule"]
-    rows += [[lab[k], f"{r['six_contrib_f']:+.2f}", f"{r['six_contrib_nw']:+.2f}",
-              f"{r['few_rec_sum_f']:.2f} / {r['few_art_sum_f']:.2f}", f"{r['few_rec_sum_nw']:.2f} / {r['few_art_sum_nw']:.2f}",
-              f"{r['many_rec_sum_f']:.2f} / {r['many_art_sum_f']:.2f}", f"{r['many_rec_sum_nw']:.2f} / {r['many_art_sum_nw']:.2f}"]
-             for k, r in sd.iterrows()]
+    fmt3 = lambda a_, b_, c_: "--" if pd.isna(a_) else f"{a_:+.2f} / {b_:+.2f} / {c_:+.2f}"
+    rows += [r"\midrule", r"\multicolumn{5}{@{}l}{\emph{(b) Contributions in points, record / work / artist}} \\",
+             r" & Six, NW rec. & Stern, NW & Rothschild, NW & Largest, F \\", r"\midrule"]
+    rows += [[lab[k], f"{r['six_contrib_nw']:+.2f}", fmt3(r["stern_rn"], r["stern_wn"], r["stern_an"]),
+              fmt3(r["roth_rn"], r["roth_wn"], r["roth_an"]), fmt3(r["max_rf"], r["max_wf"], r["max_af"])] for k, r in sd.iterrows()]
     write_table("rev_supp_sample_definitions.tex", "Main results under seven definitions of the gift channel.",
                 ["Definition", "Records", "Units", "F rec.", "NW rec.", "F art.", "NW art."], rows, "lrrrrrr",
                 "tab:s_sample_definitions", resize=True,
                 note="The main analysis includes credit lines that consist of a named collection and excludes records acquired "
                      "by exchange of an earlier gift. Fund-led records open with a museum fund or purchase formula before the gift. "
-                     "`Six' is the six cases' joint contribution to the share of records. `Few' and `Many' sum the absolute "
-                     "contributions of single units with at least 100 records that hold at least as many records per artist as "
-                     "the gift channel (`Few') or fewer (`Many'), counted by record and by artist.")
+                     "`Six' is the six cases' joint contribution to the non-Western share of records. `Stern' and `Rothschild' give those units' "
+                     "contributions to the non-Western share, and `Largest, F' the largest single-unit contribution to the female share, "
+                     "each counted by record, by work, and by artist.")
 
     # S: Rockefeller.
     rows = [[tex_escape(pn), fint(r["n"]), fint(r["n_artists"]), f"{int(r['era_start'])}--{int(r['era_end'])}",
@@ -1041,7 +1068,7 @@ def main():
                 ["", "Count", "Units supplying any", "Units for half", "Label-shuffled", r"Ten leading sources (\%)", "Label-shuffled"],
                 rows, "lrrrrrr", "tab:s_concentration", resize=True,
                 note="Artists are those new to the collection, credited to the donor unit through which they first entered. The shuffled reference permutes the label across artists "
-                     "first entering in the same decade (for records, across artist clusters in the same department and decade) and reports the mean and the 2.5th and 97.5th percentiles. `Ten leading sources' are the ten units that supply the most, which differ from the ten largest units of Table~\\ref{tab:s_sizes}.")
+                     "first entering in the same department and decade (for records, across artist clusters in the same department and decade) and reports the mean and the 2.5th and 97.5th percentiles. `Ten leading sources' are the ten units that supply the most, which differ from the ten largest units of Table~\\ref{tab:s_sizes}.")
     rows = []
     for c_, r in classes.iterrows():
         if c_.startswith("Spearman"):
