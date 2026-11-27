@@ -331,6 +331,11 @@ def main():
     put("SixArtConNWOne", fdec(-a6["art_delta_nw"], 1))
     assert -a6["rec_delta_nw"] > 0 and -a6["art_delta_nw"] > 0
     put("SixConNWAbs", fdec(-a6["rec_delta_nw"], 2)); put("SixArtConNWAbs", fdec(-a6["art_delta_nw"], 2))
+    _ratio = a6["rec_delta_nw"] / a6["art_delta_nw"]
+    _words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
+    assert 2 <= _ratio < 10
+    put("SixRecArtTimes", _words[int(_ratio)])   # 'more than <word> times'
+
     put("SixArtLost", fint(a6["artists_lost"])); put("SixArtLostPct", fdec(pct(a6["artists_lost"], museum["n_artists"])))
     put("SixShareNWRec", fdec(schemes.loc["Baseline", "six_share_of_nw_records"]))
     rnd = cf[cf.index.str.startswith("Random")].iloc[0]
@@ -402,6 +407,7 @@ def main():
     put("TypClean", fint(typsum["non-anchor clean"])); put("TypAmbig", fint(typsum["non-anchor ambiguous"]))
     put("TypNone", fint(typsum["non-anchor unclassified"]))
     put("TypAny", fint(int(float(typsum["non-anchor clean"])) + int(float(typsum["non-anchor ambiguous"]))))
+    assert 0.35 < (int(float(typsum["non-anchor clean"])) + int(float(typsum["non-anchor ambiguous"]))) / int(float(typsum["non-anchor units"])) < 0.45, "text says about two in five"
     assert int(float(typsum["non-anchor clean"])) + int(float(typsum["non-anchor ambiguous"])) + int(float(typsum["non-anchor unclassified"])) == int(float(typsum["non-anchor units"]))
     for key, ty in (("Vol", "Volume gift"), ("Found", "Founding-lineage gift"), ("Single", "Single-artist gift"),
                     ("Anon", "Anonymous-archive gift"), ("Inst", "Institutional block gift"),
@@ -548,6 +554,7 @@ def main():
     put("NOtherParserGain", fint(n - int(name_first.sum()) - 49740))  # 49,740 is the submitted sample size
     assert n - int(name_first.sum()) - 49740 > 0
     put("SixConNWOne", fdec(schemes.loc["Baseline", "six_contribution_pp"], 1))
+    assert schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"] < 0.5 * schemes.loc["Baseline", "six_contribution_pp"], "text says most of the rise disappears"
     put("SchEESixSigned", fsigned(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"]))
     put("SchEESixOne", fdec(schemes.loc["Eastern Europe and former USSR as Western", "six_contribution_pp"], 1))
     put("NIndig", fint(regrec.loc["All donor-identified gifts", "Indigenous peoples of North America and Australia"]))
