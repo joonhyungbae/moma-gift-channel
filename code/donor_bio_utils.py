@@ -230,7 +230,7 @@ def donor_artist_set(df):
     return artists
 
 
-def load_moma_donor_gifts(include_collections=True, include_exchange=False):
+def load_moma_donor_gifts(include_collections=True, include_exchange=False, include_generosity=False):
     """Named-donor gift records, 1929-2024, five main departments.
 
     include_collections  credit lines that are a named collection alone ('The
@@ -239,6 +239,8 @@ def load_moma_donor_gifts(include_collections=True, include_exchange=False):
     include_exchange     records acquired by exchange of an earlier gift ('Gift
                          of X (by exchange)') stay under the original donor
                          (main analysis: False; they are museum acquisitions).
+    include_generosity   purchases credited 'Acquired through the generosity of X'
+                         without a gift formula count under X (sensitivity only).
     """
     from coding import collection_only_donor
     path = get_processed_path()
@@ -281,14 +283,21 @@ def load_moma_donor_gifts(include_collections=True, include_exchange=False):
                 extract_birth_year
             )
         is_coll = chunk["CreditLine"].map(collection_only_donor).notna() if include_collections else False
+        _cl = chunk["CreditLine"].fillna("")
+        is_gen = (_cl.str.contains("generosity of", case=False) & ~_cl.str.contains(r"\b(?:gift|bequest)\b", case=False)
+                  if include_generosity else False)
         chunk = chunk[
             chunk["YearAcquired"].between(1929, 2024)
             & chunk["Department"].isin(MAIN_DEPARTMENTS)
-            & (chunk["AcquisitionType"].isin(GIFT_TYPES) | is_coll)
+            & (chunk["AcquisitionType"].isin(GIFT_TYPES) | is_coll | is_gen)
         ].copy()
         if chunk.empty:
             continue
         chunk["DonorRaw"] = chunk["CreditLine"].apply(extract_donor_from_gift)
+        if include_generosity:
+            _g = chunk["CreditLine"].fillna("").str.extract(r"generosity of (?:the )?([^,;]+)", flags=re.IGNORECASE)[0].str.strip()
+            _gm = chunk["DonorRaw"].isna() & _g.notna() & ~chunk["AcquisitionType"].isin(GIFT_TYPES)
+            chunk.loc[_gm, "DonorRaw"] = _g[_gm]
         chunk = chunk[chunk["DonorRaw"].notna()].copy()
         if not chunk.empty:
             chunks.append(chunk)

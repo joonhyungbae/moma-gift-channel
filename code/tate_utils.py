@@ -126,5 +126,8 @@ def extract_tate_donor_from_creditline(creditline):
                 return np.nan
             if rest.strip().lower() in GENERIC_DONOR_ROLE_TERMS:
                 return np.nan
+            from coding import ROLE_PREFIX_RE
+            if ROLE_PREFIX_RE.match(rest):
+                return np.nan
             return rest
     return np.nan

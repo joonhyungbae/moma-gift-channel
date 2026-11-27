@@ -36,7 +36,8 @@ DEFS = [("main", {}), ("with exchange", {"include_exchange": True}),
         ("neither change", {"include_collections": False, "include_exchange": True}),
         ("without fund-led", {"exclude_fund_led": True}),
         ("MoMA nationality only", {"moma_nationality": True}),
-        ("Rothschild units merged", {"merge_rothschild": True})]
+        ("Rothschild units merged", {"merge_rothschild": True}),
+        ("with donor-funded purchases", {"include_generosity": True})]
 SIX = set(CASE_LABEL.values())
 _spec = importlib.util.spec_from_file_location("works", os.path.join(os.path.dirname(os.path.abspath(__file__)), "61_rev_works.py"))
 WORKS = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(WORKS)

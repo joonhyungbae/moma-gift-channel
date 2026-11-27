@@ -335,6 +335,9 @@ DONOR_ALIASES = {
     "Judith Rothschild Contemporary Drawings Collection": "Judith Rothschild Foundation Contemporary Drawings Collection",
 }
 BY_EXCHANGE_RE = re.compile(r"\bby exchange\b", re.IGNORECASE)
+# Donors named only by their relation to the artist ('the artist's mother', 'the
+# artist and his wife') are role labels: they aggregate unrelated people.
+ROLE_PREFIX_RE = re.compile(r"^(?:[Tt]he\s+)?artists?(?:'s|\u2019s)?\b")  # lower-case role, not names like 'Artists Space'
 # Third form: the credit line is a named collection and nothing else ('The Louis
 # E. Stern Collection', 'The Sidney and Harriet Janis Collection'). The donor
 # unit is the collection's name. Museum-internal transfers and purchase or
@@ -436,7 +439,7 @@ def parse_credit_line(creditline, generic_terms=()):
     donor = donor.strip(" ;")
     if not SUFFIX_END_RE.search(donor):
         donor = donor.rstrip(". ")
-    if not donor or donor.lower() in generic_terms:
+    if not donor or donor.lower() in generic_terms or ROLE_PREFIX_RE.match(donor):
         return {**empty, "by_exchange": by_exchange}
     # A second donor joined by 'and' inside the first comma-free segment
     # ('Agnes Gund and Daniel Shapiro') is one joint donor unit, as in the

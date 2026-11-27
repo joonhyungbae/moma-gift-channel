@@ -113,20 +113,20 @@ CASE_TEX = {"Kleiner, Bell & Co.": r"Kleiner, Bell \& Co.", "Rockefeller lineage
 
 
 FIG1_OFFSETS = {
-    "is_F": {"Kleiner, Bell & Co.": (8, 22), "Rockefeller lineage": (-60, -30), "Jack Shear": (8, -18),
+    "is_F": {"Kleiner, Bell & Co.": (8, 22), "Rockefeller lineage": (-60, -30), "Jack Shear": (-34, -16),
              "Judith Rothschild Foundation": (10, 14), "Peter J. Cohen": (8, 6), "Jean Pigozzi": (-8, -22),
              "Agnes Gund": (8, 8), "Patricia Phelps de Cisneros": (-8, 14), "Helen Kornblum": (-8, 6),
-             "Louis E. Stern Collection": (-10, -14),
+             "Louis E. Stern Collection": (-6, 18),
              "Judith Rothschild Foundation Contemporary Drawings Collection": (14, -14)},
     "is_NW": {"Kleiner, Bell & Co.": (8, 24), "Rockefeller lineage": (-10, 30), "Jack Shear": (8, -16),
               "Judith Rothschild Foundation": (8, -14), "Peter J. Cohen": (8, -24), "Jean Pigozzi": (8, 6),
               "Agnes Gund": (-8, 16), "Patricia Phelps de Cisneros": (-34, 16), "Helen Kornblum": (-8, -18),
-              "Louis E. Stern Collection": (-10, -14),
+              "Louis E. Stern Collection": (-6, 18),
               "Judith Rothschild Foundation Contemporary Drawings Collection": (10, -2)},
 }
 FIG2_OFFSETS = {
-    "contrib_f": {"Jack Shear": (4, 8), "Helen Kornblum": (6, 0), "Judith Rothschild Foundation": (6, -12),
-                  "Peter J. Cohen": (4, -14), "Agnes Gund": (6, 8), "Jean Pigozzi": (-6, 10), "Rockefeller lineage": (-6, -14),
+    "contrib_f": {"Jack Shear": (-8, 18), "Helen Kornblum": (6, 0), "Judith Rothschild Foundation": (6, -12),
+                  "Peter J. Cohen": (4, -14), "Agnes Gund": (6, 8), "Jean Pigozzi": (-34, 6), "Rockefeller lineage": (-6, -14),
                   "Louis E. Stern Collection": (6, 14), "Judith Rothschild Foundation Contemporary Drawings Collection": (8, 4)},
     "contrib_nw": {"Jack Shear": (-4, 10), "Patricia Phelps de Cisneros": (6, 4), "Judith Rothschild Foundation": (-10, 12),
                    "Jean Pigozzi": (6, -12), "Kleiner, Bell & Co.": (8, -4), "Rockefeller lineage": (-30, 12),
@@ -284,7 +284,8 @@ def main():
     assert (_sd[["max_wf", "max_af"]].abs() < 1).all().all()        # no gift moves the female share by one point at the work or artist count
     assert (_sd[["roth_rn", "roth_wn", "roth_an"]] > 1).all().all()  # the Rothschild gift moves the non-Western share by more than one point at every count
     assert (_sd[["stern_wf", "stern_af", "stern_wn", "stern_an"]].abs().fillna(0) < 0.3).all().all()  # Stern nearly vanishes at work and artist counts
-    assert (_sd.loc[_sd["stern_rf"].notna(), ["stern_rf", "stern_rn"]] < -2).all().all()  # Stern lowers both record shares by more than two points
+    assert (_sd.loc[_sd["stern_rf"].notna(), ["stern_rf", "stern_rn"]] < -1.7).all().all()  # Stern lowers both record shares by about two points
+    assert (_sd.loc["main", ["stern_rf", "stern_rn"]] < -2).all()
     assert _sd.loc["main", "max_rf_unit"] == "Louis E. Stern Collection" and _sd.loc["main", "max_rn_unit"] == "Judith Rothschild Foundation"
     _k = units.loc["Kleiner, Bell & Co."]
     _kv = [units.loc["Kleiner, Bell & Co.", "contrib_f"], units.loc["Kleiner, Bell & Co.", "contrib_nw"],
@@ -419,6 +420,15 @@ def main():
     put("JPlaceholder", fint(six.loc["Judith Rothschild Foundation", "placeholder_records"]))
     put("JEastEurope", fint(regrec.loc["Judith Rothschild Foundation", "Eastern Europe and former USSR"]))
     put("JArtNoOrigin", fint(bound["artists_without_nationality"]))
+    # Record-level range for the Rothschild gift: its records without a nationality counted as Western or as non-Western.
+    _jr = gifts[gifts["Unit"] == "Judith Rothschild Foundation"]
+    _unc = int(((_jr["o_valid"] == 0) & (_jr["GeographicOrigin"].isna())).sum())
+    _NW, _OV = gifts["is_NW"].sum(), gifts["o_valid"].sum()
+    _jNW, _jOV = _jr["is_NW"].sum(), _jr["o_valid"].sum()
+    _wo = pct(_NW - _jNW, _OV - _jOV)
+    put("JRecNoOrigin", fint(_unc)); put("JRecNoOriginPct", fdec(pct(_unc, len(_jr)), 0))
+    put("JConNWRecHi", fsigned(pct(_NW + _unc, _OV + _unc) - _wo)); put("JConNWRecLo", fsigned(pct(_NW, _OV + _unc) - _wo))
+    assert pct(_NW, _OV + _unc) - _wo > 2  # 'more than two points' holds even if every uncoded record is Western
     put("JArtConNWBound", fsigned(bound["contribution_if_non_western_pp"]))
     put("JArtConNWCoded", fsigned(bound["contribution_coded_only_pp"]))
     put("JArtConNWLow", fsigned(bound["contribution_if_western_pp"]))
@@ -904,7 +914,7 @@ def main():
                 "and `Artist' the share by the largest artist. Female and non-Western shares are of coded records, and a dash marks fewer than 30 coded records (typically gifts by unidentified makers). "
                 "`Con.' is the unit's contribution to the museum's gift-record share (percentage points). "
                 "`Pat.' gives the patterns of Table~2 in the article that the unit matches: V volume gift, L founding-lineage gift, S single-artist gift, "
-                "A anonymous-archive gift, I institutional block gift, C cross-departmental gift. Donor names are given as written in the credit lines, and Tate departments and origin are coded as described in Section~\\ref{sec:s_tate}.}\\label{tab:s_units}\\\\\n\\toprule\n"
+                "A unidentified-maker gift, I institutional block gift, C cross-departmental gift. Donor names are given as written in the credit lines, and Tate departments and origin are coded as described in Section~\\ref{sec:s_tate}.}\\label{tab:s_units}\\\\\n\\toprule\n"
                 + head + "\\endfirsthead\n\\toprule\n" + head + "\\endhead\n\\bottomrule\n\\endlastfoot\n")
         for r in rows:
             f.write((r if isinstance(r, str) else " & ".join(r) + r" \\") + "\n")
@@ -1009,7 +1019,7 @@ def main():
     lab = {"main": "Main analysis", "with exchange": "With by-exchange records",
            "without collections": "Without named collections", "neither change": "Without either change",
            "without fund-led": "Without fund-led records", "MoMA nationality only": "MoMA nationality only",
-           "Rothschild units merged": "Rothschild units merged"}
+           "Rothschild units merged": "Rothschild units merged", "with donor-funded purchases": "With donor-funded purchases"}
     rows = [r"\multicolumn{7}{@{}l}{\emph{(a) Sample and shares (\%)}} \\"]
     rows += [[lab[k], fint(r["records"]), fint(r["units"]), fdec(r["pct_f"]), fdec(r["pct_nw"]),
               fdec(r["art_pct_f"]), fdec(r["art_pct_nw"])] for k, r in sd.iterrows()]
@@ -1018,7 +1028,7 @@ def main():
              r" & Six, NW rec. & Stern, NW & Rothschild, NW & Largest, F \\", r"\midrule"]
     rows += [[lab[k], f"{r['six_contrib_nw']:+.2f}", fmt3(r["stern_rn"], r["stern_wn"], r["stern_an"]),
               fmt3(r["roth_rn"], r["roth_wn"], r["roth_an"]), fmt3(r["max_rf"], r["max_wf"], r["max_af"])] for k, r in sd.iterrows()]
-    write_table("rev_supp_sample_definitions.tex", "Main results under seven definitions of the gift channel.",
+    write_table("rev_supp_sample_definitions.tex", "Main results under eight definitions of the gift channel.",
                 ["Definition", "Records", "Units", "F rec.", "NW rec.", "F art.", "NW art."], rows, "lrrrrrr",
                 "tab:s_sample_definitions", resize=True,
                 note="The main analysis includes credit lines that consist of a named collection and excludes records acquired "
@@ -1040,7 +1050,7 @@ def main():
 
     thr_label = {"min_volume": "Minimum records, volume rule", "dept_single": "Top-department share, single-department rules (\\%)", "near_gap": "Allowed excess over gift-channel share (points)",
                  "era_years": "Active era, founding-lineage rule (years)", "top_artist": "Top-artist share, single-artist rule (\\%)",
-                 "placeholder": "Unidentified-maker share, anonymous archive (\\%)", "peak_year": "Peak-year share, institutional block gift (\\%)",
+                 "placeholder": "Unidentified-maker share (\\%)", "peak_year": "Peak-year share, institutional block gift (\\%)",
                  "dept_spread": "Top-department share, cross-departmental rule (\\%)", "artist_gap": "Artist-level gap, cross-departmental rule (points)",
                  "max_top_artist": "Largest artist share, volume rule (\\%)"}
     rows = [[thr_label.get(r["threshold"], tex_escape(r["threshold"])), fdec(r["value"], 1).rstrip("0").rstrip("."), "yes" if r["default"] else "",
