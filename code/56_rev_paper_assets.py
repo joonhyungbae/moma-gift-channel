@@ -329,6 +329,8 @@ def main():
     put("SixAbbyConF", fsigned(_all["pct_f"] - _rest["pct_f"])); put("SixAbbyConNW", fsigned(_all["pct_nw"] - _rest["pct_nw"]))
     put("SixArtConF", fsigned(-a6["art_delta_f"])); put("SixArtConNW", fsigned(-a6["art_delta_nw"]))
     put("SixArtConNWOne", fdec(-a6["art_delta_nw"], 1))
+    _all_s = record_shares(gifts); _wo_j = record_shares(gifts[gifts["Unit"] != "Judith Rothschild Foundation"])
+    put("JWoNWOne", fdec(_wo_j["pct_nw"], 1))
     assert -a6["rec_delta_nw"] > 0 and -a6["art_delta_nw"] > 0
     put("SixConNWAbs", fdec(-a6["rec_delta_nw"], 2)); put("SixArtConNWAbs", fdec(-a6["art_delta_nw"], 2))
     _ratio = a6["rec_delta_nw"] / a6["art_delta_nw"]
