@@ -262,10 +262,9 @@ def main():
               "Patricia Phelps de Cisneros": "Patricia Phelps de Cisneros"}
     trows_c = [[_short.get(u_, tex_escape(u_)), fint(_bb.loc[u_, "n"]), fint(_wu.loc[u_, "n_works"]), fint(_bb.loc[u_, "n_artists"])]
                + [csigned(r_[c_]) for c_ in ("rf", "wf", "af", "rn", "wn", "an")] for u_, r_ in _sel.iterrows()]
-    write_table("rev_tab_counts.tex", "Donor units that contribute at least 0.5 point to the female or the non-Western share at any count, with their contributions counted by record, by work, and by artist.",
+    write_table("rev_tab_counts.tex", "Donor units that contribute at least 0.5 point to the female or the non-Western share at any count, with their contributions in percentage points counted by record, by work, and by artist.",
                 ["Donor unit", "Records", "Works", "Artists", "F rec.", "F work", "F art.", "NW rec.", "NW work", "NW art."], trows_c,
-                "lrrrrrrrrr", "tab:counts", resize=True,
-                note="Contributions are in percentage points.")
+                "lrrrrrrrrr", "tab:counts", resize=True)
     put("NBigMovers", fint(len(_sel)))
     # Section 5.2: gifts of many artists move the shares more as works or artists than as records.
     _cis, _cdc = _six.loc["Patricia Phelps de Cisneros"], _six.loc["Judith Rothschild Foundation Contemporary Drawings Collection"]
@@ -801,8 +800,9 @@ def main():
     _pw = gifts[gifts["Unit"] == "Jean Pigozzi"].groupby("Work")["Artist"].first()
     put("PBouabreWorks", fint(_pw.fillna("").str.contains("Bouabr").sum()))
     _cl = main_all["CreditLine"].fillna("")
-    _gen = _cl.str.contains("generosity", case=False) & ~_cl.str.contains(r"\b(?:gift|bequest)\b", case=False)
+    _gen = _cl.str.contains("generosity of", case=False) & ~_cl.str.contains(r"\b(?:gift|bequest)\b", case=False)
     put("NGenerosity", fint(_gen.sum()))
+    put("NArtistGift", fint((_ccl.str.contains("gift of the artist", case=False) & ~_col["ObjectID"].isin(set(gifts["ObjectID"]))).sum()))
     _gund_funded = (_cl.str.fullmatch(r"Acquired through the generosity of Agnes Gund\.?") | _cl.str.startswith("Agnes Gund Purchase Fund")
                     | _cl.str.contains(r"Fund and Agnes Gund$", regex=True))
     put("NGundFunded", fint(_gund_funded.sum()))
@@ -1067,10 +1067,10 @@ def main():
     rows = [r"\multicolumn{7}{@{}l}{\emph{(a) Sample and shares (\%)}} \\"]
     rows += [[lab[k], fint(r["records"]), fint(r["units"]), fdec(r["pct_f"]), fdec(r["pct_nw"]),
               fdec(r["art_pct_f"]), fdec(r["art_pct_nw"])] for k, r in sd.iterrows()]
-    fmt3 = lambda a_, b_, c_: "--" if pd.isna(a_) else f"{a_:+.2f} / {b_:+.2f} / {c_:+.2f}"
+    fmt3 = lambda a_, b_, c_: "--" if pd.isna(a_) else f"${a_:+.2f}$/${b_:+.2f}$/${c_:+.2f}$"
     rows += [r"\midrule", r"\multicolumn{5}{@{}l}{\emph{(b) Contributions in points, record / work / artist}} \\",
              r" & Six, NW rec. & Stern, NW & Rothschild, NW & Largest, F \\", r"\midrule"]
-    rows += [[lab[k], f"{r['six_contrib_nw']:+.2f}", fmt3(r["stern_rn"], r["stern_wn"], r["stern_an"]),
+    rows += [[lab[k], f"${r['six_contrib_nw']:+.2f}$", fmt3(r["stern_rn"], r["stern_wn"], r["stern_an"]),
               fmt3(r["roth_rn"], r["roth_wn"], r["roth_an"]), fmt3(r["max_rf"], r["max_wf"], r["max_af"])] for k, r in sd.iterrows()]
     write_table("rev_supp_sample_definitions.tex", "Main results under eight definitions of the gift channel.",
                 ["Definition", "Records", "Units", "F rec.", "NW rec.", "F art.", "NW art."], rows, "lrrrrrr",
@@ -1116,13 +1116,13 @@ def main():
     for m, r in conc.iterrows():
         shuf = "" if pd.isna(r.get("shuffled_mean")) else f"{fint(r['shuffled_mean'])} [{fint(r['shuffled_lo'])}, {fint(r['shuffled_hi'])}]"
         t10 = "" if pd.isna(r.get("top10_shuffled_mean")) else f"{fdec(r['top10_shuffled_mean'])} [{fdec(r['top10_shuffled_lo'])}, {fdec(r['top10_shuffled_hi'])}]"
-        rows.append([tex_escape(m.capitalize().replace("Non-western", "Non-Western").replace("non-western", "non-Western")), fint(r["n_flagged"]), fint(r["units_supplying_any"]), fint(r["units_for_half"]), shuf,
+        rows.append([tex_escape(m.capitalize().replace("Non-western", "Non-Western").replace("non-western", "non-Western").replace("(eastern europe as western)", "(Eastern Europe as Western)")), fint(r["n_flagged"]), fint(r["units_supplying_any"]), fint(r["units_for_half"]), shuf,
                      fdec(r["top10_share"]), t10])
     write_table("rev_supp_concentration.tex", "Concentration of female and non-Western records and artists across donor units.",
-                ["", "Count", "Units supplying any", "Units for half", "Label-shuffled", r"Ten leading sources (\%)", "Label-shuffled"],
+                ["", "Count", "Units", "Half", "Shuffled", r"Top ten (\%)", "Shuffled"],
                 rows, "lrrrrrr", "tab:s_concentration", resize=True,
-                note="Artists are those new to the collection, credited to the donor unit through which they first entered. The shuffled reference permutes the label across artists "
-                     "first entering in the same department and decade (for records, across artist clusters in the same department and decade) and reports the mean and the 2.5th and 97.5th percentiles. `Ten leading sources' are the ten units that supply the most, which differ from the ten largest units of Table~\\ref{tab:s_sizes}.")
+                note="`Units' is the number of donor units that supply any, `Half' the number that supply half, and `Top ten' the share supplied by the ten leading sources. Artists are those new to the collection, credited to the donor unit through which they first entered. The shuffled reference permutes the label across artists "
+                     "first entering in the same department and decade (for records, across artist clusters in the same department and decade) and reports the mean and the 2.5th and 97.5th percentiles. The ten leading sources are the ten units that supply the most, which differ from the ten largest units of Table~\\ref{tab:s_sizes}.")
     rows = []
     for c_, r in classes.iterrows():
         if c_.startswith("Spearman"):

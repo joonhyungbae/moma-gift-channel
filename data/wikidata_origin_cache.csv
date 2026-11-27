@@ -320,8 +320,10 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 45960,"Department of Publications and Urban Design, Organizing Committee of the XIX Olympiad",,,94,False,,,no candidate,0,0,,,,,,
 135951,Chow and Lin,,,50,False,,,no match,5,0,,,,,,
 41400,Ralph Thomas Ward (Corkie),,,26,False,,,no candidate,0,0,,,,,,
+8501,Associated Press,,,22,False,Q40469,Wikidata MoMA artist ID,no match,1,0,,,,,,
 46153,Carlos Libedinsky,,,17,False,Q1043016,Wikidata MoMA artist ID,matched,1,1,Q1043016,Carlos Libedinsky,1961.0,Argentina,place of birth,Argentine
 43193,Christof Kohlhöfer,,,15,False,Q1084292,Wikidata MoMA artist ID,matched,1,1,Q1084292,Chris Kohlhöfer,1942.0,Germany,place of birth,German
+5359,Mark Severin,,,13,False,Q1978364,Wikidata MoMA artist ID,matched,1,1,Q1978364,,1906.0,Belgium,place of birth,Belgian
 30072,Moriceau + Mrzyk,,,13,False,Q28027653,Wikidata MoMA artist ID,no match,1,0,,,,,,
 34834,David Mallet,,,12,False,,,matched,6,1,Q137534,David Mallet,,Kingdom of Great Britain,citizenship,British
 40844,Herbert Spencer,,,12,False,Q5735635,Wikidata MoMA artist ID,matched,1,1,Q5735635,Herbert Spencer,1924.0,United Kingdom,place of birth,British
@@ -347,11 +349,17 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 49855,Edvard Ravnikar,1907.0,,5,False,Q1605703,Wikidata MoMA artist ID,matched,1,1,Q1605703,Edo J. Ravnikar,1907.0,Slovenia,place of birth,Slovenian
 31760,Vulcan,,,5,False,,,no candidate,0,0,,,,,,
 17943,Krissy Clegg,,,4,False,,,no candidate,0,0,,,,,,
+8637,Topical Press Agency,,,4,False,Q7824861,Wikidata MoMA artist ID,no match,1,0,,,,,,
 31699,Papo Colo,,,4,False,Q7133045,Wikidata MoMA artist ID,matched,1,1,Q7133045,Colo,1946.0,United States,place of birth,American
 39262,Lettie A. Allen,,,4,False,Q6533814,Wikidata MoMA artist ID,matched,1,1,Q6533814,Lettie A. Allen,1901.0,New Zealand,place of birth,New Zealander
 47905,Durvis,,,4,False,Q134414050,Wikidata MoMA artist ID,matched,1,1,Q134414050,Durvis,,,,
 19746,Sam Samore,,,3,False,Q7408114,Wikidata MoMA artist ID,matched,1,1,Q7408114,Sam Samore,1963.0,United States,place of birth,American
+24967,"Vollard, Paris",,,3,False,,,no candidate,0,0,,,,,,
+2139,Richart Gheym,,,3,False,Q134413771,Wikidata MoMA artist ID,matched,1,1,Q134413771,Richart Gheym,,,,
 21348,Dave Eggers,,,3,False,Q589497,Wikidata MoMA artist ID,matched,1,1,Q589497,Dave Eggers,1970.0,United States,place of birth,American
+8586,Fred Hansen/Pacific and Atlantic Photos,,,3,False,Q79461096,Wikidata MoMA artist ID,matched,1,1,Q79461096,Fred Hansen,,,,
+8591,The New York Times Studio,,,3,False,,,no candidate,0,0,,,,,,
+8593,Pacific & Atlantic Photos,1921.0,,3,False,Q67151843,Wikidata MoMA artist ID,no match,1,0,,,,,,
 28881,Anonymouse,,,3,False,,,no candidate,0,0,,,,,,
 40461,John Cavanaugh,,,3,False,Q15459475,Wikidata MoMA artist ID,matched,1,1,Q15459475,John Cavanaugh,1921.0,United States,citizenship,American
 40463,Pieter Vanderbeck,,,3,False,Q79462017,Wikidata MoMA artist ID,matched,1,1,Q79462017,Pieter Vanderbeck,,,,
@@ -368,7 +376,6 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 45040,Gerd Stahl,,,3,False,Q134414062,Wikidata MoMA artist ID,matched,1,1,Q134414062,Gerd Stahl,,,,
 67481,Boris Magaš,1930.0,,3,False,Q12628144,Wikidata MoMA artist ID,matched,1,1,Q12628144,Boris Magas,1930.0,Croatia,place of birth,Croatian
 49860,Stanko Kristl,1922.0,,3,False,Q12803416,Wikidata MoMA artist ID,matched,1,1,Q12803416,Stanko Kristl,1922.0,Slovenia,place of birth,Slovenian
-74970,PaJaMa,,,3,False,Q61818238,Wikidata MoMA artist ID,no match,1,0,,,,,,
 136536,Hans Bruggeman,,,3,False,,,no match,2,0,,,,,,
 7056,Bernard Tschumi,1944.0,Q123966,2,False,Q123966,MoMA Wiki QID,matched,1,1,Q123966,Bernard Tschumi,1944.0,Switzerland,place of birth,Swiss
 8823,Rogelio Jimenez,,,2,False,,,no match,4,0,,,,,,
@@ -377,10 +384,10 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 9191,"C. Hugo Pott, Solingen, Germany",,,2,False,Q1040114,Wikidata MoMA artist ID,matched,1,1,Q1040114,"C. Hugo Pott, Solingen, Germany",1906.0,Germany,place of birth,German
 10065,"International Silver Co., Meriden, CT",1808.0,,2,False,Q117114398,Wikidata MoMA artist ID,no match,1,0,,,,,,
 10239,M. Katsuyoshi,,,2,False,,,no match,7,0,,,,,,
-11223,"Mourlot, Paris",,,2,False,,,no candidate,0,0,,,,,,
 3978,M. A. Miles,,,2,False,Q79461608,Wikidata MoMA artist ID,matched,1,1,Q79461608,M. A. Miles,,,,
 1223,Denis Constanduros,,,2,False,Q55772774,Wikidata MoMA artist ID,matched,1,1,Q55772774,Denis Constanduros,1910.0,United Kingdom,place of birth,British
 19053,Jean-Jacques Rullier,,,2,False,Q113400071,Wikidata MoMA artist ID,matched,1,1,Q113400071,Jean-Jacques Rullier,1962.0,France,citizenship,French
+8511,Bettmann/United Press International,,,2,False,Q850178,Wikidata MoMA artist ID,no match,1,0,,,,,,
 4282,Newcombe,,,2,False,Q134413804,Wikidata MoMA artist ID,matched,1,1,Q134413804,Newcombe,,,,
 6994,Gaston Darbour,,,2,False,Q1495560,Wikidata MoMA artist ID,matched,1,1,Q1495560,Gaston Charles Guillaume Darbour,1869.0,France,place of birth,French
 6998,E. A. Wéry,,,2,False,Q3588314,Wikidata MoMA artist ID,matched,1,1,Q3588314,E. A. Wéry,1868.0,France,place of birth,French
@@ -422,7 +429,6 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 49961,Štefan Kacin,1939.0,,2,False,Q59821070,Wikidata MoMA artist ID,matched,1,1,Q59821070,Štefan Kacin,1939.0,Slovenia,place of birth,Slovenian
 49962,Jurij Princes,1933.0,,2,False,Q122746977,Wikidata MoMA artist ID,matched,1,1,Q122746977,Jurij Princes,,Yugoslavia,citizenship,Yugoslavian
 49964,Marjan Uršič,1934.0,,2,False,Q122746969,Wikidata MoMA artist ID,matched,1,1,Q122746969,Marijan Uršič,1934.0,Yugoslavia,citizenship,Yugoslavian
-67843,Studio R+M,,,2,False,,,no candidate,0,0,,,,,,
 68054,Milutin Glavički,1930.0,,2,False,,,no candidate,0,0,,,,,,
 49864,Milan Mihelič,1925.0,,2,False,Q18644689,Wikidata MoMA artist ID,matched,1,1,Q18644689,Milan Mihelič,1925.0,Slovenia,place of birth,Slovenian
 131718,S. Sorbonskiy,,,2,False,,,no candidate,0,0,,,,,,
@@ -471,6 +477,7 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 541,Art Bevacqua,,,1,False,Q79460825,Wikidata MoMA artist ID,matched,1,1,Q79460825,Art Bevacqua,,,,
 11341,C. Tereshkovitch,,,1,False,,,no candidate,0,0,,,,,,
 827,Brumhoff,,,1,False,Q134378920,Wikidata MoMA artist ID,matched,1,1,Q134378920,Brumhoff,,,,
+11223,"Mourlot, Paris",,,1,False,,,no candidate,0,0,,,,,,
 4846,Johannes Regn,1935.0,,1,False,Q21287781,Wikidata MoMA artist ID,matched,1,1,Q21287781,Johannes Regn,1935.0,,,
 978,Natacha Carlu,,,1,False,Q52156846,Wikidata MoMA artist ID,matched,1,1,Q52156846,Anne Carlu,1895.0,France,citizenship,French
 6947,Peter Moser,,,1,False,,,ambiguous,7,4,,,,,,
@@ -510,9 +517,54 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 11992,"Maeght Éditeur, Paris",,,1,False,,,no candidate,0,0,,,,,,
 13108,Josef Eberg,,,1,False,,,no candidate,0,0,,,,,,
 42880,Michael Harvey,,,1,False,,,ambiguous,7,3,,,,,,
+12924,Henri Floury,,,1,False,,,no match,1,0,,,,,,
+14450,"Librairie de France, Paris",,,1,False,,,no candidate,0,0,,,,,,
 201,Aoki Toshio,1854.0,,1,False,,,no match,2,0,,,,,,
 4367,Obikawa Seijiro,,,1,False,Q117120627,Wikidata MoMA artist ID,matched,1,1,Q117120627,Obikawa Seijiro,,,,
 135492,Noss & Mitchell,,,1,False,,,no candidate,0,0,,,,,,
+8504,Acme News Pictures,1923.0,,1,False,Q2819049,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8503,Alex Anderson/The New York Times,,,1,False,Q4065275,Wikidata MoMA artist ID,matched,1,1,Q4065275,Alex Anderson,1920.0,United States,place of birth,American
+8657,Dan Grossi/Associated Press,,,1,False,Q79460952,Wikidata MoMA artist ID,matched,1,1,Q79460952,Dan Grossi,,,,
+8507,William H. Gallagher/Associated Press,,,1,False,Q8014878,Wikidata MoMA artist ID,matched,1,1,Q8014878,William H. Gallagher,1923.0,United States,place of birth,American
+8508,Automatic Camera/Photomaton,,,1,False,Q27847769,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8509,Bangs Studio,,,1,False,Q79493761,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8513,"Blackstar Publishing Co., Inc.",,,1,False,,,no candidate,0,0,,,,,,
+11350,British War Office,,,1,False,Q2060703,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8515,British Official Radiophoto/The New York Times,,,1,False,Q79493773,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8520,Camera Arts Studios,,,1,False,Q79493799,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8522,Pat Candido/The New York Daily News,,,1,False,Q79493925,Wikidata MoMA artist ID,matched,1,1,Q79493925,Pat Candido,,,,
+8523,Peter Carroll/Associated Press,,,1,False,Q79461980,Wikidata MoMA artist ID,matched,1,1,Q79461980,Peter Carroll,1911.0,,,
+8528,Committee on Public Information,,,1,False,Q1115731,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8529,London Daily Mirror,,,1,False,Q217623,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8647,Tzarskoe Selo C.E. de Hahn & Co.,,,1,False,Q79493973,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8533,Doty/Times Wide World Press,,,1,False,Q79460995,Wikidata MoMA artist ID,matched,1,1,Q79460995,Doty,,,,
+8535,"Fairchild Aerial Surveys, Inc.",,,1,False,Q117113789,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8539,Berlin Foto Senneke,,,1,False,Q79493763,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8541,Fox News,,,1,False,Q5476826,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8542,French Pictorial Service,,,1,False,Q79461100,Wikidata MoMA artist ID,matched,1,1,Q79461100,French Pictorial Service,,,,
+8544,Eddie McGovern,,,1,False,Q134378938,Wikidata MoMA artist ID,matched,1,1,Q134378938,Eddie McGovern,,,,
+8552,Albert Hilsher/Times Wide World,,,1,False,Q2638141,Wikidata MoMA artist ID,matched,1,1,Q2638141,Albert Hilscher,1892.0,Germany,place of birth,German
+8555,Hoffman/International Press Studio,,,1,False,Q79493865,Wikidata MoMA artist ID,no match,1,0,,,,,,
+81114,International Film Service,,,1,False,,,no match,1,0,,,,,,
+8562,International Newsreel,,,1,False,Q5691718,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8570,Lechner/The New York Times,,,1,False,Q79461481,Wikidata MoMA artist ID,matched,1,1,Q79461481,Lechner,,,,
+8579,Medem Photo Service,,,1,False,Q79493907,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8580,Ministere De La Guerre,,,1,False,Q20981167,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8587,The New York Daily News,,,1,False,Q627827,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8596,Bill Parsons / Nancy Palmer Agency,,,1,False,Q79460865,Wikidata MoMA artist ID,matched,1,1,Q79460865,Bill Parsons,,,,
+8599,The Pictoral News Company,,,1,False,Q79493960,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8603,Press Illustrating Company,,,1,False,Q79462025,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8604,Presse Bild Zentrale,,,1,False,Q79462023,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8605,Moscow Presse Cliche,,,1,False,Q79461816,Wikidata MoMA artist ID,matched,1,1,Q79461816,Moscow Presse Cliche,,,,
+8606,Red Cross Institute for Crippled and Disabled Men,,,1,False,Q79493941,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8608,Rollins/Associated Press,,,1,False,Q79462198,Wikidata MoMA artist ID,matched,1,1,Q79462198,Rollins,,,,
+8613,Alex J. Rota/The New York Times,,,1,False,Q79460799,Wikidata MoMA artist ID,matched,1,1,Q79460799,Alex J. Rota,,,,
+18667,Reuters,,,1,False,Q130879,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8622,Dana Stone/United Press International,,,1,False,Q5214843,Wikidata MoMA artist ID,matched,1,1,Q5214843,Dana Hazen Stone,1939.0,United States,place of birth,American
+8623,Stork Club News Service,,,1,False,Q7620064,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8625,Stroop Report,,,1,False,Q2628198,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8631,Times Photo Service,,,1,False,Q117115838,Wikidata MoMA artist ID,no match,1,0,,,,,,
+8643,Yerkes Observatory,,,1,False,Q14310,Wikidata MoMA artist ID,no match,1,0,,,,,,
 7872,Kenneth Bushnell,1933.0,,1,False,Q6390816,Wikidata MoMA artist ID,matched,1,1,Q6390816,Ken Bushnell,1933.0,United States,place of birth,American
 6747,David Black,,,1,False,Q33123628,Wikidata MoMA artist ID,matched,1,1,Q33123628,David Black,1928.0,,,
 6748,Ned Griner,,,1,False,Q134413872,Wikidata MoMA artist ID,matched,1,1,Q134413872,Ned Griner,,,,
@@ -710,13 +762,6 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 43278,Adam Broomberg and Oliver Chanarin Studio,,,1,False,Q16727918,Wikidata MoMA artist ID,no match,1,0,,,,,,
 43510,JoAnn Carney,,,1,False,Q79461358,Wikidata MoMA artist ID,matched,1,1,Q79461358,JoAnn Carney,,,,
 43559,Thornton Dial,1928.0,,1,False,Q7796523,Wikidata MoMA artist ID,matched,1,1,Q7796523,"Thornton ""Buck"" Dial",1928.0,United States,place of birth,American
-133870,Arthur Babakhanian,,,1,False,,,no candidate,0,0,,,,,,
-133871,M. Carsiodes,,,1,False,,,no candidate,0,0,,,,,,
-133872,Tom Clancy,,,1,False,,,ambiguous,7,2,,,,,,
-133873,William Kolakoski,,,1,False,,,matched,1,1,Q33100555,William George Kolakoski,1944.0,United States,place of birth,American
-133875,Tom Russell,,,1,False,,,matched,7,1,Q21461614,Tom Russell,1963.0,,,
-133876,Scientific American,,,1,False,,,matched,7,1,Q7433741,Andrew Rohrmann,,United States,citizenship,American
-133877,Tippetts-Abbett-McCarthy-Stratton (Engineers and Architects),,,1,False,,,no candidate,0,0,,,,,,
 44069,Francisco Uribe,,,1,False,Q16569276,Wikidata MoMA artist ID,matched,1,1,Q16569276,Francisco Uribe,1966.0,Mexico,place of birth,Mexican
 44248,David Degener,,,1,False,Q112821919,Wikidata MoMA artist ID,matched,1,1,Q112821919,David Degener,,,,
 44250,Ding Dong,,,1,False,,,no match,7,0,,,,,,
@@ -770,9 +815,9 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 49954,Biro 71,1971.0,,1,False,,,no candidate,0,0,,,,,,
 49963,Bogdan Splinder,1940.0,,1,False,Q122746971,Wikidata MoMA artist ID,matched,1,1,Q122746971,Bogdan Splinder,,Yugoslavia,citizenship,Yugoslavian
 68838,DVF Studio LLC,1998.0,,1,False,,,no candidate,0,0,,,,,,
-133027,Studio of Dr. Paul Wolff & Tritschler,,,1,False,,,no candidate,0,0,,,,,,
 67456,Paul Leong,,,1,False,,,no match,5,0,,,,,,
 70038,Jacky Mallett,,,1,False,,,no candidate,0,0,,,,,,
+67843,Studio R+M,,,1,False,,,no candidate,0,0,,,,,,
 68328,Refugee Nation,,,1,False,,,no match,6,0,,,,,,
 17500,William Edmondson,1874.0,,1,False,Q3568587,Wikidata MoMA artist ID,matched,1,1,Q3568587,William Edmondson,1874.0,United States,place of birth,American
 67442,Miodrag Živković,1928.0,,1,False,Q2422928,Wikidata MoMA artist ID,matched,1,1,Q2422928,Miodrag Živković,1928.0,Serbia,place of birth,Serbian
@@ -801,7 +846,6 @@ cid,name,moma_birth,moma_qid,n_records,rothschild,link,link_source,status,n_cand
 133402,Tian Fangfang,,,1,False,,,no candidate,0,0,,,,,,
 133403,Ni Nan,,,1,False,,,no match,7,0,,,,,,
 133005,Chesnutt Brothers Studio,,,1,False,,,no candidate,0,0,,,,,,
-133146,T.C. Cannon,1946.0,,1,False,,,matched,2,1,Q7668165,He-Who-Stands-in-the-Sun,1946.0,United States,place of birth,American
 133434,Klondike Photo Co.,,,1,False,,,no candidate,0,0,,,,,,
 40916,Ab van Hanegem,,,1,False,Q2727511,Wikidata MoMA artist ID,matched,1,1,Q2727511,Ab van Hanegem,1960.0,Netherlands,place of birth,Dutch
 139468,Colette and Jean-Paul Miguet,,,1,False,,,no candidate,0,0,,,,,,
