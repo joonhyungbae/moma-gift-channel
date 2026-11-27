@@ -342,10 +342,10 @@ ROLE_PREFIX_RE = re.compile(r"^(?:[Tt]he\s+)?artists?(?:'s|\u2019s)?\b")  # lowe
 # E. Stern Collection', 'The Sidney and Harriet Janis Collection'). The donor
 # unit is the collection's name. Museum-internal transfers and purchase or
 # exchange wording are not matched.
-COLLECTION_ONLY_RE = re.compile(r"^(?:The\s+)?(?P<name>[A-Z][^,;:()]*?\bCollection)\.?$")
+COLLECTION_ONLY_RE = re.compile(r"^(?:From\s+)?(?:[Tt]he\s+)?(?P<name>[A-Z][^,;:()]*?\bCollection(?:\s+of\s+[A-Z][^,;:().]*)?)\.?$")
 COLLECTION_ONLY_EXCLUDE_RE = re.compile(
     r"\b(?:gift|bequest|transferred|transfer|exchange|acquired|purchase|purchased|fund|funds|promised|fractional|"
-    r"museum of modern art|library|archives?)\b", re.IGNORECASE)
+    r"museum of modern art|library|archives?|endowment)\b", re.IGNORECASE)
 
 
 def collection_only_donor(creditline):

@@ -12,6 +12,10 @@ to fill in. The parser's error rate is the share of rows where the human
 reading differs.
 
 Output (output/): parser_audit_sample.csv
+
+The sample depends on the gift channel at the time it is drawn. The set that was
+read (2026-11-27) is frozen in moma_paper/audit/audit_ai.csv; script 62 applies
+the current parser to those records.
 """
 
 import pandas as pd

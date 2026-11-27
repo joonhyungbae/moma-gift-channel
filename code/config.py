@@ -104,4 +104,5 @@ GENERIC_DONOR_ROLE_TERMS = {
     "artist", "artists", "photographer", "photographers", "publisher", "publishers",
     "estate", "family", "foundation", "company", "firm", "studio", "office",
     "above", "donor", "donors", "anonymous donor", "anonymous", "various donors",
+    "author", "authors", "editor", "editors", "printer", "printers",
 }
