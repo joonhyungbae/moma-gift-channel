@@ -493,6 +493,15 @@ def main():
     keep = ~A_["units"].map(lambda x: x <= six_units)
     sh = lambda o: 100 * (o == "Non-Western").sum() / o.notna().sum()
     put("SixArtConNWBound", fsigned(sh(o2) - sh(o2[keep])))
+    # Section 5.2: the six-case comparison turns on the uncoded Rothschild artists (coded < records < bound) ...
+    _six_bound = sh(o2) - sh(o2[keep])
+    assert -a6["art_delta_nw"] < -a6["rec_delta_nw"] < _six_bound
+    # ... and the median across large units does not (the Rothschild unit is above the median either way).
+    _bnw = units.loc[units.index.isin(big.index), "contrib_nw"].to_frame().join(loo[["art_contrib_nw"]])["art_contrib_nw"].fillna(0).abs()
+    _jb = pd.read_csv(out("rev_rothschild_origin_bound.csv")).iloc[0]["contribution_if_non_western_pp"]
+    assert _bnw.loc["Judith Rothschild Foundation"] > _bnw.median()
+    _alt = _bnw.copy(); _alt.loc["Judith Rothschild Foundation"] = abs(_jb)
+    assert _alt.median() == _bnw.median()
     # Artist-level contributions when Eastern Europe and the former USSR count as Western.
     _nat = cc.groupby("cid")["nationality"].first()
     o_ee = _nat.map(lambda t: origin_token(t, "east_europe_western")).reindex(A_.index)
