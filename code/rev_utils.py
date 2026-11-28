@@ -220,19 +220,21 @@ def drop_top_cluster(df, placeholder_ids=frozenset()):
 DOMINANT_SHARE = 0.20  # a unit holding more than this share of a reference cell is left out of that cell
 
 
-def matched_expectation(df_unit, df_ref):
+def matched_expectation(df_unit, df_ref, dominant_share=None):
     """Share expected for a unit if, within each department x decade cell, its
     records had the composition of other donors' gifts in that cell. Units that
     hold more than DOMINANT_SHARE of a cell's coded records are left out of that
     cell's reference, so that one large gift does not set the expectation."""
     res = {}
+    if dominant_share is None:
+        dominant_share = DOMINANT_SHARE
     for flag, valid, key in (("is_F", "g_valid", "f"), ("is_NW", "o_valid", "nw")):
         u = df_unit[df_unit[valid] == 1]
         r = df_ref[df_ref[valid] == 1]
         if "Unit" in r.columns and len(r):
             cu = r.groupby(["Department", "Decade", "Unit"]).size()
             share = cu / cu.groupby(level=[0, 1]).transform("sum")
-            dom = share[share > DOMINANT_SHARE].index
+            dom = share[share > dominant_share].index
             if len(dom):
                 key_ = pd.MultiIndex.from_frame(r[["Department", "Decade", "Unit"]])
                 r = r[~key_.isin(dom)]

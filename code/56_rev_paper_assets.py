@@ -28,7 +28,7 @@ import pandas as pd
 
 from coding import GIFT_PHRASE_RE, REGIONS, origin_token
 from config import MAIN_DEPARTMENTS, PROJECT_ROOT, get_processed_path
-from rev_utils import (artist_names, artist_table, constituents, frac_artist_contribution, load_gifts, out, pct,
+from rev_utils import (artist_names, artist_table, constituents, frac_artist_contribution, load_gifts, matched_expectation, out, pct,
                        record_shares, removed_fraction)
 
 PAPER_OUT = os.path.join(PROJECT_ROOT, "moma_paper", "output")
@@ -113,23 +113,23 @@ CASE_TEX = {"Kleiner, Bell & Co.": r"Kleiner, Bell \& Co.", "Rockefeller lineage
 
 
 FIG1_OFFSETS = {
-    "is_F": {"Kleiner, Bell & Co.": (8, 22), "Rockefeller lineage": (-60, -30), "Jack Shear": (-34, -16),
-             "Judith Rothschild Foundation": (10, 14), "Peter J. Cohen": (8, 6), "Jean Pigozzi": (-8, -22),
+    "is_F": {"Kleiner, Bell & Co.": (8, 22), "Rockefeller lineage": (-20, 62), "Jack Shear": (10, -16),
+             "Judith Rothschild Foundation": (10, 14), "Peter J. Cohen": (8, 6), "Jean Pigozzi": (-8, -16),
              "Agnes Gund": (8, 8), "Patricia Phelps de Cisneros": (-8, 14), "Helen Kornblum": (-8, 6),
              "Louis E. Stern Collection": (-6, 18),
              "Judith Rothschild Foundation Contemporary Drawings Collection": (14, -14)},
     "is_NW": {"Kleiner, Bell & Co.": (8, 24), "Rockefeller lineage": (-10, 30), "Jack Shear": (8, -16),
-              "Judith Rothschild Foundation": (8, -14), "Peter J. Cohen": (8, -24), "Jean Pigozzi": (8, 6),
-              "Agnes Gund": (-8, 16), "Patricia Phelps de Cisneros": (-34, 16), "Helen Kornblum": (-8, -18),
-              "Louis E. Stern Collection": (-6, 18),
+              "Judith Rothschild Foundation": (8, -14), "Peter J. Cohen": (-10, -16), "Jean Pigozzi": (8, 6),
+              "Agnes Gund": (-8, 16), "Patricia Phelps de Cisneros": (-34, 16), "Helen Kornblum": None,
+              "Louis E. Stern Collection": (-10, -14),
               "Judith Rothschild Foundation Contemporary Drawings Collection": (10, -2)},
 }
 FIG2_OFFSETS = {
-    "contrib_f": {"Jack Shear": (-8, 18), "Helen Kornblum": (6, 0), "Judith Rothschild Foundation": (6, -12),
-                  "Peter J. Cohen": (4, -14), "Agnes Gund": (6, 8), "Jean Pigozzi": (-34, 6), "Rockefeller lineage": (-6, -14),
+    "contrib_f": {"Jack Shear": (-8, 18), "Helen Kornblum": (6, 0), "Judith Rothschild Foundation": (16, -8),
+                  "Peter J. Cohen": (10, -34), "Agnes Gund": (6, 8), "Jean Pigozzi": (-34, 6), "Rockefeller lineage": (-6, -14),
                   "Louis E. Stern Collection": (6, 14), "Judith Rothschild Foundation Contemporary Drawings Collection": (8, 4)},
     "contrib_nw": {"Jack Shear": (-4, 10), "Patricia Phelps de Cisneros": (6, 4), "Judith Rothschild Foundation": (-10, 12),
-                   "Jean Pigozzi": (6, -12), "Kleiner, Bell & Co.": (8, -4), "Rockefeller lineage": (-30, 12),
+                   "Jean Pigozzi": (6, -12), "Kleiner, Bell & Co.": (8, -4), "Rockefeller lineage": (-34, -12),
                    "Louis E. Stern Collection": (6, 14), "Judith Rothschild Foundation Contemporary Drawings Collection": (-8, -14)},
 }
 
@@ -175,6 +175,7 @@ def main():
     main_all = full[full["Department"].isin(MAIN_DEPARTMENTS)
                     & pd.to_numeric(full["YearAcquired"], errors="coerce").between(1929, 2024)]
     put("NAll", fint(len(main_all)))
+    put("NNoYear", fint((full["Department"].isin(MAIN_DEPARTMENTS) & pd.to_numeric(full["YearAcquired"], errors="coerce").isna()).sum()))
     frac = main_all["CreditLine"].fillna("").str.contains(r"fractional|promised", case=False)
     put("NFracPromised", fint(frac.sum()))
     n = len(gifts)
@@ -298,7 +299,7 @@ def main():
            loo.loc["Kleiner, Bell & Co.", "art_contrib_f"], loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"]]
     assert min(_kv) == loo.loc["Kleiner, Bell & Co.", "art_contrib_nw"] and max(_kv) == units.loc["Kleiner, Bell & Co.", "contrib_f"]
     assert _k["gap_f_matched"] > 0 and _k["gap_nw_matched"] < 0
-    assert _k["f_lo"] <= _k["exp_f"] <= _k["f_hi"] and not (_k["nw_lo"] <= _k["exp_nw"] <= _k["nw_hi"])  # 4.1: female inside, non-Western outside  # Section 4.1: matched gaps, female above and non-Western below
+    assert _k["f_lo"] <= _k["exp_f"] <= _k["f_hi"] and _k["exp_nw"] > _k["nw_hi"]  # 4.1: female inside, non-Western outside  # Section 4.1: matched gaps, female above and non-Western below
     assert _gf["gund_art_gap_f"] >= 10 and _gf["gund_art_coded"] >= 30 and _gf["gund_top_dept_share"] <= 60  # still cross-departmental
     _st = "Louis E. Stern Collection"
     _sg = gifts[gifts["Unit"] == _st]
@@ -622,8 +623,11 @@ def main():
     above = clus[clus["kmeans_silhouette"] > clus["shuffled_p95"]]["k"]
     put("SilAboveFrom", fint(above.min()) if len(above) else "--"); put("SilAboveTo", fint(above.max()) if len(above) else "--")
     put("SilMaxExcess", fdec((clus["kmeans_silhouette"] - clus["shuffled_p95"]).max(), 2))
-    _k6 = clus.set_index("k").loc[6]
-    assert _k6["kmeans_silhouette"] < _k6["shuffled_p95"] and (clus["kmeans_silhouette"] - clus["shuffled_p95"]).max() < 0.05
+    # Section 5.3: up to SilBelowTo clusters the silhouette is below the shuffled 95th percentile, above it from SilAboveFrom on.
+    _below = clus[clus["kmeans_silhouette"] <= clus["shuffled_p95"]]["k"]
+    put("SilBelowFrom", fint(_below.min())); put("SilBelowTo", fint(_below.max()))
+    assert _below.max() < above.min() and _below.min() <= 2 and 6 <= _below.max()
+    assert (clus["kmeans_silhouette"] - clus["shuffled_p95"]).max() < 0.05
     put("NClusterFeatures", "eight")
     put("TypAnchorsStableMin", fint(typsens["anchors_own_pattern"].min()))
     # Tate rules
@@ -661,6 +665,7 @@ def main():
     put("JWdUncoded", fint(_wj.sum())); put("JWdFilled", fint(_filled["rothschild"].astype(bool).sum()))
     put("WdOrigLinked", fint(_wd["link_source"].notna().sum()))
     put("WdOrigBirthRule", fint((_filled["rule"] == "place of birth").sum()))
+    put("WdOrigFilledName", fint(_filled["link_source"].isna().sum()))
     put("WdOrigFilledRec", fint((gifts["NationalityFilled"].fillna(0) > 0).sum()))
     # Worked example for the accessions questions: Drawings & Prints gifts accessioned in 2019.
     dp = gifts[(gifts["Department"] == "Drawings & Prints") & (gifts["YearAcquired"] == 2019)]
@@ -799,6 +804,33 @@ def main():
     # Section 4.3: the single-artist label describes the records; by work Bouabre holds few of the unit's works.
     _pw = gifts[gifts["Unit"] == "Jean Pigozzi"].groupby("Work")["Artist"].first()
     put("PBouabreWorks", fint(_pw.fillna("").str.contains("Bouabr").sum()))
+    # S: matched gap under other thresholds for leaving a dominant unit out of a department-decade cell.
+    _thr = [("One fifth (main)", None), ("One tenth", 0.10), ("No unit left out", 1.0)]
+    _mg = {}
+    for _lab, _t in _thr:
+        for _u in units.index[units["n"] >= 100]:
+            _sub, _rest = gifts[gifts["Unit"] == _u], gifts[gifts["Unit"] != _u]
+            _e = matched_expectation(_sub, _rest, dominant_share=_t)
+            _s = record_shares(_sub)
+            _mg[(_lab, _u)] = (_s["pct_f"] - _e["exp_f"], _s["pct_nw"] - _e["exp_nw"], _s["g_valid"], _s["o_valid"])
+    thr_rows = []
+    for p_, u_ in CASES:
+        thr_rows.append([CASE_TEX[u_] if u_ in CASE_TEX else tex_escape(u_)] + [csigned(_mg[(l_, u_)][0], 1) for l_, _ in _thr] + [csigned(_mg[(l_, u_)][1], 1) for l_, _ in _thr])
+    _big = [u for u in units.index[units["n"] >= 100]]
+    def _flips(i, v):
+        return sum(1 for u in _big if _mg[("One fifth (main)", u)][v] >= 30 and np.sign(_mg[("One fifth (main)", u)][i]) != np.sign(_mg[("No unit left out", u)][i])
+                   and not (pd.isna(_mg[("One fifth (main)", u)][i]) or pd.isna(_mg[("No unit left out", u)][i])))
+    _nbig_f = sum(1 for u in _big if _mg[("One fifth (main)", u)][2] >= 30); _nbig_nw = sum(1 for u in _big if _mg[("One fifth (main)", u)][3] >= 30)
+    put("ThrFlipF", fint(_flips(0, 2))); put("ThrFlipNW", fint(_flips(1, 3))); put("ThrUnitsF", fint(_nbig_f)); put("ThrUnitsNW", fint(_nbig_nw))
+    # Supplement S2: the matched gaps the article interprets keep their sign under every threshold
+    # (Kleiner on both shares, Gund on the female share); the Rockefeller lineage's stay within four points of zero.
+    for l_, _ in _thr:
+        assert _mg[(l_, "Kleiner, Bell & Co.")][0] > 0 and _mg[(l_, "Kleiner, Bell & Co.")][1] < 0 and _mg[(l_, "Agnes Gund")][0] > 20
+        assert abs(_mg[(l_, "Rockefeller lineage")][0]) < 4 and abs(_mg[(l_, "Rockefeller lineage")][1]) < 4
+    write_table("rev_supp_matched_threshold.tex", "Matched gaps of the six cases (percentage points) under three thresholds for leaving a dominant unit out of a department-decade cell.",
+                ["", "One fifth", "One tenth", "None", "One fifth", "One tenth", "None"],
+                [r" & \multicolumn{3}{c}{Female share} & \multicolumn{3}{c}{Non-Western share} \\", r"\midrule"] + thr_rows, "lrrrrrr", "tab:s_threshold",
+                note="A unit that holds more than the threshold share of a cell's coded records is left out of that cell's reference. `One fifth' is the rule of the article and `None' leaves no unit out.")
     _cl = main_all["CreditLine"].fillna("")
     _gen = _cl.str.contains("generosity of", case=False) & ~_cl.str.contains(r"\b(?:gift|bequest)\b", case=False)
     put("NGenerosity", fint(_gen.sum()))
@@ -1107,7 +1139,7 @@ def main():
     write_table("rev_supp_clustering.tex", "Cluster structure of the donor feature space.",
                 ["$k$", "$k$-means silhouette", "Ward silhouette", "Shuffled mean", "Shuffled 95th pct.", "Smallest cluster"], rows,
                 "rrrrrr", "tab:s_clustering",
-                note="Features are standardized log record count, active era, peak-year share, top-department share, top-artist share, "
+                note="Features are standardised log record count, active era, peak-year share, top-department share, top-artist share, "
                      "share of unidentified-maker records, female share and non-Western share. The shuffled reference permutes each feature independently across donors (100 draws). "
                      f"The adjusted Rand index between the six-cluster $k$-means solution and the pattern rules, over units matching exactly one pattern, is {clus['ari_rules_vs_k6_clean_units'].iloc[0]:.2f}.")
 
@@ -1245,11 +1277,14 @@ def main():
         offsets = FIG1_OFFSETS[num]
         for u, lab in labels.items():
             if u in d.index:
+                if offsets.get(u, (5, 5)) is None:
+                    continue
                 dx, dy = offsets.get(u, (5, 5))
                 ax.annotate(lab, xy=(d.loc[u, "n"], d.loc[u, "gap"]), xytext=(dx, dy), textcoords="offset points",
                             fontsize=7.5, ha="left" if dx >= 0 else "right",
                             arrowprops=dict(arrowstyle="-", color=GRAY[2], linewidth=0.5, shrinkA=0, shrinkB=2))
         ax.set_xscale("log"); ax.set_xlim(right=20000); ax.set_xlabel("Records given (log scale)"); ax.set_ylabel(ylab)
+        ax.set_ylim(bottom=d["gap"].min() - 11)  # room for the labels of units at the lowest share
         ax.grid(axis="y", color="#d9d9d9", linewidth=0.6)
         ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
     h, l = axes[0].get_legend_handles_labels()
