@@ -359,6 +359,10 @@ def main():
     put("BaseNW", fdec(museum["pct_nw"], 2)); put("BaseNWOne", fdec(museum["pct_nw"], 1))
     put("NMixedOrigin", fint(museum["n_mixed_origin"])); put("NUncodedOrigin", fint(museum["n_uncoded_origin"]))
     put("PctUncodedOrigin", fdec(pct(museum["n_uncoded_origin"], n)))
+    # bounds on the non-Western share of records: mixed and uncoded records all Western, or all non-Western
+    _rest_o = museum["n_mixed_origin"] + museum["n_uncoded_origin"]
+    assert museum["o_valid"] + _rest_o == n
+    put("BoundNWLo", fdec(pct(museum["nw"], n))); put("BoundNWHi", fdec(pct(museum["nw"] + _rest_o, n)))
     put("NArtists", fint(museum["n_artists"]))
     put("ArtBaseF", fdec(museum["art_pct_f"], 2)); put("ArtBaseFOne", fdec(museum["art_pct_f"], 1))
     put("RPAWomen", fdec(museum["f"] / museum["art_f"], 1)); put("RPAMen", fdec((museum["g_valid"] - museum["f"]) / (museum["art_g_valid"] - museum["art_f"]), 1))
@@ -973,7 +977,7 @@ def main():
     trows.append(["Matching no pattern", fint(typsum["non-anchor unclassified"]), fint(r13["none"]), fint(tate_rules.loc["Tate", "none"])])
     write_table("rev_tab_tate.tex", "Gift patterns at MoMA and at the Tate, with credit lines parsed by the same rules.",
                 ["", "MoMA", "MoMA, 1929--2013", "Tate"], trows, "lrrr", "tab:tate",
-                note="The public Tate file ends in 2013, and the middle column restricts MoMA to the same years. "
+                note="The middle column restricts MoMA to 1929--2013. "
                      "Tate origin is coded from place of birth and MoMA origin from nationality, and the Tate's departments are coarser. "
                      "Tate credit lines that name an acquisition channel (for example the Turner Bequest) are excluded.")
 
