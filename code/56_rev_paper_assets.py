@@ -647,6 +647,21 @@ def main():
     # Artist-level contributions (artists divided among donors) under bounds and the Eastern Europe rule.
     six_units = {u for _, u in CASES}
     AT = artist_table(cons)
+    # Supplement S4: artist-level contributions when each artist is divided equally among the donor units
+    # that gave the artist's records (the article divides in proportion to records).
+    _c = cons[~cons["placeholder"]]
+    _nu = _c.groupby("cid")["unit"].nunique()
+    _eq = {}
+    for _u, _d in _c.drop_duplicates(["cid", "unit"]).groupby("unit"):
+        _fr = pd.Series(0.0, index=AT.index)
+        _ids = _d["cid"].to_numpy()
+        _fr.loc[_ids] = (1.0 / _nu.loc[_ids]).to_numpy()
+        _eq[_u] = frac_artist_contribution(AT, _fr)
+    _eq = pd.DataFrame(_eq, index=["f", "nw"]).T
+    put("EqSternF", fsigned(_eq.loc["Louis E. Stern Collection", "f"])); put("EqSternNW", fsigned(_eq.loc["Louis E. Stern Collection", "nw"]))
+    put("EqRothNW", fsigned(_eq.loc["Judith Rothschild Foundation", "nw"])); put("EqMaxF", fdec(_eq["f"].abs().max(), 2))
+    # the three statements of Section 5.2 at the artist count also hold under the equal division
+    assert _eq.loc["Louis E. Stern Collection"].abs().max() < 0.3 and _eq.loc["Judith Rothschild Foundation", "nw"] > 1 and _eq["f"].abs().max() < 1
     fr6 = removed_fraction(cons, gifts.index[gifts["Unit"].isin(six_units)], AT)
     frj = removed_fraction(cons, gifts.index[gifts["Unit"] == "Judith Rothschild Foundation"], AT)
     unc_j = ((AT["OV"] == 0) & (frj > 0)).astype(float)
